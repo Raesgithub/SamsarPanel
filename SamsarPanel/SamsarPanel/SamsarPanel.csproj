@@ -16,4 +16,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Components\Cpanel\" />
+    <Folder Include="Components\Layout\Cpanel\" />
+  </ItemGroup>
+
 </Project>

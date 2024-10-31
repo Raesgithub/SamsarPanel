@@ -35,6 +35,17 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
+
+/////////////////////////////
+builder.Services.AddControllers();
+builder.Services.AddScoped(a => new HttpClient
+{
+    // BaseAddress = new Uri(builder.Configuration.GetSection("BaseAddress").Value!)
+    BaseAddress = new Uri("https://localhost:7135/")
+});
+builder.Services.AddMemoryCache();
+
+///////////////////////////
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 var app = builder.Build();
@@ -53,7 +64,9 @@ else
 }
 
 app.UseHttpsRedirection();
-
+/////////////////////////////////
+app.MapControllers();
+///////////////////////////////////
 app.UseStaticFiles();
 app.UseAntiforgery();
 
