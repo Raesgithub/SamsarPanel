@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SamsarPanel.Client.Pages;
@@ -18,22 +18,22 @@ builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
 
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultScheme = IdentityConstants.ApplicationScheme;
-        options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-    })
-    .AddIdentityCookies();
+//builder.Services.AddAuthentication(options =>
+//    {
+//        options.DefaultScheme = IdentityConstants.ApplicationScheme;
+//        options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+//    })
+//    .AddIdentityCookies();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddSignInManager()
-    .AddDefaultTokenProviders();
+//builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+//    .AddEntityFrameworkStores<ApplicationDbContext>()
+//    .AddSignInManager()
+//    .AddDefaultTokenProviders();
 
 
 /////////////////////////////
@@ -44,7 +44,31 @@ builder.Services.AddScoped(a => new HttpClient
     BaseAddress = new Uri("https://localhost:7135/")
 });
 builder.Services.AddMemoryCache();
-
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.Name = ".identity"; // نام کوکی
+    options.Cookie.HttpOnly = true; // فقط برای HTTP
+    options.ExpireTimeSpan = TimeSpan.FromHours(8); // زمان انقضا
+    options.SlidingExpiration = true; // فعال‌سازی انقضای لغزشی
+    options.LoginPath = "/Account/Login"; // مسیر ورود
+    options.LogoutPath = "/Account/Logout"; // مسیر خروج
+    options.AccessDeniedPath = "/Account/AccessDenied"; // مسیر دسترسی ممنوع
+});
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedPhoneNumber = false;
+    options.SignIn.RequireConfirmedEmail = false;
+    options.SignIn.RequireConfirmedAccount = false;
+    options.User.RequireUniqueEmail = true;
+    options.Password.RequireDigit = false;
+    options.Password.RequiredUniqueChars = 0;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+}).AddRoles<IdentityRole>()
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
 ///////////////////////////
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
