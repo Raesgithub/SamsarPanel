@@ -1,20 +1,84 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@inject NavigationManager nav
+<!-- cpanel template-->
+@if (witchHTML=="cpanel")
+{
+    <!DOCTYPE html>
+    <html lang="fa">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <!-- begin::global styles -->
+        <link rel="stylesheet" href="/cpanel/assets/vendors/bundle.css" type="text/css">
+        <!-- end::global styles -->
+        <!-- begin::custom styles -->
+        <link rel="stylesheet" href="/cpanel/assets/css/app.css" type="text/css">
+        <link rel="stylesheet" href="/cpanel/assets/css/custom.css" type="text/css">
+        <!-- end::custom styles -->
+        <!-- begin::favicon -->
+        <link rel="shortcut icon" href="/cpanel/assets/media/image/favicon.png">
+        <!-- end::favicon -->
+        <!-- begin::theme color -->
+        <meta name="theme-color" content="#3f51b5" />
+        <!-- end::theme color -->
+        <base href="/" />
+        <HeadOutlet />
+    </head>
+    <body>
+        <RoutesCpanel />
+        <!-- end::main content -->
+        <!-- begin::global scripts -->
+        <script src="/cpanel/assets/vendors/bundle.js"></script>
+        <!-- end::global scripts -->
+        <!-- begin::custom scripts -->
+        <script src="/cpanel/assets/js/custom.js"></script>
+        <script src="/cpanel/assets/js/app.js"></script>
+        <!-- end::custom scripts -->
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <base href="/" />
-    <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
-    <link rel="stylesheet" href="app.css" />
-    <link rel="stylesheet" href="SamsarPanel.styles.css" />
-    <link rel="icon" type="image/png" href="favicon.png" />
-    <HeadOutlet />
-</head>
+        <script src="_framework/blazor.web.js"></script>
 
-<body>
-    <Routes />
-    <script src="_framework/blazor.web.js"></script>
-</body>
+    </body>
+    </html>
+}
+<!-- main template-->
+else
+{
+    <!DOCTYPE html>
+    <html lang="en">
 
-</html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <base href="/" />
+        <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
+        <link rel="stylesheet" href="app.css" />
+        <link rel="stylesheet" href="SamsarPanel.styles.css" />
+        <link rel="icon" type="image/png" href="favicon.png" />
+        <HeadOutlet />
+    </head>
+
+    <body>
+        <Routes />
+        <script src="_framework/blazor.web.js"></script>
+    </body>
+
+    </html>
+}
+
+
+@code{
+    string witchHTML = "";
+    protected override void OnInitialized()
+    {
+        //https://localhost:7163/
+        var url = nav.BaseUri.ToLower();
+        if (nav.Uri.ToLower().StartsWith(url +"cpanel/"))
+        {
+            witchHTML = "cpanel";
+        }
+        else
+        {
+            witchHTML = "";
+        }
+    }
+}
