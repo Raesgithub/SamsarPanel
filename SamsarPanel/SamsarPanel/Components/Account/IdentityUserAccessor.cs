@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Identity;
-using SamsarPanel.Data;
+using Domain.Data;
 
 namespace SamsarPanel.Components.Account
 {

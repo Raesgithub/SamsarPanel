@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SamsarPanel.Client.Pages;
 using SamsarPanel.Components;
 using SamsarPanel.Components.Account;
-using SamsarPanel.Data;
+using Domain.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

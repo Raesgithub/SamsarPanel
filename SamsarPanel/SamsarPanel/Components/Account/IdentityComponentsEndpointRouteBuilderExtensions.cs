@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using SamsarPanel.Components.Account.Pages;
 using SamsarPanel.Components.Account.Pages.Manage;
-using SamsarPanel.Data;
+using Domain.Data;
 using System.Security.Claims;
 using System.Text.Json;
 

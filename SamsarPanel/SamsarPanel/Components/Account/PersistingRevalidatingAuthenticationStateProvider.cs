@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using SamsarPanel.Client;
-using SamsarPanel.Data;
+using Domain.Data;
 using System.Diagnostics;
 using System.Security.Claims;
 
