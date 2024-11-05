@@ -8,6 +8,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <base href="/" />
         <!-- begin::global styles -->
         <link rel="stylesheet" href="/cpanel/assets/vendors/bundle.css" type="text/css">
         <!-- end::global styles -->
@@ -21,7 +22,7 @@
         <!-- begin::theme color -->
         <meta name="theme-color" content="#3f51b5" />
         <!-- end::theme color -->
-        <base href="/" />
+        
         <HeadOutlet />
     </head>
     <body>
@@ -39,17 +40,16 @@
 
     </body>
     </html>
+    return;
 }
 <!-- main template-->
-else
-{
     <!DOCTYPE html>
     <html lang="en">
 
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <base href="/" />
+        
         <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
         <link rel="stylesheet" href="app.css" />
         <link rel="stylesheet" href="SamsarPanel.styles.css" />
@@ -63,7 +63,6 @@ else
     </body>
 
     </html>
-}
 
 
 @code{
@@ -72,7 +71,7 @@ else
     {
         //https://localhost:7163/
         var url = nav.BaseUri.ToLower();
-        if (nav.Uri.ToLower().StartsWith(url +"cpanel/"))
+        if (nav.Uri.ToLower().StartsWith(url +"cpanel"))
         {
             witchHTML = "cpanel";
         }
