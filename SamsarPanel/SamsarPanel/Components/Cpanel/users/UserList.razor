@@ -1,5 +1,10 @@
 ﻿@page "/cpanel/users/"
+@using Domain.Data
+@using Domain.ViewModels
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
 @layout Layout.Cpanel.MainLayoutCpanel
+@inject UserManager<ApplicationUser> userManager
 <PageTitle>Home</PageTitle>
 
 <div class="page-header">
@@ -29,8 +34,33 @@
 <div class="card">
     <div class="card-body">
         <h5 class="card-title">عنوان محتوا</h5>
-        <p>
-            صفحه خالی ...
-        </p>
+        <form class="search">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="جستجو ..." aria-label="Recipient's username" aria-describedby="button-addon2">
+                <div class="input-group-append">
+                    <button class="btn" type="button" id="button-addon2">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <table>
+        </table>
     </div>
 </div>
+@code {
+    public List<UserVM> Users { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        //"" +" " +"" ===> " "  ""
+        Users = await userManager.Users.Select(s => new UserVM
+            {
+                Email = s.Email,
+                FullName = (s.Firstname ?? string.Empty + " " + s.Lastname ?? string.Empty).Trim(),
+                PhoneNumber = s.PhoneNumber??string.Empty,
+                UserId = s.Id,
+                UserName=s.UserName
+
+            }).ToListAsync();
+    }
+}
