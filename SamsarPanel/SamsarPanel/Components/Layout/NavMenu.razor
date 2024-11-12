@@ -1,5 +1,5 @@
 ﻿@implements IDisposable
-
+ @rendermode InteractiveServer 
 @inject NavigationManager NavigationManager
 
 <div class="top-row ps-3 navbar navbar-dark">
@@ -36,9 +36,9 @@
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/cpanel/">
+            <a class="nav-link" @onclick='()=>NavigationManager.NavigateTo("/cpanel/",true)'>
                 <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> cpanel
-            </NavLink>
+            </a>
         </div>
 
         <AuthorizeView>

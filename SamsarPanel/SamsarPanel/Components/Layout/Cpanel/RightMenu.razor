@@ -1,4 +1,5 @@
 ﻿@using Domain.Resourses
+
 @inject NavigationManager nav
 @rendermode InteractiveServer
 
@@ -16,7 +17,7 @@
              <li>
                 <a href="#"><i class="icon ti-layers-alt"></i> <span>کاربران</span> </a>
                 <ul>
-                    <li><a @onclick='()=>nav.NavigateTo("/cpanel/users",true)'> لیست کاربران </a></li>                
+                    <li><a  @onclick="ShowUserList"> لیست کاربران </a></li>                
                     <li><a href="chat.html">کاربران جدید </a></li>                
                     <li><a href="chat.html">کاربران ویژه </a></li>                
                 </ul>
@@ -36,5 +37,9 @@
     private void Dashboard(MouseEventArgs e)
     {
         nav.NavigateTo("/cpanel",true);
+    }
+    private void ShowUserList(MouseEventArgs e)
+    {
+        nav.NavigateTo("/cpanel/users", true);
     }
 }

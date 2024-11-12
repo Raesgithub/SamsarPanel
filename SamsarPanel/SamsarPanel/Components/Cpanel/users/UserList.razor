@@ -46,7 +46,7 @@
         </form>
         <div class="table-responsive" tabindex="1" style="overflow: hidden; outline: none;">
             <table class="table">
-                <tr>
+                <tr class="text-center">
                     <th>نام </th>
                     <th>ایمیل</th>
                     <th>تلفن</th>
@@ -57,11 +57,20 @@
                 </tr>
                 @foreach (var item in Users)
                 {
-                    <tr>
+                    <tr class="text-center">
                         <td>@item.FullName</td>
                         <td>@item.Email</td>
                         <td>@item.PhoneNumber</td>
-                        <td>@item.IsSuspend</td>
+                        <td>
+                            @if (item.IsSuspend)
+                            {
+                                <span class="bg-warning d-inline-block border m-auto" style="border-radius: 50%;  width: 10px;  height: 10px;"></span>
+                            }
+                            else
+                            {
+                                <span class="bg-success d-inline-block border m-auto" style="border-radius: 50%;  width: 10px;  height: 10px;"></span>
+                            }
+                        </td>
                         <td>@item.LastDateLogin</td>
                         <td>@item.LoginCount</td>
                         <td class="text-left">

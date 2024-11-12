@@ -1,11 +1,15 @@
 ﻿@page "/Account/Login"
 
 @using System.ComponentModel.DataAnnotations
+@using MD.PersianDateTime
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
 @using Domain.Data
+@using Microsoft.EntityFrameworkCore
 
 @inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@* @inject ApplicationDbContext Context *@
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
@@ -92,6 +96,19 @@
         var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
         if (result.Succeeded)
         {
+
+            //  var user = await Context.Users.Where(a => a.Email == Input.Email).AsNoTracking().FirstOrDefaultAsync();
+            var user = await UserManager.FindByEmailAsync(Input.Email);
+
+            user.LoginCount += 1;
+            user.LastDateLogin = new PersianDateTime(DateTime.Now).ToString();
+            
+            await UserManager.UpdateAsync(user);
+            
+            // Context.Users.Update(user);
+           // await Context.SaveChangesAsync();
+
+
             Logger.LogInformation("User logged in.");
             RedirectManager.RedirectTo(ReturnUrl);
         }
