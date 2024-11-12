@@ -44,12 +44,47 @@
                 </div>
             </div>
         </form>
-        <table>
-        </table>
+        <div class="table-responsive" tabindex="1" style="overflow: hidden; outline: none;">
+            <table class="table">
+                <tr>
+                    <th>نام </th>
+                    <th>ایمیل</th>
+                    <th>تلفن</th>
+                    <th>وضعیت</th>
+                    <th>آخرین بازدید</th>
+                    <th>تعداد بازدید</th>
+                    <th></th>
+                </tr>
+                @foreach (var item in Users)
+                {
+                    <tr>
+                        <td>@item.FullName</td>
+                        <td>@item.Email</td>
+                        <td>@item.PhoneNumber</td>
+                        <td>@item.IsSuspend</td>
+                        <td>@item.LastDateLogin</td>
+                        <td>@item.LoginCount</td>
+                        <td class="text-left">
+                            <div class="dropdown">
+                                <a href="#" class="btn btn-light btn-floating btn-icon btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                </a>
+                                <div class="dropdown-menu">
+                                    <button class="dropdown-item" type="button">عمل</button>
+                                    <button class="dropdown-item" type="button">عمل دیگر</button>
+                                    <button class="dropdown-item" type="button">یک عمل دیگر</button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+        
     </div>
 </div>
 @code {
-    public List<UserVM> Users { get; set; }
+    public List<UserVM> Users { get; set; } = new List<UserVM>();
     protected override async Task OnInitializedAsync()
     {
         //"" +" " +"" ===> " "  ""
@@ -59,7 +94,10 @@
                 FullName = (s.Firstname ?? string.Empty + " " + s.Lastname ?? string.Empty).Trim(),
                 PhoneNumber = s.PhoneNumber??string.Empty,
                 UserId = s.Id,
-                UserName=s.UserName
+                UserName=s.UserName,
+                IsSuspend=s.IsSuspend,
+                LastDateLogin=s.LastDateLogin,
+                LoginCount=s.LoginCount
 
             }).ToListAsync();
     }

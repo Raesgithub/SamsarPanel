@@ -7,8 +7,9 @@ namespace Domain.Data
     {
         public string? Firstname { get; set; } = null;
         public string? Lastname { get; set; } = null;
-
-
+        public string? LastDateLogin { get; set; } = null;
+        public bool IsSuspend { get; set; } = false;
+        public int LoginCount { get; set; } = 0;
     }
 
 }
