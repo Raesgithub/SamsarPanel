@@ -22,4 +22,10 @@
     <Folder Include="Components\Cpanel\posts\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Components\Cpanel\users\_Imports.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
 </Project>

@@ -1,4 +1,4 @@
-﻿@page "/cpanel/users/profile"
+﻿@page "/cpanel/users/profile/{UserId}"
 @layout Layout.Cpanel.MainLayoutCpanel
 <PageTitle>Home</PageTitle>
 
@@ -34,3 +34,6 @@
         </p>
     </div>
 </div>
+@code{
+    [Parameter] public string UserId { get; set; }
+}
