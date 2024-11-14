@@ -1,5 +1,8 @@
 ﻿@page "/cpanel/users/profile/{UserId}"
+
 @layout Layout.Cpanel.MainLayoutCpanel
+@inject UserManager<ApplicationUser> userManager
+@inject NavigationManager nav
 <PageTitle>Home</PageTitle>
 
 <div class="page-header">
@@ -26,14 +29,53 @@
 </div>
 <!-- end::page header -->
 
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">عنوان محتوا</h5>
-        <p>
-            صفحه خالی ...
-        </p>
+
+<div class="row">
+    <div class="col-md-8 col-xl-9">
+        <div class="card">
+            <div class="card-body">
+            </div>
+        </div>
     </div>
+    <div class="col-md-4 col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                <h5>وضعیت 
+                    @if (User.IsSuspend )
+                    {
+                        <span class="px-3 text-warning">مسدود</span>
+                    }
+                    else
+                    {
+                        <span class="px-3 text-success">فعال</span>
+                    }
+                </h5>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5>بارگزاری تصویر</h5>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h5>اطلاعات ورود</h5>
+            </div>
+        </div>
+      
+    </div>
+  
 </div>
-@code{
+@code {
     [Parameter] public string UserId { get; set; }
+    public ApplicationUser? User { get; set; } = new ApplicationUser();   
+    protected override async Task OnInitializedAsync()
+    {
+        User= await userManager.FindByIdAsync(UserId);
+        if (User is null)
+        {
+            nav.NavigateTo("/cpanel/users/", true);
+            return;
+        }
+    }
 }
