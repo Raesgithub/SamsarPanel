@@ -1,8 +1,11 @@
 ﻿@page "/cpanel/users/"
+@using Domain.Resourses
 @using Domain.ViewModels
+@using Microsoft.Extensions.Caching.Memory
 @layout Layout.Cpanel.MainLayoutCpanel
 @inject UserManager<ApplicationUser> userManager
 @inject NavigationManager nav
+@inject IMemoryCache cache
 @rendermode InteractiveServer
 <PageTitle>Home</PageTitle>
 
@@ -24,9 +27,9 @@
         <h5 class="card-title">عنوان محتوا</h5>
         <form class="search">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="جستجو ..." aria-label="Recipient's username" aria-describedby="button-addon2">
+                <input type="text" class="form-control" placeholder="جستجو ..." @bind-value="search">
                 <div class="input-group-append">
-                    <button class="btn" type="button" id="button-addon2">
+                    <button class="btn" type="button" @onclick="SearchBtn">
                         <i class="fa fa-search"></i>
                     </button>
                 </div>
@@ -35,20 +38,21 @@
         <div class="table-responsive" tabindex="1" style="overflow: auto; outline: none;">
             <table class="table">
                 <tr class="text-center">
-                    <th>نام </th>
-                    <th>ایمیل</th>
-                    <th>تلفن</th>
+                    <th>آواتار </th>
+                    <th>مشخصات </th>
+                    <th>راه های ارتباط</th>
                     <th>وضعیت</th>
-                    <th>آخرین بازدید</th>
-                    <th>تعداد بازدید</th>
+                    <th>امار بازدید</th>
+
                     <th></th>
                 </tr>
                 @foreach (var item in Users)
                 {
                     <tr class="text-center">
-                        <td>@item.FullName</td>
-                        <td>@item.Email</td>
-                        <td>@item.PhoneNumber</td>
+                        <td><img src="@item.avatar" style="width:50px;height:50px;border-radius:50%;display:block;margin:auto"/></td>
+                        <td>@item.FullName<div>@item.UserName</div></td>
+                        <td>@item.Email<div>@item.PhoneNumber</div></td>
+
                         <td>
                             @if (item.IsSuspend)
                             {
@@ -59,8 +63,7 @@
                                 <span class="bg-success d-inline-block border m-auto" style="border-radius: 50%;  width: 10px;  height: 10px;"></span>
                             }
                         </td>
-                        <td>@item.LastDateLogin</td>
-                        <td>@item.LoginCount</td>
+                        <td>@item.LastDateLogin<div>@item.LoginCount بازدید</div></td>
                         <td class="text-left">
                             <div class="dropdown">
                                 <a href="#" class="btn btn-light btn-floating btn-icon btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -77,14 +80,21 @@
                 }
             </table>
         </div>
-        
+
     </div>
 </div>
 @code {
     public List<UserVM> Users { get; set; } = new List<UserVM>();
-   
+    string search = "";
     protected override async Task OnInitializedAsync()
     {
+        var allUsers = new List<UserVM>();
+        if (cache.TryGetValue("all-users", out allUsers))
+        {
+            Users = allUsers;
+            cache.Remove("all-users");
+            return;
+        }
         //"" +" " +"" ===> " "  ""
         Users = await userManager.Users.Select(s => new UserVM
             {
@@ -94,9 +104,30 @@
                 UserId = s.Id,
                 UserName=s.UserName,
                 IsSuspend=s.IsSuspend,
+                avatar = string.IsNullOrEmpty(s.Avater) ? ConstantCpanel.image_user_no_avatar : ConstantCpanel.image_user_Path + "/" + s.Avater,
                 LastDateLogin=s.LastDateLogin,
                 LoginCount=s.LoginCount
 
-            }).ToListAsync();
+            }).AsNoTracking().ToListAsync();
+
+        cache.Set("all-users", Users);
+    }
+    private async Task SearchBtn(MouseEventArgs e)
+    {
+        Users = await userManager.Users.Where(a => a.UserName.Contains(search) 
+           || a.Firstname.Contains(search) || a.Lastname.Contains(search) 
+          || a.Email.Contains(search) || a.PhoneNumber.Contains(search)).Select(s => new UserVM
+            {
+                Email = s.Email,
+                FullName = (s.Firstname ?? string.Empty + " " + s.Lastname ?? string.Empty).Trim(),
+                PhoneNumber = s.PhoneNumber ?? string.Empty,
+                UserId = s.Id,
+                UserName = s.UserName,
+                IsSuspend = s.IsSuspend,
+                avatar = string.IsNullOrEmpty(s.Avater) ? ConstantCpanel.image_user_no_avatar : ConstantCpanel.image_user_Path + "/" + s.Avater,
+                LastDateLogin = s.LastDateLogin,
+                LoginCount = s.LoginCount
+
+            }).AsNoTracking().ToListAsync();
     }
 }

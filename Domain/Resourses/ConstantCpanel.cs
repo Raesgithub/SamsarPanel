@@ -9,5 +9,6 @@ namespace Domain.Resourses
     public static class ConstantCpanel
     {
         public  const string image_user_no_avatar = "/Cpanel/assets/media/image/user.png";
+        public const string image_user_Path = "/Cpanel/assets/media/image/users";
     }
 }

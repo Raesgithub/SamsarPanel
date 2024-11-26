@@ -28,18 +28,44 @@
 </div>
 <!-- end::page header -->
 
-
+<EditForm Model="User">
 <div class="row">
     <div class="col-md-8 col-xl-9">
-        <div class="card">
+        <div class="card rounded">
             <div class="card-body">
+                 <div class="row">
+                     <div class="col-md-6 form-group">
+                            <label>نام</label>
+                            <InputText @bind-Value="User!.Firstname"  class="form-control" />
+                     </div>
+                        <div class="col-md-6 form-group">
+                            <label> نام خانوادگی</label>
+                            <InputText @bind-Value="User!.Lastname" class="form-control" />
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label> ایمیل</label>
+                            <InputText @bind-Value="User!.Email" class="form-control" />
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>شماره تماس</label>
+                            <InputText @bind-Value="User!.PhoneNumber" class="form-control" />
+                        </div>
+                        <div class="w-100">
+                            <button class="btn btn-success m-3" type="submit">ذخیره تغیراتــــــــــ</button>
+                            <button class="btn btn-warning m-3 float-right" type="button">برگشت به لیست</button>
+                        </div>
+                 </div>
+
+
+
             </div>
         </div>
     </div>
     <div class="col-md-4 col-xl-3">
-        <div class="card">
+        <div class="card rounded">
             <div class="card-body">
-                <h5>وضعیت 
+                <h5 class="text-info">
+                    وضعیت
                     @if (User.IsSuspend )
                     {
                         <span class="px-3 text-warning">مسدود</span>
@@ -51,20 +77,31 @@
                 </h5>
             </div>
         </div>
-        <div class="card">
+        <div class="card rounded">
             <div class="card-body">
-                <h5>بارگزاری تصویر</h5>
+                    <h5 class="text-info">بارگزاری تصویر</h5>
+                    <img src="@User.UserImage()" class="img-fluid m-auto d-block img-thumbnail"/>
             </div>
         </div>
-        <div class="card">
+        <div class=" card rounded">
             <div class="card-body">
-                <h5>اطلاعات ورود</h5>
+                <h5 class="text-info">بازدید</h5>
+                <div class="form-group">
+                    <label class="form-label mb-0">آخرین بازدید</label>
+                    <input type="text" readonly="" class="form-control-plaintext text-left border pl-2" value="@User.LastDateLogin">
+                    
+                </div>
+               
+                <div class="form-group ">
+                    <label class="form-label  mb-0">تعداد بازدید : <strong>@User.LoginCount</strong></label>
+                </div>
             </div>
         </div>
       
     </div>
   
 </div>
+</EditForm>
 @code {
     [Parameter] public string UserId { get; set; }
     public ApplicationUser? User { get; set; } = new ApplicationUser();   
