@@ -1,7 +1,10 @@
 ﻿@page "/cpanel/users/"
+@using Dapper
 @using Domain.Resourses
 @using Domain.ViewModels
+@using Microsoft.Data.SqlClient
 @using Microsoft.Extensions.Caching.Memory
+@using System.Diagnostics
 @layout Layout.Cpanel.MainLayoutCpanel
 @inject UserManager<ApplicationUser> userManager
 @inject NavigationManager nav
@@ -95,7 +98,33 @@
             cache.Remove("all-users");
             return;
         }
+
         //"" +" " +"" ===> " "  ""
+        Stopwatch stopwatch = new Stopwatch();
+        // شروع زمان‌سنجی
+        stopwatch.Start();
+        var conStr = "Server=(localdb)\\mssqllocaldb;Database=aspnet-SamsarPanel-3353ccfb-a532-47d2-b5f2-9c5d23693f62;Trusted_Connection=True;MultipleActiveResultSets=true";
+        using(var con=new SqlConnection(conStr)){
+            var query = @"declare @search nvarchar =''
+                                select Email,Firstname,Lastname,PhoneNumber,Id,UserName,Avater,LastDateLogin,LoginCount
+                                from AspNetUsers
+                                where UserName like N'%'+@search+'%' or Firstname like  N'%'+@search+'%' 
+                                or Lastname like  N'%'+@search+'%' or Email like  N'%'+@search+'%' 
+                                or PhoneNumber like  N'%'+@search+'%' ";
+            var res= await con.QueryAsync<UserVM>(query);
+            Users = res.ToList();
+
+
+        }
+        stopwatch.Stop();
+
+        // نمایش زمان صرف شده
+        var xx = stopwatch.ElapsedMilliseconds;
+
+        Stopwatch stopwatch2 = new Stopwatch();
+        // شروع زمان‌سنجی
+        stopwatch2.Start();
+
         Users = await userManager.Users.Select(s => new UserVM
             {
                 Email = s.Email,
@@ -109,25 +138,29 @@
                 LoginCount=s.LoginCount
 
             }).AsNoTracking().ToListAsync();
-
+        stopwatch2.Stop();
+        var xxx = stopwatch2.ElapsedMilliseconds;
         cache.Set("all-users", Users);
     }
     private async Task SearchBtn(MouseEventArgs e)
     {
-        Users = await userManager.Users.Where(a => a.UserName.Contains(search) 
-           || a.Firstname.Contains(search) || a.Lastname.Contains(search) 
-          || a.Email.Contains(search) || a.PhoneNumber.Contains(search)).Select(s => new UserVM
-            {
-                Email = s.Email,
-                FullName = (s.Firstname ?? string.Empty + " " + s.Lastname ?? string.Empty).Trim(),
-                PhoneNumber = s.PhoneNumber ?? string.Empty,
-                UserId = s.Id,
-                UserName = s.UserName,
-                IsSuspend = s.IsSuspend,
-                avatar = string.IsNullOrEmpty(s.Avater) ? ConstantCpanel.image_user_no_avatar : ConstantCpanel.image_user_Path + "/" + s.Avater,
-                LastDateLogin = s.LastDateLogin,
-                LoginCount = s.LoginCount
 
-            }).AsNoTracking().ToListAsync();
+        //await userManager.Users.Count();
+        //2ms
+            Users = await userManager.Users.Where(a => a.UserName.Contains(search) 
+               || a.Firstname.Contains(search) || a.Lastname.Contains(search) 
+              || a.Email.Contains(search) || a.PhoneNumber.Contains(search)).Select(s => new UserVM
+                {
+                    Email = s.Email,
+                    FullName = (s.Firstname ?? string.Empty + " " + s.Lastname ?? string.Empty).Trim(),
+                    PhoneNumber = s.PhoneNumber ?? string.Empty,
+                    UserId = s.Id,
+                    UserName = s.UserName,
+                    IsSuspend = s.IsSuspend,
+                    avatar = string.IsNullOrEmpty(s.Avater) ? ConstantCpanel.image_user_no_avatar : ConstantCpanel.image_user_Path + "/" + s.Avater,
+                    LastDateLogin = s.LastDateLogin,
+                    LoginCount = s.LoginCount
+
+                }).AsNoTracking().ToListAsync();
     }
 }
