@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Resourses;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,5 +18,13 @@ namespace Domain.ViewModels
         public string LastDateLogin { get; set; }
         public string? avatar { get; set; }
         public int LoginCount { get; set; } = 0;
+
+        public string GetAvatar()
+        {
+            if (string.IsNullOrEmpty(avatar)) 
+                return ConstantCpanel.image_user_no_avatar;
+            return ConstantCpanel.image_user_Path+"/"+avatar;
+        }
+
     }
 }

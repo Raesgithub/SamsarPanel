@@ -1,4 +1,9 @@
 ﻿@page "/cpanel/users/"
+@using Application.Dtos.cpanel
+@using Application.Repositories.cpanel
+@using Domain.ViewModels
+@using Microsoft.Extensions.Caching.Memory
+@using Application.Repositories
 @using Dapper
 @using Domain.Resourses
 @using Domain.ViewModels
@@ -30,7 +35,7 @@
         <h5 class="card-title">عنوان محتوا</h5>
         <form class="search">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="جستجو ..." @bind-value="search">
+                <input type="text" class="form-control" placeholder="جستجو ..." @bind-value="Pagging.Search">
                 <div class="input-group-append">
                     <button class="btn" type="button" @onclick="SearchBtn">
                         <i class="fa fa-search"></i>
@@ -49,10 +54,10 @@
 
                     <th></th>
                 </tr>
-                @foreach (var item in Users)
+                @foreach (var item in Pagging.Values)
                 {
                     <tr class="text-center">
-                        <td><img src="@item.avatar" style="width:50px;height:50px;border-radius:50%;display:block;margin:auto"/></td>
+                        <td><img src="@item.GetAvatar()" style="width:50px;height:50px;border-radius:50%;display:block;margin:auto" /></td>
                         <td>@item.FullName<div>@item.UserName</div></td>
                         <td>@item.Email<div>@item.PhoneNumber</div></td>
 
@@ -87,80 +92,29 @@
     </div>
 </div>
 @code {
-    public List<UserVM> Users { get; set; } = new List<UserVM>();
-    string search = "";
+    public PaggingDto<UserVM> Pagging { get; set; } = new PaggingDto<UserVM>();
+ 
     protected override async Task OnInitializedAsync()
     {
         var allUsers = new List<UserVM>();
         if (cache.TryGetValue("all-users", out allUsers))
         {
-            Users = allUsers;
+            Pagging.Values = allUsers;
             cache.Remove("all-users");
             return;
         }
 
-        //"" +" " +"" ===> " "  ""
-        Stopwatch stopwatch = new Stopwatch();
-        // شروع زمان‌سنجی
-        stopwatch.Start();
-        var conStr = "Server=(localdb)\\mssqllocaldb;Database=aspnet-SamsarPanel-3353ccfb-a532-47d2-b5f2-9c5d23693f62;Trusted_Connection=True;MultipleActiveResultSets=true";
-        using(var con=new SqlConnection(conStr)){
-            var query = @"declare @search nvarchar =''
-                                select Email,Firstname,Lastname,PhoneNumber,Id,UserName,Avater,LastDateLogin,LoginCount
-                                from AspNetUsers
-                                where UserName like N'%'+@search+'%' or Firstname like  N'%'+@search+'%' 
-                                or Lastname like  N'%'+@search+'%' or Email like  N'%'+@search+'%' 
-                                or PhoneNumber like  N'%'+@search+'%' ";
-            var res= await con.QueryAsync<UserVM>(query);
-            Users = res.ToList();
+        UserRepository repository = new UserRepository();
+        Pagging= await  repository.GetAll(Pagging);
+       
+        cache.Set("all-users", Pagging.Values);
 
-
-        }
-        stopwatch.Stop();
-
-        // نمایش زمان صرف شده
-        var xx = stopwatch.ElapsedMilliseconds;
-
-        Stopwatch stopwatch2 = new Stopwatch();
-        // شروع زمان‌سنجی
-        stopwatch2.Start();
-
-        Users = await userManager.Users.Select(s => new UserVM
-            {
-                Email = s.Email,
-                FullName = (s.Firstname ?? string.Empty + " " + s.Lastname ?? string.Empty).Trim(),
-                PhoneNumber = s.PhoneNumber??string.Empty,
-                UserId = s.Id,
-                UserName=s.UserName,
-                IsSuspend=s.IsSuspend,
-                avatar = string.IsNullOrEmpty(s.Avater) ? ConstantCpanel.image_user_no_avatar : ConstantCpanel.image_user_Path + "/" + s.Avater,
-                LastDateLogin=s.LastDateLogin,
-                LoginCount=s.LoginCount
-
-            }).AsNoTracking().ToListAsync();
-        stopwatch2.Stop();
-        var xxx = stopwatch2.ElapsedMilliseconds;
-        cache.Set("all-users", Users);
     }
     private async Task SearchBtn(MouseEventArgs e)
     {
 
-        //await userManager.Users.Count();
-        //2ms
-            Users = await userManager.Users.Where(a => a.UserName.Contains(search) 
-               || a.Firstname.Contains(search) || a.Lastname.Contains(search) 
-              || a.Email.Contains(search) || a.PhoneNumber.Contains(search)).Select(s => new UserVM
-                {
-                    Email = s.Email,
-                    FullName = (s.Firstname ?? string.Empty + " " + s.Lastname ?? string.Empty).Trim(),
-                    PhoneNumber = s.PhoneNumber ?? string.Empty,
-                    UserId = s.Id,
-                    UserName = s.UserName,
-                    IsSuspend = s.IsSuspend,
-                    avatar = string.IsNullOrEmpty(s.Avater) ? ConstantCpanel.image_user_no_avatar : ConstantCpanel.image_user_Path + "/" + s.Avater,
-                    LastDateLogin = s.LastDateLogin,
-                    LoginCount = s.LoginCount
-
-                }).AsNoTracking().ToListAsync();
+        UserRepository repository = new UserRepository();
+        
+        Pagging = await repository.GetAll(Pagging);
     }
 }
