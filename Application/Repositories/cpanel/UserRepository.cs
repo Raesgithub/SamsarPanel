@@ -22,6 +22,9 @@ namespace Application.Repositories.cpanel
             {
                 if (pagging.Page + 1 > pagging.TotalPages) return pagging;
             }
+            
+
+
             var page =pagging.Page * pagging.Take;
             var conStr = "Server=(localdb)\\mssqllocaldb;Database=aspnet-SamsarPanel-3353ccfb-a532-47d2-b5f2-9c5d23693f62;Trusted_Connection=True;MultipleActiveResultSets=true";
             using (var con = new SqlConnection(conStr))

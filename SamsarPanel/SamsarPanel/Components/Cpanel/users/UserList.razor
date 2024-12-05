@@ -32,7 +32,6 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">عنوان محتوا</h5>
         <form class="search">
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="جستجو ..." @bind-value="Pagging.Search">
@@ -45,76 +44,99 @@
         </form>
         <div class="table-responsive" tabindex="1" style="overflow: auto; outline: none;">
             <table class="table">
-                <tr class="text-center">
-                    <th>آواتار </th>
-                    <th>مشخصات </th>
-                    <th>راه های ارتباط</th>
-                    <th>وضعیت</th>
-                    <th>امار بازدید</th>
-
-                    <th></th>
-                </tr>
-                @foreach (var item in Pagging.Values)
-                {
+                <thead>
                     <tr class="text-center">
-                        <td><img src="@item.GetAvatar()" style="width:50px;height:50px;border-radius:50%;display:block;margin:auto" /></td>
-                        <td>@item.FullName<div>@item.UserName</div></td>
-                        <td>@item.Email<div>@item.PhoneNumber</div></td>
+                        <th>آواتار </th>
+                        <th>مشخصات </th>
+                        <th>راه های ارتباط</th>
 
-                        <td>
-                            @if (item.IsSuspend)
-                            {
-                                <span class="bg-warning d-inline-block border m-auto" style="border-radius: 50%;  width: 10px;  height: 10px;"></span>
-                            }
-                            else
-                            {
-                                <span class="bg-success d-inline-block border m-auto" style="border-radius: 50%;  width: 10px;  height: 10px;"></span>
-                            }
-                        </td>
-                        <td>@item.LastDateLogin<div>@item.LoginCount بازدید</div></td>
-                        <td class="text-left">
-                            <div class="dropdown">
-                                <a href="#" class="btn btn-light btn-floating btn-icon btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <button class="dropdown-item" type="button" @onclick='()=> nav.NavigateTo($"/cpanel/users/profile/{item.UserId}" , true)'>پروفایل</button>
-                                    <button class="dropdown-item" type="button">عمل دیگر</button>
-                                    <button class="dropdown-item" type="button">یک عمل دیگر</button>
-                                </div>
-                            </div>
-                        </td>
+                        <th>امار بازدید</th>
+
+                        <th></th>
                     </tr>
-                }
+                </thead>
+                <tbody>
+                    @foreach (var item in Pagging.Values)
+                    {
+                        <tr class="text-center @(item.IsSuspend?"bg-warning":"")">
+                            <td><img src="@item.GetAvatar()" style="width:50px;height:50px;border-radius:50%;display:block;margin:auto" /></td>
+                            <td>@item.FullName<div>@item.UserName</div></td>
+                            <td>@item.Email<div>@item.PhoneNumber</div></td>
+
+                            @*      <td>
+                                @if (item.IsSuspend)
+                                {
+                                    <span class="bg-warning d-inline-block border m-auto" style="border-radius: 50%;  width: 10px;  height: 10px;"></span>
+                                }
+                                else
+                                {
+                                    <span class="bg-success d-inline-block border m-auto" style="border-radius: 50%;  width: 10px;  height: 10px;"></span>
+                                }
+                            </td> *@
+                            <td>@item.LastDateLogin<div>@item.LoginCount بازدید</div></td>
+                            <td class="text-left">
+                                <div class="dropdown">
+                                    <a href="#" class="btn btn-light btn-floating btn-icon btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <button class="dropdown-item" type="button" @onclick='()=> nav.NavigateTo($"/cpanel/users/profile/{item.Id}" , true)'>پروفایل</button>
+                                        <button class="dropdown-item" type="button">عمل دیگر</button>
+                                        <button class="dropdown-item" type="button">یک عمل دیگر</button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5">تعداد کل کاربران : <strong>@Pagging.TotalRecords ( @(Pagging.Page+1) از @Pagging.TotalPages )</strong></td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
+        @if (Pagging.Page + 1 != Pagging.TotalPages){
+            <div class="text-center">
+                <button class="btn btn-warning" @onclick="GetMoreData">بیشتر</button>
+            </div>
+        }
+
 
     </div>
 </div>
 @code {
     public PaggingDto<UserVM> Pagging { get; set; } = new PaggingDto<UserVM>();
- 
+
     protected override async Task OnInitializedAsync()
     {
-        var allUsers = new List<UserVM>();
-        if (cache.TryGetValue("all-users", out allUsers))
+        var paggingTemp = new PaggingDto<UserVM>();
+        if (cache.TryGetValue("all-users", out paggingTemp))
         {
-            Pagging.Values = allUsers;
+            Pagging = paggingTemp;
             cache.Remove("all-users");
             return;
         }
 
         UserRepository repository = new UserRepository();
         Pagging= await  repository.GetAll(Pagging);
-       
-        cache.Set("all-users", Pagging.Values);
+
+        cache.Set("all-users", Pagging);
 
     }
     private async Task SearchBtn(MouseEventArgs e)
     {
 
         UserRepository repository = new UserRepository();
-        
+
+        Pagging.Page = 0;
+        Pagging.Values = new List<UserVM>();
+        Pagging = await repository.GetAll(Pagging);
+    }
+    private async Task GetMoreData(MouseEventArgs e)
+    {
+        UserRepository repository = new UserRepository();
+        Pagging.Page+=1;
         Pagging = await repository.GetAll(Pagging);
     }
 }
