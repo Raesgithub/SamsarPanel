@@ -1,11 +1,12 @@
 ﻿@page "/cpanel/users/profile/{UserId}"
+@using Domain.ViewModels
 
 @layout Layout.Cpanel.MainLayoutCpanel
 @inject UserManager<ApplicationUser> userManager
 @inject NavigationManager nav
 <PageTitle>Home</PageTitle>
-@* @inject IJSRuntime js
-@rendermode InteractiveServer *@
+
+@rendermode InteractiveServer 
 
 <div class="page-header">
     <div>
@@ -31,45 +32,40 @@
 <!-- end::page header -->
 @if (mes!="")
 {
-    <div class="alert alert-@alertColor alert-dismissible fade show " role="alert" style="position: fixed; z-index: 77; top: 100px;">
+    <div class="alert alert-@alertColor  " role="alert" >
         <strong>@mes</strong>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
     </div>
 }
 
 
-<EditForm Model="User" OnValidSubmit="ValidSubmit" OnInvalidSubmit="InValidSubmit" FormName="f1">
+<EditForm Model="uservm" OnValidSubmit="ValidSubmit" OnInvalidSubmit="InValidSubmit">
     <div class="row">
         <div class="col-md-8 col-xl-9">
             <div class="card rounded">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6 form-group">
+                        
                             <label>نام</label>
-                            <InputText @bind-Value="User!.Firstname"  class="form-control" />
+                            <InputText @bind-Value="uservm!.Firstname" class="form-control" />
                         </div>
                         <div class="col-md-6 form-group">
                             <label> نام خانوادگی</label>
-                            <InputText @bind-Value="User!.Lastname" class="form-control" />
+                            <InputText @bind-Value="uservm!.Lastname" class="form-control" />
                         </div>
                         <div class="col-md-6 form-group">
                             <label> ایمیل</label>
-                            <InputText @bind-Value="User!.Email" class="form-control" />
+                            <InputText @bind-Value="uservm!.Email" class="form-control" />
                         </div>
                         <div class="col-md-6 form-group">
                             <label>شماره تماس</label>
-                            <InputText @bind-Value="User!.PhoneNumber" class="form-control" />
+                            <InputText @bind-Value="uservm!.PhoneNumber" class="form-control" />
                         </div>
                         <div class="w-100">
                             <button class="btn btn-success m-3" type="submit">ذخیره تغیراتــــــــــ</button>
                             <button class="btn btn-warning m-3 float-right" type="button">برگشت به لیست</button>
                         </div>
                     </div>
-
-
-
                 </div>
             </div>
         </div>
@@ -78,7 +74,7 @@
                 <div class="card-body">
                     <h5 class="text-info">
                         وضعیت
-                        @if (User.IsSuspend )
+                        @if (uservm.IsSuspend)
                         {
                             <span class="px-3 text-warning">مسدود</span>
                         }
@@ -92,7 +88,7 @@
             <div class="card rounded">
                 <div class="card-body">
                     <h5 class="text-info">بارگزاری تصویر</h5>
-                    <img src="@User.UserImage()" class="img-fluid m-auto d-block img-thumbnail"/>
+                    <img src="@uservm.GetAvatar()" class="img-fluid m-auto d-block img-thumbnail" />
                 </div>
             </div>
             <div class=" card rounded">
@@ -100,29 +96,37 @@
                     <h5 class="text-info">بازدید</h5>
                     <div class="form-group">
                         <label class="form-label mb-0">آخرین بازدید</label>
-                        <input type="text" readonly="" class="form-control-plaintext text-left border pl-2" value="@User.LastDateLogin">
+                        <input type="text" readonly="" class="form-control-plaintext text-left border pl-2" value="@uservm.LastDateLogin">
 
                     </div>
 
                     <div class="form-group ">
-                        <label class="form-label  mb-0">تعداد بازدید : <strong>@User.LoginCount</strong></label>
+                        <label class="form-label  mb-0">تعداد بازدید : <strong>@uservm.LoginCount</strong></label>
                     </div>
                 </div>
             </div>
 
         </div>
 
-    </div>
+    </div> 
 </EditForm>
 @code {
     [Parameter] public string UserId { get; set; } = "";
+    // [SupplyParameterFromForm]
+    UserVM uservm { get; set; } = new UserVM();
     string mes = "";
     string alertColor="info";
-    [SupplyParameterFromForm]
-    public ApplicationUser? User { get; set; } = new ApplicationUser();   
+  //  [SupplyParameterFromForm]
+    //public ApplicationUser? User { get; set; } = new ApplicationUser();  
+    
+
+
+
+
     void ValidSubmit(){
         mes = "خطایی اتفاق افتاده";
         alertColor = "danger";
+
         // await js.InvokeVoidAsync("toast", "valid");
     }
     void InValidSubmit()
@@ -133,14 +137,24 @@
     }
     protected override async Task OnParametersSetAsync()
     {
-        
-      
+
+
     }
     protected override async Task OnInitializedAsync()
     {
         if (UserId != "")
         {
-            User = await userManager.FindByIdAsync(UserId);
+           var User = await userManager.FindByIdAsync(UserId);
+           //map User--->uservm
+            uservm.PhoneNumber = User.PhoneNumber;
+            uservm.Lastname = User.Lastname;
+            uservm.Email = User.Email;
+            uservm.Firstname = User.Firstname;
+            uservm.UserId = User.Id;
+            uservm.LoginCount = User.LoginCount;
+            uservm.IsSuspend = User.IsSuspend;
+            uservm.LastDateLogin = User.LastDateLogin;
+            uservm.LoginCount = User.LoginCount;
         }
     }
 }
