@@ -10,5 +10,6 @@ namespace Domain.Resourses
     {
         public  const string image_user_no_avatar = "/Cpanel/assets/media/image/user.png";
         public const string image_user_Path = "/Cpanel/assets/media/image/users";
+        public const string connectionString= "Server=(localdb)\\mssqllocaldb;Database=aspnet-SamsarPanel-3353ccfb-a532-47d2-b5f2-9c5d23693f62;Trusted_Connection=True;MultipleActiveResultSets=true";
     }
 }

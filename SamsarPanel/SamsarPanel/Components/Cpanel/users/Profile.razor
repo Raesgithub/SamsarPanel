@@ -1,4 +1,5 @@
 ﻿@page "/cpanel/users/profile/{UserId}"
+@using Application.Repositories.cpanel
 @using Domain.ViewModels
 
 @layout Layout.Cpanel.MainLayoutCpanel
@@ -39,23 +40,24 @@
 
 
 <EditForm Model="uservm" OnValidSubmit="ValidSubmit" OnInvalidSubmit="InValidSubmit">
+
     <div class="row">
         <div class="col-md-8 col-xl-9">
             <div class="card rounded">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6 form-group">
-                        
+
                             <label>نام</label>
-                            <InputText @bind-Value="uservm!.Firstname" class="form-control" />
+                            <InputText @bind-Value="uservm!.Firstname" class="form-control" required/>
                         </div>
                         <div class="col-md-6 form-group">
                             <label> نام خانوادگی</label>
-                            <InputText @bind-Value="uservm!.Lastname" class="form-control" />
+                            <InputText @bind-Value="uservm!.Lastname" class="form-control" required />
                         </div>
                         <div class="col-md-6 form-group">
                             <label> ایمیل</label>
-                            <InputText @bind-Value="uservm!.Email" class="form-control" />
+                            <InputText @bind-Value="uservm!.Email" class="form-control" required />
                         </div>
                         <div class="col-md-6 form-group">
                             <label>شماره تماس</label>
@@ -116,23 +118,39 @@
     UserVM uservm { get; set; } = new UserVM();
     string mes = "";
     string alertColor="info";
-  //  [SupplyParameterFromForm]
+    //[SupplyParameterFromForm]
     //public ApplicationUser? User { get; set; } = new ApplicationUser();  
-    
 
 
 
 
-    void ValidSubmit(){
-        mes = "خطایی اتفاق افتاده";
-        alertColor = "danger";
 
+    async Task ValidSubmit(){
+        if (string.IsNullOrEmpty(uservm.Firstname) || string.IsNullOrEmpty(uservm.Lastname) || string.IsNullOrEmpty(uservm.Email))
+        {
+            mes = "اطلاعات درخواستی را کامل وارد نمایید";
+            alertColor = "danger";
+            return;
+        }
+
+        var userRep = new UserRepository();
+         if(await userRep.UpdateAsync(uservm)){
+            mes = "تغییرات اعمال گردید";
+            alertColor = "success";
+         }else{
+            mes = "خطایی اتفاق افتاده";
+            alertColor = "danger";
+         }
+
+      
+        
         // await js.InvokeVoidAsync("toast", "valid");
     }
     void InValidSubmit()
     {
-        mes = "همه چیز اوکیه";
-        alertColor = "success";
+        mes = "خطایی اتفاق افتاده";
+        alertColor = "danger";
+
         //await js.InvokeVoidAsync("toast", "invalid");
     }
     protected override async Task OnParametersSetAsync()
@@ -144,8 +162,11 @@
     {
         if (UserId != "")
         {
-           var User = await userManager.FindByIdAsync(UserId);
-           //map User--->uservm
+            var User = await userManager.FindByIdAsync(UserId);
+            //map User--->uservm
+            uservm.UserId = User.Id;
+            uservm.Id = User.Id;
+            uservm.UserName = User.UserName;
             uservm.PhoneNumber = User.PhoneNumber;
             uservm.Lastname = User.Lastname;
             uservm.Email = User.Email;

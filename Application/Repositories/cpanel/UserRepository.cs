@@ -1,5 +1,6 @@
 ﻿using Application.Dtos.cpanel;
 using Dapper;
+using Domain.Resourses;
 using Domain.ViewModels;
 using Microsoft.Data.SqlClient;
 using System;
@@ -26,8 +27,8 @@ namespace Application.Repositories.cpanel
 
 
             var page =pagging.Page * pagging.Take;
-            var conStr = "Server=(localdb)\\mssqllocaldb;Database=aspnet-SamsarPanel-3353ccfb-a532-47d2-b5f2-9c5d23693f62;Trusted_Connection=True;MultipleActiveResultSets=true";
-            using (var con = new SqlConnection(conStr))
+            
+            using (var con = new SqlConnection(ConstantCpanel.connectionString))
             {
                 var where = @"where UserName like N'%'+@search+'%' or Firstname like  N'%'+@search+'%' 
                                              or Lastname like  N'%'+@search+'%' or Email like  N'%'+@search+'%' 
@@ -56,5 +57,22 @@ namespace Application.Repositories.cpanel
 
             }
         }
+
+        public async Task<bool> UpdateAsync(UserVM userVM)
+        {
+            
+            var query = $@"update aspnetusers 
+                                        set firstname='{userVM.Firstname}', lastname='{userVM.Lastname}',
+                                        email='{userVM.Email}', phonenumber='{userVM.PhoneNumber}'
+                                        where id='{userVM.UserId}' ";
+            var res = 0;
+            using (var con = new SqlConnection(ConstantCpanel.connectionString))
+            {
+              res=  await con.ExecuteAsync(query);
+            }
+            return res==0?false:true;
+
+        }
+
     }
 }

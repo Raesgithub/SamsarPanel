@@ -5,6 +5,7 @@ using SamsarPanel.Client.Pages;
 using SamsarPanel.Components;
 using SamsarPanel.Components.Account;
 using Domain.Data;
+using Domain.Resourses;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +26,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAu
 //    })
 //    .AddIdentityCookies();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+var connectionString = ConstantCpanel.connectionString;
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
