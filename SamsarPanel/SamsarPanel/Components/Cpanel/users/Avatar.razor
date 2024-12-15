@@ -1,14 +1,12 @@
 ﻿@page "/cpanel/users/avatar/{UserId}"
 @using Application.Repositories.cpanel
 @using Domain.ViewModels
-
 @layout Layout.Cpanel.MainLayoutCpanel
 @inject UserManager<ApplicationUser> userManager
 @inject NavigationManager nav
 <PageTitle>تغییر نمایه کاربری</PageTitle>
-
+@inject IJSRuntime js;
 @rendermode InteractiveServer 
-
 <div class="page-header">
     <div>
         <h3>کاربران</h3>
@@ -31,14 +29,11 @@
     </div>
 </div>
 <!-- end::page header -->
-
 <div class="">
     <label class="form-label">نام</label>
     <InputFile  class="form-control" onchange="HandleInputFile"/>
-    <button class="btn btn-success" @onclick="UploadFile">بارگزاری تصویر</button>
+    <button class="btn btn-success @(file==null? "disabled":"")" @onclick="UploadFile">بارگزاری تصویر</button>
 </div>
-
-
 @code {
     [Parameter] public string UserId { get; set; } = "";
     IBrowserFile file;
@@ -59,13 +54,40 @@
 
         }
     }
-
-
     private async Task UploadFile(MouseEventArgs e)
     {
-        var path = @"C:\Users\Raes\source\repos\SamsarPanel\SamsarPanel\SamsarPanel\wwwroot\Cpanel\assets\images\users\"+file.Name;
-        using (var stream = new FileStream(path,FileMode.Create)){
+        if (file==null || file.Size ==0)
+        {
+            await js.InvokeVoidAsync("toastError", "فایلی انتخاب نمایید");
+            return;
+        }
+        //check type   ali.Jpg-->.Jpg-->.jpg
+        var ext= Path.GetExtension(file.Name).ToLower();
+        List<string> validType = new List<string> { ".jpg", ".jpeg", ".png", ".gif" };
+        if( validType.Where(a=>a==ext).Any()==false){
+            await js.InvokeVoidAsync("toastError","نوع فایل انتخابی صحیح نمی باشد");
+            return;
+        }
+        //check size
+        if(file.Size/1024>2000){
+            await js.InvokeVoidAsync("toastError", "اندازه فایل بزرگ است");
+            return;
+        }
+        //new uniqe name 897520241015121824152
+        var filename= Path.GetTempFileName() + $"{new Random().Next(1000)}{ext}";
+        //get path
+        var path= Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Cpanel", "assets", "images", "users");
+       
+        //check path
+        if (Directory.Exists(path) == false)
+        {
+            Directory.CreateDirectory(path);
+        }
+        //save
+       // var path = @"C:\Users\Raes\source\repos\SamsarPanel\SamsarPanel\SamsarPanel\wwwroot\Cpanel\assets\images\users\"+file.Name;
+        using (var stream = new FileStream(Path.Combine(path,filename),FileMode.Create)){
             await  file.OpenReadStream(maxAllowedSize: 10_000_000).CopyToAsync(stream);
         }
+        await js.InvokeVoidAsync("toast", "تصویر آپلود شد");
     }
 }

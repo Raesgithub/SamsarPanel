@@ -12,4 +12,17 @@ function toast(text, color ="linear-gradient(to right, #00b09b, #96c93d)") {
             background: `'${color}'`,
         }
     }).showToast();
+    function toastError(text, color = "linear-gradient(110deg, rgba(231,85,85,1) 0%, rgba(193,104,104,1) 52%, rgba(145,9,9,1) 100%)") {
+        Toastify({
+            text: text,
+            duration: 3000,
+
+            close: true,
+            gravity: "bottom", // `top` or `bottom`
+            position: "center", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+            style: {
+                background: `'${color}'`,
+            }
+        }).showToast();
 }
