@@ -24,10 +24,14 @@
 
   <ItemGroup>
     <Folder Include="Components\Cpanel\posts\" />
+    <Folder Include="wwwroot\Cpanel\assets\images\users\" />
     <Folder Include="wwwroot\Cpanel\assets\media\image\users\" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Components\Cpanel\users\Avatar.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
     <Content Update="Components\Cpanel\users\_Imports.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>

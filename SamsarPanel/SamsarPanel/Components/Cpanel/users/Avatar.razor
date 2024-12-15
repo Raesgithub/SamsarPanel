@@ -1,0 +1,71 @@
+﻿@page "/cpanel/users/avatar/{UserId}"
+@using Application.Repositories.cpanel
+@using Domain.ViewModels
+
+@layout Layout.Cpanel.MainLayoutCpanel
+@inject UserManager<ApplicationUser> userManager
+@inject NavigationManager nav
+<PageTitle>تغییر نمایه کاربری</PageTitle>
+
+@rendermode InteractiveServer 
+
+<div class="page-header">
+    <div>
+        <h3>کاربران</h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">کنترل پنل</a></li>
+                <li class="breadcrumb-item"><a href="#">صفحات</a></li>
+                <li class="breadcrumb-item active" aria-current="page">کاربران</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="btn-group" role="group">
+        <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            اقدامات
+        </button>
+        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item" href="/cpanel/users">بازگشت به کاربران</a>
+            <a class="dropdown-item" href="/cpanel">کنترل پنل</a>
+        </div>
+    </div>
+</div>
+<!-- end::page header -->
+
+<div class="">
+    <label class="form-label">نام</label>
+    <InputFile  class="form-control" onchange="HandleInputFile"/>
+    <button class="btn btn-success" @onclick="UploadFile">بارگزاری تصویر</button>
+</div>
+
+
+@code {
+    [Parameter] public string UserId { get; set; } = "";
+    IBrowserFile file;
+    void HandleInputFile(InputFileChangeEventArgs e ){
+        var selectFile= e.GetMultipleFiles(1).FirstOrDefault();
+        if (selectFile != null)
+        {
+            file = selectFile;
+        }
+    }
+    // [SupplyParameterFromForm]
+    protected override async Task OnInitializedAsync()
+    {
+        if (UserId != "")
+        {
+            var User = await userManager.FindByIdAsync(UserId);
+            //map User--->uservm
+
+        }
+    }
+
+
+    private async Task UploadFile(MouseEventArgs e)
+    {
+        var path = @"C:\Users\Raes\source\repos\SamsarPanel\SamsarPanel\SamsarPanel\wwwroot\Cpanel\assets\images\users\"+file.Name;
+        using (var stream = new FileStream(path,FileMode.Create)){
+            await  file.OpenReadStream(maxAllowedSize: 10_000_000).CopyToAsync(stream);
+        }
+    }
+}
