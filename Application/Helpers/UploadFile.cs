@@ -10,27 +10,27 @@ namespace Application.Helpers
 {
     public class UploadFile
     {
-        public async Task<ResultDto> Upload(IBrowserFile file)
+        public async Task<ResultUploadDto> Upload(IBrowserFile file,string path, List<string> validTypes,int size=3000)
         {
             if (file == null || file.Size == 0)
             {
-                               return new ResultDto { IsSuccess=false,Message= "فایلی انتخاب نمایید" };
+                               return new ResultUploadDto { IsSuccess=false,Message= "فایلی انتخاب نمایید" };
             }
             var ext = Path.GetExtension(file.Name).ToLower();
-            List<string> validType = new List<string> { ".jpg", ".jpeg", ".png", ".gif" };
-            if (validType.Where(a => a == ext).Any() == false)
+            
+            if (validTypes.Where(a => a == ext).Any() == false)
             {
                 
-                return new ResultDto { IsSuccess = false, Message = "نوع فایل انتخابی صحیح نمی باشد" };
+                return new ResultUploadDto { IsSuccess = false, Message = "نوع فایل انتخابی صحیح نمی باشد" };
             }
-            if (file.Size / 1024 > 2000)
+            if (file.Size / 1024 > size)
             {
                 
-                return new ResultDto { IsSuccess = false, Message = "اندازه فایل بزرگ است" };
+                return new ResultUploadDto { IsSuccess = false, Message = "اندازه فایل بزرگ است" };
 
             }
             var filename = Path.GetTempFileName() + $"{new Random().Next(1000)}{ext}";
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Cpanel", "assets", "images", "users");
+            //var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Cpanel", "assets", "images", "users");
 
             if (Directory.Exists(path) == false)
             {
@@ -40,7 +40,7 @@ namespace Application.Helpers
             {
                 await file.OpenReadStream(maxAllowedSize: 10_000_000).CopyToAsync(stream);
             }
-            return new ResultDto { IsSuccess = true, Message = filename};
+            return new ResultUploadDto { IsSuccess = true, Filename = filename};
 
         }
     }

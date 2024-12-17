@@ -134,11 +134,12 @@
         }
 
         var userRep = new UserRepository();
-         if(await userRep.UpdateAsync(uservm)){
+        var res = await userRep.UpdateAsync(uservm);
+        if(res.IsSuccess){
             mes = "تغییرات اعمال گردید";
             alertColor = "success";
          }else{
-            mes = "خطایی اتفاق افتاده";
+            mes = res.Message;
             alertColor = "danger";
          }
 

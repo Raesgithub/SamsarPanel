@@ -1,5 +1,7 @@
 ﻿@page "/cpanel/users/avatar/{UserId}"
+@using Application.Helpers
 @using Application.Repositories.cpanel
+@using Domain.Resourses
 @using Domain.ViewModels
 @layout Layout.Cpanel.MainLayoutCpanel
 @inject UserManager<ApplicationUser> userManager
@@ -37,6 +39,7 @@
 @code {
     [Parameter] public string UserId { get; set; } = "";
     IBrowserFile file;
+
     void HandleInputFile(InputFileChangeEventArgs e ){
         var selectFile= e.GetMultipleFiles(1).FirstOrDefault();
         if (selectFile != null)
@@ -56,38 +59,25 @@
     }
     private async Task UploadFile(MouseEventArgs e)
     {
-        if (file==null || file.Size ==0)
+        var upload = new UploadFile();
+        var res = await upload.Upload(file, ConstantCpanel.pysicaly_image_user_path, ConstantCpanel.image_Valid_Types);
+
+        if (res.IsSuccess)
         {
-            await js.InvokeVoidAsync("toastError", "فایلی انتخاب نمایید");
-            return;
+            var service = new UserRepository();
+            var result= await service.UpdateAvatarAsync(res.Filename, UserId);
+            if (result.IsSuccess)
+            {
+                await js.InvokeVoidAsync("toast", "تصویر آپلود شد");
+            }
+            else{
+                await js.InvokeVoidAsync("toast", result.Message);
+            }
+            
         }
-        //check type   ali.Jpg-->.Jpg-->.jpg
-        var ext= Path.GetExtension(file.Name).ToLower();
-        List<string> validType = new List<string> { ".jpg", ".jpeg", ".png", ".gif" };
-        if( validType.Where(a=>a==ext).Any()==false){
-            await js.InvokeVoidAsync("toastError","نوع فایل انتخابی صحیح نمی باشد");
-            return;
+        else{
+            await js.InvokeVoidAsync("toastError", res.Message);
         }
-        //check size
-        if(file.Size/1024>2000){
-            await js.InvokeVoidAsync("toastError", "اندازه فایل بزرگ است");
-            return;
-        }
-        //new uniqe name 897520241015121824152
-        var filename= Path.GetTempFileName() + $"{new Random().Next(1000)}{ext}";
-        //get path
-        var path= Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Cpanel", "assets", "images", "users");
-       
-        //check path
-        if (Directory.Exists(path) == false)
-        {
-            Directory.CreateDirectory(path);
-        }
-        //save
-       // var path = @"C:\Users\Raes\source\repos\SamsarPanel\SamsarPanel\SamsarPanel\wwwroot\Cpanel\assets\images\users\"+file.Name;
-        using (var stream = new FileStream(Path.Combine(path,filename),FileMode.Create)){
-            await  file.OpenReadStream(maxAllowedSize: 10_000_000).CopyToAsync(stream);
-        }
-        await js.InvokeVoidAsync("toast", "تصویر آپلود شد");
+        
     }
 }

@@ -11,4 +11,9 @@ namespace Application.Dtos.cpanel
         public bool IsSuccess { get; set; }
         public string Message { get; set; }
     }
+    public class ResultUploadDto:ResultDto
+    {
+
+        public string? Filename { get; set; } = null;
+    }
 }

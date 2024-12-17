@@ -58,19 +58,64 @@ namespace Application.Repositories.cpanel
             }
         }
 
-        public async Task<bool> UpdateAsync(UserVM userVM)
+        public async Task<ResultDto> UpdateAsync(UserVM userVM)
         {
-            
-            var query = $@"update aspnetusers 
+            try
+            {
+                var query = $@"update aspnetusers 
                                         set firstname='{userVM.Firstname}', lastname='{userVM.Lastname}',
                                         email='{userVM.Email}', phonenumber='{userVM.PhoneNumber}'
                                         where id='{userVM.UserId}' ";
-            var res = 0;
-            using (var con = new SqlConnection(ConstantCpanel.connectionString))
-            {
-              res=  await con.ExecuteAsync(query);
+                var res = 0;
+                using (var con = new SqlConnection(ConstantCpanel.connectionString))
+                {
+                    res = await con.ExecuteAsync(query);
+                }
+                if (res == 0)
+                {
+                    return new ResultDto { IsSuccess = false, Message = "قادر به ثبت اطلاعات نشدیم . اطلاعات ورودی معتبر نمی باشد" };
+                }
+                else
+                {
+                    return new ResultDto { IsSuccess = true };
+                }
             }
-            return res==0?false:true;
+            catch (Exception ex)
+            {
+
+                return new ResultDto { IsSuccess = false, Message = ex.InnerException != null ? ex.InnerException.Message : ex.Message };
+
+            }
+
+
+        }
+        public async Task<ResultDto> UpdateAvatarAsync(string filename,string userId)
+        {
+            //
+            try
+            {
+                var query = $@"update aspnetusers  set Avater='{filename}   where id='{userId}' ";
+                var res = 0;
+                using (var con = new SqlConnection(ConstantCpanel.connectionString))
+                {
+                    res = await con.ExecuteAsync(query);
+                }
+                if (res == 0)
+                {
+                    return new ResultDto { IsSuccess = false, Message = "قادر به ثبت اطلاعات نشدیم . اطلاعات ورودی معتبر نمی باشد" };
+                }
+                else
+                {
+                    return new ResultDto { IsSuccess = true };
+                }
+            
+            }
+            catch (Exception ex)
+            {
+
+                return new ResultDto { IsSuccess = false, Message = ex.InnerException!=null? ex.InnerException.Message:ex.Message };
+
+            }
 
         }
 
