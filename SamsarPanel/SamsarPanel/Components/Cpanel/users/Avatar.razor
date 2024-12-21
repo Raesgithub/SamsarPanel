@@ -151,7 +151,7 @@
             var result= await service.UpdateAvatarAsync(res.Filename, UserId);
             if (result.IsSuccess)
             {
-                userVM.avatar = res.Filename;
+                userVM.avater = res.Filename;
                 await js.InvokeVoidAsync("toast", "تصویر آپلود شد");
                 
             }

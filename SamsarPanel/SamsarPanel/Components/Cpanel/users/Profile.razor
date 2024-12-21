@@ -1,10 +1,13 @@
 ﻿@page "/cpanel/users/profile/{UserId}"
+@page "/cpanel/users/profile/add"
 @using Application.Repositories.cpanel
 @using Domain.ViewModels
-
+@inject IJSRuntime js
 @layout Layout.Cpanel.MainLayoutCpanel
 @inject UserManager<ApplicationUser> userManager
 @inject NavigationManager nav
+
+@inject IUserStore<ApplicationUser> UserStore
 <PageTitle>Home</PageTitle>
 
 @rendermode InteractiveServer 
@@ -30,16 +33,10 @@
         </div>
     </div>
 </div>
-<!-- end::page header -->
-@if (mes!="")
-{
-    <div class="alert alert-@alertColor  " role="alert" >
-        <strong>@mes</strong>
-    </div>
-}
 
 
-<EditForm Model="uservm" OnValidSubmit="ValidSubmit" OnInvalidSubmit="InValidSubmit">
+
+<EditForm Model="@uservm" OnValidSubmit="ValidSubmit" OnInvalidSubmit="InValidSubmit" Enhance FormName="form1">
 
     <div class="row">
         <div class="col-md-8 col-xl-9">
@@ -91,7 +88,7 @@
                 <div class="card-body">
                     <h5 class="text-info">بارگزاری تصویر</h5>
                     <img src="@uservm.GetAvatar()" class="img-fluid m-auto d-block img-thumbnail" />
-                    <button class="btn btn-warning m-3 float-right" @onclick='()=> nav.NavigateTo($"/cpanel/users/avatar/{uservm.Id}" , true)'>تغییر نمایه</button>
+                    <button class="btn btn-warning m-3 float-right"             @onclick='()=> nav.NavigateTo($"/cpanel/users/avatar/{uservm.Id}" , true)'>تغییر نمایه</button>
                 </div>
             </div>
             <div class=" card rounded">
@@ -115,54 +112,62 @@
 </EditForm>
 @code {
     [Parameter] public string UserId { get; set; } = "";
-    // [SupplyParameterFromForm]
+    [SupplyParameterFromForm]
     UserVM uservm { get; set; } = new UserVM();
-    string mes = "";
-    string alertColor="info";
-    //[SupplyParameterFromForm]
-    //public ApplicationUser? User { get; set; } = new ApplicationUser();  
-
-
-
 
 
     async Task ValidSubmit(){
+
         if (string.IsNullOrEmpty(uservm.Firstname) || string.IsNullOrEmpty(uservm.Lastname) || string.IsNullOrEmpty(uservm.Email))
         {
-            mes = "اطلاعات درخواستی را کامل وارد نمایید";
-            alertColor = "danger";
+            await js.InvokeVoidAsync("toastError", "اطلاعات درخواستی را کامل وارد نمایید");
+
             return;
         }
 
         var userRep = new UserRepository();
-        var res = await userRep.UpdateAsync(uservm);
-        if(res.IsSuccess){
-            mes = "تغییرات اعمال گردید";
-            alertColor = "success";
-         }else{
-            mes = res.Message;
-            alertColor = "danger";
-         }
 
+
+        if (!string.IsNullOrEmpty(UserId)){ // update user
+            var res = await userRep.UpdateAsync(uservm);
+            if (res.IsSuccess)
+            {
+                await js.InvokeVoidAsync("toast", "تغییرات اعمال گردید");
+
+            }
+            else
+            {
+                await js.InvokeVoidAsync("toastError", res.Message);
+
+            }
+            return;
+        }
+        //// add user
+        // ApplicationUser user = new ApplicationUser();
+        // user.Firstname = uservm.Firstname;
+        // user.Lastname = uservm.Lastname;
+        // user.Email = uservm.Email;
+        // user.PhoneNumber = uservm.PhoneNumber;
+        // user.UserName = "gggggg";
+
+        
+        
+        
+        // var result = await userManager.CreateAsync(user, Input.Password);
       
         
         // await js.InvokeVoidAsync("toast", "valid");
     }
-    void InValidSubmit()
-    {
-        mes = "خطایی اتفاق افتاده";
-        alertColor = "danger";
-
-        //await js.InvokeVoidAsync("toast", "invalid");
-    }
-    protected override async Task OnParametersSetAsync()
+    async Task InValidSubmit()
     {
 
 
+        await js.InvokeVoidAsync("toast", "اطلاعات درخواستی را کامل وارد نمایید");
     }
+  
     protected override async Task OnInitializedAsync()
     {
-        if (UserId != "")
+        if (!string.IsNullOrEmpty(UserId))
         {
             var service = new UserRepository();
             var res = await service.GetById(UserId);
@@ -175,5 +180,6 @@
             //map User--->uservm
 
         }
+        
     }
 }

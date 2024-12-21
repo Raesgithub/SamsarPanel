@@ -75,7 +75,37 @@ namespace Application.Repositories.cpanel
                 var query = $@"update aspnetusers 
                                         set firstname='{userVM.Firstname}', lastname='{userVM.Lastname}',
                                         email='{userVM.Email}', phonenumber='{userVM.PhoneNumber}'
-                                        where id='{userVM.UserId}' ";
+                                        where id='{userVM.Id}' ";
+                var res = 0;
+                using (var con = new SqlConnection(ConstantCpanel.connectionString))
+                {
+                    res = await con.ExecuteAsync(query);
+                }
+                if (res == 0)
+                {
+                    return new ResultDto { IsSuccess = false, Message = "قادر به ثبت اطلاعات نشدیم . اطلاعات ورودی معتبر نمی باشد" };
+                }
+                else
+                {
+                    return new ResultDto { IsSuccess = true };
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new ResultDto { IsSuccess = false, Message = ex.InnerException != null ? ex.InnerException.Message : ex.Message };
+
+            }
+
+
+        }
+        public async Task<ResultDto> InsertAsync(UserVM userVM)
+        {
+            try
+            {
+                var query = $@"INSERT INTO aspnetusers (username, email, Firstname,Lastname,PhoneNumber) VALUES ()";
+ 
+                                        
                 var res = 0;
                 using (var con = new SqlConnection(ConstantCpanel.connectionString))
                 {
