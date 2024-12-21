@@ -91,6 +91,7 @@
                 <div class="card-body">
                     <h5 class="text-info">بارگزاری تصویر</h5>
                     <img src="@uservm.GetAvatar()" class="img-fluid m-auto d-block img-thumbnail" />
+                    <button class="btn btn-warning m-3 float-right" @onclick='()=> nav.NavigateTo($"/cpanel/users/avatar/{uservm.Id}" , true)'>تغییر نمایه</button>
                 </div>
             </div>
             <div class=" card rounded">
@@ -163,20 +164,16 @@
     {
         if (UserId != "")
         {
-            var User = await userManager.FindByIdAsync(UserId);
+            var service = new UserRepository();
+            var res = await service.GetById(UserId);
+            if (res == null)
+            {
+                nav.NavigateTo("/cpanel/users/", true);
+                return;
+            }
+            uservm = res;
             //map User--->uservm
-            uservm.UserId = User.Id;
-            uservm.Id = User.Id;
-            uservm.UserName = User.UserName;
-            uservm.PhoneNumber = User.PhoneNumber;
-            uservm.Lastname = User.Lastname;
-            uservm.Email = User.Email;
-            uservm.Firstname = User.Firstname;
-            uservm.UserId = User.Id;
-            uservm.LoginCount = User.LoginCount;
-            uservm.IsSuspend = User.IsSuspend;
-            uservm.LastDateLogin = User.LastDateLogin;
-            uservm.LoginCount = User.LoginCount;
+
         }
     }
 }

@@ -7,7 +7,7 @@
 @inject UserManager<ApplicationUser> userManager
 @inject NavigationManager nav
 <PageTitle>تغییر نمایه کاربری</PageTitle>
-@inject IJSRuntime js;
+@inject IJSRuntime js
 @rendermode InteractiveServer 
 <div class="page-header">
     <div>
@@ -31,15 +31,89 @@
     </div>
 </div>
 <!-- end::page header -->
-<div class="">
-    <label class="form-label">نام</label>
-    <InputFile  class="form-control" onchange="HandleInputFile"/>
-    <button class="btn btn-success @(file==null? "disabled":"")" @onclick="UploadFile">بارگزاری تصویر</button>
+
+
+<div class="row">
+    <div class="col-md-5 col-xl-4">
+        <div class="card rounded">
+            <div class="card-body">
+                <h5 class="text-info">بارگزاری تصویر</h5>
+                <img src="@userVM.GetAvatar()" class="img-fluid m-auto d-block img-thumbnail" />
+                <div class="mt-3">
+                    <InputFile class="form-control" onchange="HandleInputFile" />
+                    <button class="btn btn-success mt-3 float-right @(file==null? "disabled":"")" @onclick="UploadFile">بارگزاری تصویر</button>
+                </div>
+
+            </div>
+        </div>
+        <div class="card rounded">
+            <div class="card-body">
+                <h5 class="text-info">
+                    وضعیت
+                    @if (@userVM.IsSuspend)
+                    {
+                        <span class="px-3 text-warning">مسدود</span>
+                    }
+                    else
+                    {
+                        <span class="px-3 text-success">فعال</span>
+                    }
+                </h5>
+            </div>
+        </div>
+
+        <div class=" card rounded">
+            <div class="card-body">
+                <h5 class="text-info">بازدید</h5>
+                <div class="form-group">
+                    <label class="form-label mb-0">آخرین بازدید</label>
+                    <input type="text" readonly="" class="form-control-plaintext text-left border pl-2" value="@userVM.LastDateLogin">
+
+                </div>
+
+                <div class="form-group ">
+                    <label class="form-label  mb-0">تعداد بازدید : <strong>@userVM.LoginCount</strong></label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-7 col-xl-8">
+        <div class="card rounded">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+
+                        <label>نام</label>
+                        <input value="@userVM!.Firstname" class="form-control" readonly />
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label> نام خانوادگی</label>
+                        <input value="@userVM!.Lastname" class="form-control" readonly />
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label> ایمیل</label>
+                        <input value="@userVM!.Email" class="form-control" readonly />
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>شماره تماس</label>
+                        <input value="@userVM!.PhoneNumber" class="form-control" readonly />
+                    </div>
+                    <div class="w-100">
+                        <button class="btn btn-warning m-3 float-right" @onclick='()=> nav.NavigateTo($"/cpanel/users/profile/{userVM.Id}" , true)'>ویرایش</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </div>
+
 @code {
     [Parameter] public string UserId { get; set; } = "";
     IBrowserFile file;
-
+    public UserVM userVM { get; set; } = new UserVM();
     void HandleInputFile(InputFileChangeEventArgs e ){
         var selectFile= e.GetMultipleFiles(1).FirstOrDefault();
         if (selectFile != null)
@@ -50,15 +124,24 @@
     // [SupplyParameterFromForm]
     protected override async Task OnInitializedAsync()
     {
+
         if (UserId != "")
         {
-            var User = await userManager.FindByIdAsync(UserId);
+            var service = new UserRepository();
+            var res= await  service.GetById(UserId);
+            if (res==null)
+            {
+                nav.NavigateTo("/cpanel/users/", true);
+                return;
+            }
+            userVM = res;
             //map User--->uservm
 
         }
     }
     private async Task UploadFile(MouseEventArgs e)
     {
+
         var upload = new UploadFile();
         var res = await upload.Upload(file, ConstantCpanel.pysicaly_image_user_path, ConstantCpanel.image_Valid_Types);
 
@@ -68,7 +151,9 @@
             var result= await service.UpdateAvatarAsync(res.Filename, UserId);
             if (result.IsSuccess)
             {
+                userVM.avatar = res.Filename;
                 await js.InvokeVoidAsync("toast", "تصویر آپلود شد");
+                
             }
             else{
                 await js.InvokeVoidAsync("toast", result.Message);

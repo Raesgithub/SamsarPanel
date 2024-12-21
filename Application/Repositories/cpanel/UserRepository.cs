@@ -57,6 +57,16 @@ namespace Application.Repositories.cpanel
 
             }
         }
+        public async Task<UserVM?> GetById(string id)
+        {
+            using (var con = new SqlConnection(ConstantCpanel.connectionString))
+            {
+                var query = $@"select Email,Firstname,Lastname,PhoneNumber,Id,UserName,Avater,LastDateLogin,LoginCount
+                                             from AspNetUsers where id='{id}'";
+                return await con.QuerySingleOrDefaultAsync<UserVM>(query);
+
+            }
+        }
 
         public async Task<ResultDto> UpdateAsync(UserVM userVM)
         {
@@ -94,7 +104,7 @@ namespace Application.Repositories.cpanel
             //
             try
             {
-                var query = $@"update aspnetusers  set Avater='{filename}   where id='{userId}' ";
+                var query = $@"update aspnetusers  set Avater='{filename}'   where id='{userId}' ";
                 var res = 0;
                 using (var con = new SqlConnection(ConstantCpanel.connectionString))
                 {

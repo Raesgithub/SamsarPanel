@@ -29,7 +29,7 @@ namespace Application.Helpers
                 return new ResultUploadDto { IsSuccess = false, Message = "اندازه فایل بزرگ است" };
 
             }
-            var filename = Path.GetTempFileName() + $"{new Random().Next(1000)}{ext}";
+            var filename =Path.GetFileName( Path.GetTempFileName() + $"{new Random().Next(1000)}{ext}");
             //var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Cpanel", "assets", "images", "users");
 
             if (Directory.Exists(path) == false)
