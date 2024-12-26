@@ -104,7 +104,7 @@ namespace Application.Repositories.cpanel
             try
             {
                 var query = $@"update aspnetusers 
-                                        set IsSuspend={status}   where id='{id}' ";
+                                        set IsSuspend={(status==true?1:0)}   where id='{id}' ";
                 var res = 0;
                 using (var con = new SqlConnection(ConstantCpanel.connectionString))
                 {
