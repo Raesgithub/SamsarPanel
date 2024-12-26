@@ -43,6 +43,19 @@
             <div class="card rounded">
                 <div class="card-body">
                     <div class="row">
+                        @if (string.IsNullOrEmpty(UserId))
+                        {
+                            <div class="col-md-6 form-group">
+
+                                <label>نام کاربری</label>
+                                <InputText @bind-Value="uservm!.UserName" class="form-control" required />
+                            </div>
+                            <div class="col-md-6 form-group">
+
+                                <label>رمز عبور</label>
+                                <InputText @bind-Value="password" class="form-control" required />
+                            </div>
+                        }
                         <div class="col-md-6 form-group">
 
                             <label>نام</label>
@@ -88,7 +101,11 @@
                 <div class="card-body">
                     <h5 class="text-info">بارگزاری تصویر</h5>
                     <img src="@uservm.GetAvatar()" class="img-fluid m-auto d-block img-thumbnail" />
-                    <button class="btn btn-warning m-3 float-right"             @onclick='()=> nav.NavigateTo($"/cpanel/users/avatar/{uservm.Id}" , true)'>تغییر نمایه</button>
+                    @if (!string.IsNullOrEmpty(UserId))
+                    {
+                        <button class="btn btn-warning m-3 float-right" @onclick='()=> nav.NavigateTo($"/cpanel/users/avatar/{uservm.Id}" , true)'>تغییر نمایه</button>
+                    }
+                    
                 </div>
             </div>
             <div class=" card rounded">
@@ -112,6 +129,7 @@
 </EditForm>
 @code {
     [Parameter] public string UserId { get; set; } = "";
+    string password = "";
     [SupplyParameterFromForm]
     UserVM uservm { get; set; } = new UserVM();
 
@@ -124,6 +142,8 @@
 
             return;
         }
+
+
 
         var userRep = new UserRepository();
 
@@ -143,20 +163,29 @@
             return;
         }
         //// add user
-        // ApplicationUser user = new ApplicationUser();
-        // user.Firstname = uservm.Firstname;
-        // user.Lastname = uservm.Lastname;
-        // user.Email = uservm.Email;
-        // user.PhoneNumber = uservm.PhoneNumber;
-        // user.UserName = "gggggg";
-
+        if (string.IsNullOrEmpty(uservm.UserName) || string.IsNullOrEmpty(password))
+        {
+            await js.InvokeVoidAsync("toastError", "اطلاعات درخواستی را کامل وارد نمایید");
+            return;
+        }
+        ApplicationUser user = new ApplicationUser();
+        user.Firstname = uservm.Firstname;
+        user.Lastname = uservm.Lastname;
+        user.Email = uservm.Email;
+        user.PhoneNumber = uservm.PhoneNumber;
+        user.UserName = uservm.UserName;
+        var result = await userManager.CreateAsync(user, password);
+        if (result.Succeeded)
+        {
+            await js.InvokeVoidAsync("toast", "کاربر جدید ایجاد شد");
+            uservm = new UserVM();
+            password = "";
+        }
+        else{
+            await js.InvokeVoidAsync("toastError",result.Errors.Select(s=>s.Description).FirstOrDefault());
+        }
         
-        
-        
-        // var result = await userManager.CreateAsync(user, Input.Password);
-      
-        
-        // await js.InvokeVoidAsync("toast", "valid");
+       
     }
     async Task InValidSubmit()
     {
@@ -167,7 +196,7 @@
   
     protected override async Task OnInitializedAsync()
     {
-        if (!string.IsNullOrEmpty(UserId))
+        if (!string.IsNullOrEmpty(UserId)) // edit
         {
             var service = new UserRepository();
             var res = await service.GetById(UserId);

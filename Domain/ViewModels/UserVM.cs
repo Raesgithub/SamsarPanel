@@ -22,6 +22,7 @@ namespace Domain.ViewModels
         public string? avater { get; set; } = null;
         public int LoginCount { get; set; } = 0;
 
+       
         public string GetAvatar()
         {
             if (string.IsNullOrEmpty(avater)) 

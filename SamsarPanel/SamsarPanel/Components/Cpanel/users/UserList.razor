@@ -14,6 +14,7 @@
 @inject UserManager<ApplicationUser> userManager
 @inject NavigationManager nav
 @inject IMemoryCache cache
+@inject IJSRuntime js
 @rendermode InteractiveServer
 <PageTitle>Home</PageTitle>
 
@@ -78,7 +79,15 @@
                                     </a>
                                     <div class="dropdown-menu">
                                         <button class="dropdown-item" type="button" @onclick='()=> nav.NavigateTo($"/cpanel/users/profile/{item.Id}" , true)'>پروفایل</button>
-                                        <button class="dropdown-item" type="button">عمل دیگر</button>
+                                        @if (item.IsSuspend)
+                                        {
+                                            <button class="dropdown-item" type="button" @onclick="()=>changeStatus(item.Id,item.IsSuspend)">فعال شود</button>
+                                        }
+                                        else
+                                        {
+                                            <button class="dropdown-item" type="button" @onclick="()=>changeStatus(item.Id,item.IsSuspend)">مسدود شود</button>
+                                        }
+
                                         <button class="dropdown-item" type="button">یک عمل دیگر</button>
                                     </div>
                                 </div>
@@ -104,7 +113,17 @@
 </div>
 @code {
     public PaggingDto<UserVM> Pagging { get; set; } = new PaggingDto<UserVM>();
-
+    async Task changeStatus(string id,bool status){
+        UserRepository repository = new UserRepository();
+        var res=  await repository.UpdateStatusAsync(id, status);
+        if (res.IsSuccess)
+        {
+            await js.InvokeVoidAsync("toast", "وضعیت کاربر تغییر یافت");
+        }
+        else{
+            await js.InvokeVoidAsync("toastError", res.Message);
+        }
+    }
     protected override async Task OnInitializedAsync()
     {
         var paggingTemp = new PaggingDto<UserVM>();

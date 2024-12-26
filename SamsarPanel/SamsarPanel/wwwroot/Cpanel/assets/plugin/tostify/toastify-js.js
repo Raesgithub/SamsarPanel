@@ -5,11 +5,11 @@ function toast(text, color = "linear-gradient(to right, #00b09b, #96c93d)") {
         duration: 3000,
 
         close: true,
-        gravity: "top", // `top` or `bottom`
-        position: "right", // `left`, `center` or `right`
+        gravity: "bottom", // `top` or `bottom`
+        position: "center", // `left`, `center` or `right`
         stopOnFocus: true, // Prevents dismissing of toast on hover
         style: {
-            background: `'${color}'`,
+            background: `${color}`,
         }
     }).showToast();
 }
@@ -23,7 +23,7 @@ function toast(text, color = "linear-gradient(to right, #00b09b, #96c93d)") {
             position: "center", // `left`, `center` or `right`
             stopOnFocus: true, // Prevents dismissing of toast on hover
             style: {
-                background: `'${color}'`,
+                background: `${color}`,
             }
         }).showToast();
 }

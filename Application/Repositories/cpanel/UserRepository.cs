@@ -39,7 +39,7 @@ namespace Application.Repositories.cpanel
                                              --تعداد کل رکوردها
                                             select count(*)  from AspNetUsers {where}
                                              --دریافت داده
-                                             select Email,Firstname,Lastname,PhoneNumber,Id,UserName,Avater,LastDateLogin,LoginCount
+                                             select Email,Firstname,Lastname,PhoneNumber,Id,UserName,Avater,LastDateLogin,LoginCount, Firstname+' ' +Lastname as  FullName
                                              from AspNetUsers {where}
                                              order by Email
                                              offset @skip rows fetch next @take rows only ";
@@ -84,6 +84,36 @@ namespace Application.Repositories.cpanel
                 if (res == 0)
                 {
                     return new ResultDto { IsSuccess = false, Message = "قادر به ثبت اطلاعات نشدیم . اطلاعات ورودی معتبر نمی باشد" };
+                }
+                else
+                {
+                    return new ResultDto { IsSuccess = true };
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new ResultDto { IsSuccess = false, Message = ex.InnerException != null ? ex.InnerException.Message : ex.Message };
+
+            }
+
+
+        }
+        public async Task<ResultDto> UpdateStatusAsync(string id,bool status)
+        {
+            try
+            {
+                var query = $@"update aspnetusers 
+                                        set IsSuspend={status}   where id='{id}' ";
+                var res = 0;
+                using (var con = new SqlConnection(ConstantCpanel.connectionString))
+                {
+                    //isert update delete
+                    res = await con.ExecuteAsync(query);
+                }
+                if (res == 0)
+                {
+                    return new ResultDto { IsSuccess = false, Message = "قادر به تغییر وضعیت نشدیم" };
                 }
                 else
                 {
