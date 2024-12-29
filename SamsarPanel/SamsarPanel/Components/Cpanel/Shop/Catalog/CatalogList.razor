@@ -1,0 +1,141 @@
+﻿@page "/cpanel/shop/catalog"
+@using Application.Dtos.cpanel
+@using Application.Repositories.Shop
+@using Application.Repositories.cpanel
+@using Domain.ViewModels
+@using Microsoft.Extensions.Caching.Memory
+@using Application.Repositories
+@using Dapper
+@using Domain.Resourses
+
+@using Microsoft.Data.SqlClient
+
+@using System.Diagnostics
+@layout Layout.Cpanel.MainLayoutCpanel
+
+@inject NavigationManager nav
+@inject IMemoryCache cache
+@inject IJSRuntime js
+@rendermode InteractiveServer
+<PageTitle>Home</PageTitle>
+
+<div class="page-header">
+    <div>
+        <h3>کاربران</h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">کنترل پنل</a></li>
+                <li class="breadcrumb-item active"><a href="#">کاربران</a></li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- end::page header -->
+
+<div class="card">
+    <div class="card-body">
+        <button @onclick="()=>{isAdd=true;}" class="btn btn-success mb-3">افزودن دسته جدید</button>
+        @if (isAdd)
+        {
+            <div class="row">
+                <div class="col-md-8 col-xl-6 mx-auto p-3 border shadow">
+                    <EditForm Model="catalog" FormName="c1" Enhance OnValidSubmit="ValidSubmit">
+                        <div class="mt-3">
+                            <label class="from-lable">نام دسته</label>
+                            <InputText @bind-Value="catalog.Name" class="form-control" />
+                        </div>
+                        <div class="mt-3">
+                            <label class="from-lable">لوگوی دسته</label>
+                            <InputText @bind-Value="catalog.Logo" class="form-control" />
+                        </div>
+                        <div class="mt-3 ">
+                            <button class="btn btn-sm btn-success" type="submit">ثیت دسته جدید</button>
+                            <button class="btn btn-sm btn-warning float-right" type="button" @onclick="()=>{isAdd=false;}">انصراف</button>
+                        </div>
+                    </EditForm>
+                </div>
+
+            </div>
+        }
+        else
+        {
+            <form class="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="جستجو ..." @bind-value="Pagging.Search">
+                    <div class="input-group-append">
+                        <button class="btn" type="button" @onclick="SearchBtn">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="table-responsive" tabindex="1" style="overflow: auto; outline: none;">
+                <table class="table">
+                </table>
+            </div>
+            @if (Pagging.Page + 1 != Pagging.TotalPages)
+            {
+                <div class="text-center">
+                    <button class="btn btn-warning" @onclick="GetMoreData">بیشتر</button>
+                </div>
+            }
+        }
+
+
+
+
+    </div>
+</div>
+@code {
+    public PaggingDto<UserVM> Pagging { get; set; } = new PaggingDto<UserVM>();
+    bool isAdd = false;
+    [SupplyParameterFromForm]
+    public Domain.Models.shop.Catalog catalog { get; set; } = new Domain.Models.shop.Catalog();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        // var paggingTemp = new PaggingDto<UserVM>();
+        // if (cache.TryGetValue("all-users", out paggingTemp))
+        // {
+        //     Pagging = paggingTemp;
+        //     cache.Remove("all-users");
+        //     return;
+        // }
+
+        // UserRepository repository = new UserRepository();
+        // Pagging= await  repository.GetAll(Pagging);
+
+        // cache.Set("all-users", Pagging);
+
+    }
+    private async Task SearchBtn(MouseEventArgs e)
+    {
+
+        UserRepository repository = new UserRepository();
+
+        Pagging.Page = 0;
+        Pagging.Values = new List<UserVM>();
+        Pagging = await repository.GetAll(Pagging);
+    }
+    private async Task GetMoreData(MouseEventArgs e)
+    {
+        UserRepository repository = new UserRepository();
+        Pagging.Page += 1;
+        Pagging = await repository.GetAll(Pagging);
+    }
+    async Task ValidSubmit()
+    {
+        var catRepository = new CatalogRepository();
+        var resultDto = await catRepository.AddAsync(catalog);
+        if (resultDto.IsSuccess)
+        {
+            await js.InvokeVoidAsync("toast", "دسته مورد نظر ایجاد شد");
+            catalog = new Domain.Models.shop.Catalog();
+        }
+        else{
+            await js.InvokeVoidAsync("toastError", resultDto.Message);
+        }
+    }
+
+}
