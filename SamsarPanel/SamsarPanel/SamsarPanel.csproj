@@ -27,6 +27,7 @@
     <Folder Include="Components\Cpanel\posts\" />
     <Folder Include="wwwroot\Cpanel\assets\images\users\" />
     <Folder Include="wwwroot\Cpanel\assets\media\image\users\" />
+    <Folder Include="wwwroot\Cpanel\assets\plugin\sweetalert\" />
   </ItemGroup>
 
   <ItemGroup>
