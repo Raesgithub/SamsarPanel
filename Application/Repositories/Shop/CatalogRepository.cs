@@ -49,6 +49,27 @@ namespace Application.Repositories.Shop
 
             }
         }
+        public async Task<ResultDto> UpdateAsync(Catalog cat)
+        {
+            try
+            {
+                var query = $@"update  Catalogs set  Name=N'{cat.Name}'  , Logo=N'{cat.Logo}' where id={cat.Id}";
+                var res = 0;
+                using (var con = new SqlConnection(ConstantCpanel.connectionString))
+                {
+                    res = await con.ExecuteAsync(query);
+                }
+                if (res == 0)  return new ResultDto { IsSuccess = false, Message = "قادر به ویرایش نشدیم" };
+                return new ResultDto { IsSuccess = true };
+                
+            }
+            catch (Exception ex)
+            {
+
+                return new ResultDto { IsSuccess = false, Message = ex.InnerException != null ? ex.InnerException.Message : ex.Message };
+
+            }
+        }
         public async Task<ResultDto> DeleteAsync(int id)
         {
             try

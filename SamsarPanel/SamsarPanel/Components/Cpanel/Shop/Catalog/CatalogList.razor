@@ -34,7 +34,7 @@
 
 <div class="card">
     <div class="card-body">
-        <button @onclick="()=>{isAdd=true;}" class="btn btn-success mb-3">افزودن دسته جدید</button>
+        <button @onclick="()=>{isAdd=true;catalog=new Domain.Models.shop.Catalog();}" class="btn btn-success mb-3">افزودن دسته جدید</button>
         @if (isAdd)
         {
             <div class="row">
@@ -80,7 +80,7 @@
                                 <td>@item.Name</td>
                                 <td>
                                     <button class="btn btn-danger btn-sm" @onclick="()=>Delete(item)">حذف</button>
-                                    <button class="btn btn-primary btn-sm">ویرایش</button>
+                                    <button class="btn btn-primary btn-sm" @onclick="()=>{isAdd=true;catalog=item;}">ویرایش</button>
                                 </td>
 
                             </tr>
@@ -101,16 +101,22 @@
 
     async Task Delete(Domain.Models.shop.Catalog cat)
     {
+
+        // bool result=  await js.InvokeAsync<bool>("saQuestion", "هشدار", "پس از حذف قادر به بازیابی نمی باشد");
+        if (await js.InvokeAsync<bool>("saQuestion", "هشدار", "پس از حذف قادر به بازیابی نمی باشد") == false) return;
+
         var catRepository = new CatalogRepository();
-        var res= await catRepository.DeleteAsync(cat.Id);
+        var res = await catRepository.DeleteAsync(cat.Id);
         if (res.IsSuccess)
         {
             await js.InvokeVoidAsync("toast", "حذف شد");
             catalogList.Remove(cat);
         }
-        else{
+        else
+        {
             await js.InvokeVoidAsync("toastError", res.Message);
         }
+
     }
     protected override async Task OnInitializedAsync()
     {
@@ -125,14 +131,31 @@
     async Task ValidSubmit()
     {
         var catRepository = new CatalogRepository();
-        var resultDto = await catRepository.AddAsync(catalog);
+        ResultDto resultDto;
+        bool isUpdate = false;
+        if (catalog.Id==0){
+            resultDto = await catRepository.AddAsync(catalog);
+            isUpdate = false;
+        }
+        else{
+            resultDto = await catRepository.UpdateAsync(catalog);
+            isUpdate = true;
+        }
+        
         if (resultDto.IsSuccess)
         {
-            await js.InvokeVoidAsync("toast", "دسته مورد نظر ایجاد شد");
+            await js.InvokeVoidAsync("toast", "انجام شد");
            
-            catalog.Id = Convert.ToInt32(resultDto.Message);
-            catalogList.Add(catalog);
-            catalog = new Domain.Models.shop.Catalog();
+            if (isUpdate==false) //add
+            {
+                catalog.Id = Convert.ToInt32(resultDto.Message);
+                catalogList.Add(catalog);
+                catalog = new Domain.Models.shop.Catalog();
+            }
+            else{
+             //   catalogList.
+            }
+            
         }
         else{
             await js.InvokeVoidAsync("toastError", resultDto.Message);
