@@ -59,71 +59,69 @@
         }
         else
         {
-            <form class="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="جستجو ..." @bind-value="Pagging.Search">
-                    <div class="input-group-append">
-                        <button class="btn" type="button" @onclick="SearchBtn">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </div>
-                </div>
-            </form>
+
             <div class="table-responsive" tabindex="1" style="overflow: auto; outline: none;">
                 <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>لوگو</th>
+                            <th>نام دسته</th>
+                            <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in catalogList)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@(new MarkupString(item.Logo))  </td>
+                                <td>@item.Name</td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm" @onclick="()=>Delete(item)">حذف</button>
+                                    <button class="btn btn-primary btn-sm">ویرایش</button>
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
                 </table>
             </div>
-            @if (Pagging.Page + 1 != Pagging.TotalPages)
-            {
-                <div class="text-center">
-                    <button class="btn btn-warning" @onclick="GetMoreData">بیشتر</button>
-                </div>
-            }
         }
-
-
-
 
     </div>
 </div>
 @code {
-    public PaggingDto<UserVM> Pagging { get; set; } = new PaggingDto<UserVM>();
     bool isAdd = false;
     [SupplyParameterFromForm]
     public Domain.Models.shop.Catalog catalog { get; set; } = new Domain.Models.shop.Catalog();
+    public List<Domain.Models.shop.Catalog> catalogList { get; set; } = new List<Domain.Models.shop.Catalog>();
 
-
+    async Task Delete(Domain.Models.shop.Catalog cat)
+    {
+        var catRepository = new CatalogRepository();
+        var res= await catRepository.DeleteAsync(cat.Id);
+        if (res.IsSuccess)
+        {
+            await js.InvokeVoidAsync("toast", "حذف شد");
+            catalogList.Remove(cat);
+        }
+        else{
+            await js.InvokeVoidAsync("toastError", res.Message);
+        }
+    }
     protected override async Task OnInitializedAsync()
     {
-        // var paggingTemp = new PaggingDto<UserVM>();
-        // if (cache.TryGetValue("all-users", out paggingTemp))
-        // {
-        //     Pagging = paggingTemp;
-        //     cache.Remove("all-users");
-        //     return;
-        // }
+        //delete * from catalogs where id=5
+        var catRepository = new CatalogRepository();
+        catalogList= await  catRepository.GetAllAsync();
 
-        // UserRepository repository = new UserRepository();
-        // Pagging= await  repository.GetAll(Pagging);
-
-        // cache.Set("all-users", Pagging);
 
     }
-    private async Task SearchBtn(MouseEventArgs e)
-    {
 
-        UserRepository repository = new UserRepository();
 
-        Pagging.Page = 0;
-        Pagging.Values = new List<UserVM>();
-        Pagging = await repository.GetAll(Pagging);
-    }
-    private async Task GetMoreData(MouseEventArgs e)
-    {
-        UserRepository repository = new UserRepository();
-        Pagging.Page += 1;
-        Pagging = await repository.GetAll(Pagging);
-    }
     async Task ValidSubmit()
     {
         var catRepository = new CatalogRepository();
@@ -131,6 +129,9 @@
         if (resultDto.IsSuccess)
         {
             await js.InvokeVoidAsync("toast", "دسته مورد نظر ایجاد شد");
+           
+            catalog.Id = Convert.ToInt32(resultDto.Message);
+            catalogList.Add(catalog);
             catalog = new Domain.Models.shop.Catalog();
         }
         else{
