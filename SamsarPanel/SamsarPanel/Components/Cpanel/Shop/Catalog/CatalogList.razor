@@ -141,11 +141,11 @@
             resultDto = await catRepository.UpdateAsync(catalog);
             isUpdate = true;
         }
-        
+
         if (resultDto.IsSuccess)
         {
             await js.InvokeVoidAsync("toast", "انجام شد");
-           
+
             if (isUpdate==false) //add
             {
                 catalog.Id = Convert.ToInt32(resultDto.Message);
@@ -153,7 +153,17 @@
                 catalog = new Domain.Models.shop.Catalog();
             }
             else{
-             //   catalogList.
+                foreach (var item in catalogList)
+                {
+                    if (item.Id==catalog.Id)
+                    {
+                        item.Name = catalog.Name;
+                        item.Logo = catalog.Logo;
+                        break;
+                    }
+                }
+                isAdd = false;
+
             }
             
         }
