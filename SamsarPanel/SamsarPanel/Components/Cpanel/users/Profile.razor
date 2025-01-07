@@ -145,7 +145,7 @@
 
 
 
-        var userRep = new UserRepository();
+        var userRep = new ProductRepository();
 
 
         if (!string.IsNullOrEmpty(UserId)){ // update user
@@ -198,7 +198,7 @@
     {
         if (!string.IsNullOrEmpty(UserId)) // edit
         {
-            var service = new UserRepository();
+            var service = new ProductRepository();
             var res = await service.GetById(UserId);
             if (res == null)
             {

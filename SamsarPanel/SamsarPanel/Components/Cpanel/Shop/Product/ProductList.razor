@@ -1,0 +1,64 @@
+﻿@page "/cpanel/shop/products"
+@using Application.Dtos.cpanel
+@using Application.Repositories.cpanel
+@using Domain.ViewModels
+<div class="page-header">
+    <div>
+        <h3>لیست محصولات</h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">داشبورد</a></li>
+
+                <li class="breadcrumb-item active" aria-current="page">لیست محصولات</li>
+            </ol>
+        </nav>
+    </div>
+
+</div>
+<!-- end::page header -->
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12 mb-3">
+                <form class="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="جستجو ...">
+                        <div class="input-group-append">
+                            <button class="btn" type="button">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            @foreach (var item in paging.Values!)
+            {
+                <div class="col-md-4 col-xl-3">
+                    <div class="card">
+                        <img src="/cpanel/assets/media/image/portfolio-four.jpg" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <p class="card-text">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها</p>
+                            <a href="#" class="btn btn-primary">بیشتر بخوانید</a>
+                        </div>
+                    </div>
+                </div>
+            }
+            
+
+
+        </div>
+    </div>
+</div>
+@code{
+    public PaggingDto<ProductVM> paging { get; set; } = new PaggingDto<ProductVM>();
+    protected override async Task OnInitializedAsync()
+    {
+        ProductRepository productRepository = new ProductRepository();
+        paging=await productRepository.GetAll(paging);
+        
+    }
+
+
+}

@@ -8,5 +8,6 @@ namespace Domain.Data
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser,IdentityRole,string>(options)
     {
         public DbSet<Catalog> Catalogs { get; set; }
+        public DbSet<Product> Products { get; set; }
     }
 }
