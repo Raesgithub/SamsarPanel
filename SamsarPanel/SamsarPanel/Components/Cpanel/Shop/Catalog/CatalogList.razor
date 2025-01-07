@@ -130,10 +130,16 @@
 
     async Task ValidSubmit()
     {
+        if (string.IsNullOrEmpty(catalog.Name))
+        {
+            await js.InvokeVoidAsync("toastError", "نام دسته محصول را وارد نمایید");
+            return;
+        }
         var catRepository = new CatalogRepository();
         ResultDto resultDto;
         bool isUpdate = false;
         if (catalog.Id==0){
+            
             resultDto = await catRepository.AddAsync(catalog);
             isUpdate = false;
         }
