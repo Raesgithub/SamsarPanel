@@ -23,9 +23,9 @@
             <div class="col-12 mb-3">
                 <form class="search">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="جستجو ...">
+                        <input type="text" class="form-control" placeholder="جستجو ..." @bind-value="paging.Search">
                         <div class="input-group-append">
-                            <button class="btn" type="button">
+                            <button class="btn" type="button" @onclick="SearchBtn">
                                 <i class="fa fa-search"></i>
                             </button>
                         </div>
@@ -45,7 +45,12 @@
                     </div>
                 </div>
             }
-            
+            @if (paging.Page + 1 != paging.TotalPages)
+            {
+                <div class="text-center">
+                    <button class="btn btn-warning" @onclick="GetMoreData">بیشتر</button>
+                </div>
+            }
 
 
         </div>
@@ -59,6 +64,20 @@
         paging=await productRepository.GetAll(paging);
         
     }
+    private async Task GetMoreData(MouseEventArgs e)
+    {
+        ProductRepository repository = new ProductRepository();
+        paging.Page += 1;
+        paging = await repository.GetAll(paging);
+    }
+    private async Task SearchBtn(MouseEventArgs e)
+    {
 
+        ProductRepository repository = new ProductRepository();
+
+        paging.Page = 0;
+        paging.Values = new List<ProductVM>();
+        paging = await repository.GetAll(paging);
+    }
 
 }

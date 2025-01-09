@@ -21,6 +21,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="WYSIWYGTextEditor" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Components\Cpanel\Shop\Product\AddProduct.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
     <Content Update="Components\Cpanel\users\Avatar.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>

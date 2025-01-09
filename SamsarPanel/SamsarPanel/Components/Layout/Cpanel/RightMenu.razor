@@ -33,8 +33,8 @@
             <li>
                 <a href="#"><i class="icon ti-clipboard"></i> <span> محصولات</span> </a>
                 <ul>
-                    <li><a href="chat.html">لیست محصولات </a></li>
-                    <li><a href="chat.html"> محصول جدید </a></li>
+                    <li><a @onclick='()=> nav.NavigateTo("/cpanel/shop/products" , true)'>لیست محصولات </a></li>
+                    <li><a @onclick='()=> nav.NavigateTo("/cpanel/shop/products/add" , true)'> محصول جدید </a></li>
                     <li><NavLink @onclick='()=> nav.NavigateTo("/cpanel/shop/catalog" , true)'>  دسته بندی محصول  </NavLink></li>
                 </ul>
             </li>

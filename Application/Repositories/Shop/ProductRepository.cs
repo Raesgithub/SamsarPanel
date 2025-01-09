@@ -23,9 +23,6 @@ namespace Application.Repositories.cpanel
             {
                 if (pagging.Page + 1 > pagging.TotalPages) return pagging;
             }
-            
-
-
             var page =pagging.Page * pagging.Take;
             
             using (var con = new SqlConnection(ConstantCpanel.connectionString))

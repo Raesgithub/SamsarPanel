@@ -1,0 +1,57 @@
+﻿@page "/cpanel/shop/products/add"
+@using WYSIWYGTextEditor
+ @rendermode InteractiveServer
+<div class="page-header">
+    <div>
+        <h3>افزودن محصول جدید</h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/cpanel/">داشبورد</a></li>
+                <li class="breadcrumb-item"><NavLink href="/cpanel/shop/products">لیست محصولات</NavLink></li>
+                <li class="breadcrumb-item active" aria-current="page">محصول جدید</li>
+            </ol>
+        </nav>
+    </div>
+
+</div>
+<!-- end::page header -->
+
+<div class="card">
+    <div class="card-body">
+        <EditForm Model="product" Enhance FormName="f1">
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label">عنوان</label>
+                    <InputText @bind-Value="product.Name" class="form-control"/>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">وضعیت انتشار</label>
+                    <InputSelect @bind-Value="product.IsPublish" class="form-control">
+                        <option value="true">منتشر شود</option>
+                        <option value="false">عدم انتشار</option>
+                    </InputSelect>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">مبلغ جاری</label>
+                    <InputNumber @bind-Value="product.Price" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">مبلغ قبلی</label>
+                    <InputNumber @bind-Value="product.PriceOld" class="form-control" />
+                </div>
+                <div class="col-12">
+                    <TextEditor Toolbar="new Toolbar { ShowFullToolbar=true }" EditorContainerId="TestId" @ref="@MyEditor"
+                    Placeholder="Enter non HTML format like centering..."/>
+
+                </div>
+            </div>
+        </EditForm>
+
+    </div>
+</div>
+@code{
+    [SupplyParameterFromForm]
+    public Domain.Models.shop.Product product { get; set; } = new Domain.Models.shop.Product();
+    TextEditor MyEditor;
+
+}
