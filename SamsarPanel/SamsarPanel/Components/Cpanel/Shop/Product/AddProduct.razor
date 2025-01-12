@@ -1,5 +1,6 @@
 ﻿@page "/cpanel/shop/products/add"
-@using WYSIWYGTextEditor
+@using Blazored.TextEditor
+
  @rendermode InteractiveServer
 <div class="page-header">
     <div>
@@ -22,7 +23,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <label class="form-label">عنوان</label>
-                    <InputText @bind-Value="product.Name" class="form-control"/>
+                    <InputText @bind-Value="product.Name" class="form-control" />
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">وضعیت انتشار</label>
@@ -39,9 +40,8 @@
                     <label class="form-label">مبلغ قبلی</label>
                     <InputNumber @bind-Value="product.PriceOld" class="form-control" />
                 </div>
-                <div class="col-12">
-       
-                    <TextEditor @ref="@MyEditor">
+                <div class="col-12 mt-4">
+                    <BlazoredTextEditor @ref="@QuillHtml" EditorCssStyle="background:#fff">
                         <ToolbarContent>
                             <select class="ql-header">
                                 <option selected=""></option>
@@ -68,38 +68,86 @@
                             <span class="ql-formats">
                                 <button class="ql-link"></button>
                             </span>
+                            <span class="ql-formats">
+                                <button class="ql-align" value=""></button> <!-- Left Align -->
+                                <button class="ql-align" value="center"></button> <!-- Center Align -->
+                                <button class="ql-align" value="right"></button> <!-- Right Align -->
+                                <button class="ql-align" value="justify"></button> <!-- Justify Align -->
+                            </span>
+                            <!-- New Direction Buttons -->
+                           @*  <span class="ql-formats">
+                                <button class="ql-direction" value="ltr">LTR</button> <!-- Left to Right -->
+                                <button class="ql-direction" value="rtl">RTL</button> <!-- Right to Left -->
+                            </span> *@
                         </ToolbarContent>
-                        <EditorContent>
+                        <EditorContent >
                             <h4>This Toolbar works with HTML</h4>
                             <a href="http://BlazorHelpWebsite.com">
                                 BlazorHelpWebsite.com
                             </a>
                         </EditorContent>
-                    </TextEditor>
+                    </BlazoredTextEditor>
                     <br />
-                   @*  <button class="btn btn-primary"
+                    <button class="btn btn-primary"
                             @onclick="GetHTML">
                         Get HTML
-                    </button> *@
-                   @*  <button class="btn btn-primary"
+                    </button>
+                    <button class="btn btn-primary"
                             @onclick="SetHTML">
                         Set HTML
-                    </button> *@
+                    </button>
                     <br />
                     <div>
                         <br />
-                      @*   @((MarkupString)QuillHTMLContent)
-                        @QuillHTMLContent *@
+                        @((MarkupString)QuillHTMLContent)
+                        @QuillHTMLContent
                     </div>
+                    <br />
+
                 </div>
             </div>
         </EditForm>
 
     </div>
 </div>
-@code{
+<style>
+    .ql-editor, .ql-container {
+      direction:rtl;
+      color:#000;
+        /*   text-align:right; */
+        height:fit-content;
+    }
+
+    .ql-ui {
+        position: relative !important;
+        padding: 0 10px;
+        right: -12px;
+    }
+
+     
+    .ql-toolbar{
+        background:#fff;
+    }
+</style>
+@code {
     [SupplyParameterFromForm]
     public Domain.Models.shop.Product product { get; set; } = new Domain.Models.shop.Product();
-    TextEditor MyEditor;
+    BlazoredTextEditor QuillHtml;
+    string QuillHTMLContent;
+
+    public async Task GetHTML()
+    {
+        QuillHTMLContent = await this.QuillHtml.GetHTML();
+    }
+
+    public async Task SetHTML()
+    {
+        string QuillContent =
+            @"<a href='http://BlazorHelpWebsite.com/'>" +
+            "<img src='images/BlazorHelpWebsite.gif' /></a>";
+
+        await this.QuillHtml.LoadHTMLContent(QuillContent);
+    }
+
 
 }

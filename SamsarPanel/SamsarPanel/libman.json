@@ -1,0 +1,10 @@
+{
+  "version": "3.0",
+  "defaultProvider": "unpkg",
+  "libraries": [
+    {
+      "library": "quill@2.0.3",
+      "destination": "wwwroot/lib/quill/"
+    }
+  ]
+}
