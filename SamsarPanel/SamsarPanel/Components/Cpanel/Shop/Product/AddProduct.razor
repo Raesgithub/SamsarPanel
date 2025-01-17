@@ -1,6 +1,8 @@
 ﻿@page "/cpanel/shop/products/add"
 @using Application.Repositories.Shop
+@using Application.Repositories.cpanel
 @using Blazored.TextEditor
+@using MD.PersianDateTime
 @inject IJSRuntime js
  @rendermode InteractiveServer
 <div class="page-header">
@@ -29,11 +31,12 @@
                 <div class="col-md-6">
                     <label class="form-label">دسته بندی محصول</label>
                     <InputSelect @bind-Value="product.CatalogId" class="form-control">
-                          @foreach (var item in catalogs)
+                        <option value="0">گزینه ای انتخاب کنید</option>
+                        @foreach (var item in catalogs)
                         {
                             <option value="@item.Id">@item.Name</option>
                         }
-                        
+
                     </InputSelect>
                 </div>
                 <div class="col-md-6">
@@ -43,13 +46,15 @@
                         <option value="false">عدم انتشار</option>
                     </InputSelect>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-3">
                     <label class="form-label">مبلغ جاری</label>
-                    <InputNumber @bind-Value="product.Price" class="form-control" />
+                    <InputNumber @bind-Value="product.Price"  class="form-control text-left" />
+                    <p style="font-size:1.5em" class="text-left mb-0">@FormattedPrice</p>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 mt-3">
                     <label class="form-label">مبلغ قبلی</label>
-                    <InputNumber @bind-Value="product.PriceOld" class="form-control" />
+                    <InputNumber @bind-Value="product.PriceOld" class="form-control  text-left" />
+                    <p style="font-size:1.5em" class="text-left mb-0">@FormattedPriceOld</p>
                 </div>
                 <div class="col-12 mt-4">
                     <label class="form-label">ویژگی های محصول</label>
@@ -157,7 +162,8 @@
     .ql-editor, .ql-container {
     direction:rtl;
     color:#000;
-    /*   text-align:right; */
+    text-align:right;
+    font-family: "primary-font", "segoe ui", "tahoma";
     height:fit-content;
     }
 
@@ -176,9 +182,13 @@
     [SupplyParameterFromForm]
     public Domain.Models.shop.Product product { get; set; } = new Domain.Models.shop.Product();
     List<Domain.Models.shop.Catalog> catalogs = new List<Domain.Models.shop.Catalog>();
+    string priceSplitComa = "";
     BlazoredTextEditor QuillHtmlF;
     BlazoredTextEditor QuillHtmlD;
-    string QuillHTMLContent;
+    string QuillHTMLContent="";
+
+    private string FormattedPrice => product.Price.ToString("#,0 تومان");
+    private string FormattedPriceOld => product.PriceOld.ToString("#,0 تومان");
 
     protected override async Task OnInitializedAsync()
     {
@@ -196,6 +206,12 @@
         if (product.Price < 10000)
         {
             await js.InvokeVoidAsync("toastError", "مبلغ وارد شده صحیح نمی باشد");
+            isOk = false;
+        }
+
+        if (product.CatalogId ==0)
+        {
+            await js.InvokeVoidAsync("toastError", "دسته محصول را انتخاب کنید");
             isOk = false;
         }
         product.Description = await this.QuillHtmlD.GetHTML();
@@ -218,11 +234,19 @@
     async Task Save(){
 
         if (await CheckValidData() == false) return;
+        ProductRepository productRepository = new ProductRepository();
+        product.Images = "sssssss";
+        product.Cdate = product.Mdate = new PersianDateTime(DateTime.Now).ToString();
+        
+        var res=await productRepository.InsertAsync(product);
+        if (res.IsSuccess)
+        {
+            await js.InvokeVoidAsync("toast", "ذخیره شد");
+            return;
+        }
+        
 
-
-
-
-        await js.InvokeVoidAsync("toastError", "ssssss");
+        await js.InvokeVoidAsync("toastError",res.Message);
 
     }
     // public async Task GetHTML()

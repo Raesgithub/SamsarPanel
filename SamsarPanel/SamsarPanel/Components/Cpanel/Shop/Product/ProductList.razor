@@ -37,10 +37,24 @@
             {
                 <div class="col-md-4 col-xl-3">
                     <div class="card">
-                        <img src="/cpanel/assets/media/image/portfolio-four.jpg" class="card-img-top" alt="...">
+                        <div class="position-relative">
+                              <img src="/cpanel/assets/media/image/portfolio-four.jpg" class="card-img-top" alt="...">
+                            <span class="position-absolute rounded-2 pr-2 pl-2 pt-1 pb-1 text-dark" 
+                            style="bottom: 0;left: 0; background: #ccc;">@item.Price.ToString("#,0 تومان")</span>
+                            @if (item.IsPublish)
+                            {
+                                <span class="bg-danger border-1 d-inline-block position-absolute " 
+                                style="width: 15px;height: 15px;top: 10px;border-radius: 50%;right: 8px;border: 2px solid#000;"></span>
+                            }
+                            else
+                            {
+                                <span title="منتشر شده"  class="bg-success border-1 d-inline-block position-absolute "
+                                      style="width: 15px;height: 15px;top: 10px;border-radius: 50%;right: 8px;border: 2px solid#000;"></span>
+                            }
+                        </div>
                         <div class="card-body">
-                            <p class="card-text">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها</p>
-                            <a href="#" class="btn btn-primary">بیشتر بخوانید</a>
+                            <p class="card-text">@item.Name</p>
+                            <a href="#" class="btn btn-primary">جزئیات</a>
                         </div>
                     </div>
                 </div>
@@ -73,7 +87,7 @@
     private async Task SearchBtn(MouseEventArgs e)
     {
 
-        ProductRepository repository = new ProductRepository();
+        var repository = new ProductRepository();
 
         paging.Page = 0;
         paging.Values = new List<ProductVM>();
