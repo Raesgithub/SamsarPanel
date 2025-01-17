@@ -1,6 +1,7 @@
 ﻿@page "/cpanel/shop/products/add"
+@using Application.Repositories.Shop
 @using Blazored.TextEditor
-
+@inject IJSRuntime js
  @rendermode InteractiveServer
 <div class="page-header">
     <div>
@@ -19,11 +20,21 @@
 
 <div class="card">
     <div class="card-body">
-        <EditForm Model="product" Enhance FormName="f1">
+        <EditForm Model="product" OnSubmit="Save" Enhance FormName="f1">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-12">
                     <label class="form-label">عنوان</label>
                     <InputText @bind-Value="product.Name" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">دسته بندی محصول</label>
+                    <InputSelect @bind-Value="product.CatalogId" class="form-control">
+                          @foreach (var item in catalogs)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                        
+                    </InputSelect>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">وضعیت انتشار</label>
@@ -41,7 +52,8 @@
                     <InputNumber @bind-Value="product.PriceOld" class="form-control" />
                 </div>
                 <div class="col-12 mt-4">
-                    <BlazoredTextEditor @ref="@QuillHtml" EditorCssStyle="background:#fff">
+                    <label class="form-label">ویژگی های محصول</label>
+                    <BlazoredTextEditor @ref="@QuillHtmlF" EditorCssStyle="background:#fff">
                         <ToolbarContent>
                             <select class="ql-header">
                                 <option selected=""></option>
@@ -75,35 +87,66 @@
                                 <button class="ql-align" value="justify"></button> <!-- Justify Align -->
                             </span>
                             <!-- New Direction Buttons -->
-                           @*  <span class="ql-formats">
+                            @*  <span class="ql-formats">
                                 <button class="ql-direction" value="ltr">LTR</button> <!-- Left to Right -->
                                 <button class="ql-direction" value="rtl">RTL</button> <!-- Right to Left -->
                             </span> *@
                         </ToolbarContent>
                         <EditorContent >
-                            <h4>This Toolbar works with HTML</h4>
-                            <a href="http://BlazorHelpWebsite.com">
-                                BlazorHelpWebsite.com
-                            </a>
+
                         </EditorContent>
                     </BlazoredTextEditor>
-                    <br />
-                    <button class="btn btn-primary"
-                            @onclick="GetHTML">
-                        Get HTML
-                    </button>
-                    <button class="btn btn-primary"
-                            @onclick="SetHTML">
-                        Set HTML
-                    </button>
-                    <br />
-                    <div>
-                        <br />
-                        @((MarkupString)QuillHTMLContent)
-                        @QuillHTMLContent
-                    </div>
-                    <br />
 
+                </div>
+                <div class="col-12 mt-4">
+                    <label class="form-label">توضیح  محصول</label>
+                    <BlazoredTextEditor @ref="@QuillHtmlD" EditorCssStyle="background:#fff">
+                        <ToolbarContent>
+                            <select class="ql-header">
+                                <option selected=""></option>
+                                <option value="1"></option>
+                                <option value="2"></option>
+                                <option value="3"></option>
+                                <option value="4"></option>
+                                <option value="5"></option>
+                            </select>
+                            <span class="ql-formats">
+                                <button class="ql-bold"></button>
+                                <button class="ql-italic"></button>
+                                <button class="ql-underline"></button>
+                                <button class="ql-strike"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <select class="ql-color"></select>
+                                <select class="ql-background"></select>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-list" value="ordered"></button>
+                                <button class="ql-list" value="bullet"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-link"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-align" value=""></button> <!-- Left Align -->
+                                <button class="ql-align" value="center"></button> <!-- Center Align -->
+                                <button class="ql-align" value="right"></button> <!-- Right Align -->
+                                <button class="ql-align" value="justify"></button> <!-- Justify Align -->
+                            </span>
+                            <!-- New Direction Buttons -->
+                            @*  <span class="ql-formats">
+                                <button class="ql-direction" value="ltr">LTR</button> <!-- Left to Right -->
+                                <button class="ql-direction" value="rtl">RTL</button> <!-- Right to Left -->
+                            </span> *@
+                        </ToolbarContent>
+                        <EditorContent>
+
+                        </EditorContent>
+                    </BlazoredTextEditor>
+
+                </div>
+                <div class="col-12 mt-3">
+                    <button type="submit" class="btn btn-success">ذخیره .....</button>
                 </div>
             </div>
         </EditForm>
@@ -112,42 +155,89 @@
 </div>
 <style>
     .ql-editor, .ql-container {
-      direction:rtl;
-      color:#000;
-        /*   text-align:right; */
-        height:fit-content;
+    direction:rtl;
+    color:#000;
+    /*   text-align:right; */
+    height:fit-content;
     }
 
     .ql-ui {
-        position: relative !important;
-        padding: 0 10px;
-        right: -12px;
+    position: relative !important;
+    padding: 0 10px;
+    right: -12px;
     }
 
-     
+
     .ql-toolbar{
-        background:#fff;
+    background:#fff;
     }
 </style>
 @code {
     [SupplyParameterFromForm]
     public Domain.Models.shop.Product product { get; set; } = new Domain.Models.shop.Product();
-    BlazoredTextEditor QuillHtml;
+    List<Domain.Models.shop.Catalog> catalogs = new List<Domain.Models.shop.Catalog>();
+    BlazoredTextEditor QuillHtmlF;
+    BlazoredTextEditor QuillHtmlD;
     string QuillHTMLContent;
 
-    public async Task GetHTML()
+    protected override async Task OnInitializedAsync()
     {
-        QuillHTMLContent = await this.QuillHtml.GetHTML();
+        CatalogRepository catalogRepository = new CatalogRepository();
+        catalogs = await catalogRepository.GetAllAsync();
     }
 
-    public async Task SetHTML()
-    {
-        string QuillContent =
-            @"<a href='http://BlazorHelpWebsite.com/'>" +
-            "<img src='images/BlazorHelpWebsite.gif' /></a>";
+    async Task<bool> CheckValidData(){
+        var isOk = true;
+        if (string.IsNullOrEmpty(product.Name))
+        {
+            await js.InvokeVoidAsync("toastError", "عنوان محصول وارد نشده");
+            isOk = false;
+        }
+        if (product.Price < 10000)
+        {
+            await js.InvokeVoidAsync("toastError", "مبلغ وارد شده صحیح نمی باشد");
+            isOk = false;
+        }
+        product.Description = await this.QuillHtmlD.GetHTML();
 
-        await this.QuillHtml.LoadHTMLContent(QuillContent);
+        if (product.Description.Length<50)
+        {
+            await js.InvokeVoidAsync("toastError", "توضیحات محصول کوتاه می باشد");
+            isOk = false;
+        }
+        product.Feauchers = await this.QuillHtmlF.GetHTML();
+
+        if (product.Feauchers.Length<50)
+        {
+            await js.InvokeVoidAsync("toastError", "ویژگیهای محصول کوتاه می باشد");
+            isOk = false;
+        }
+        return isOk;
     }
+
+    async Task Save(){
+
+        if (await CheckValidData() == false) return;
+
+
+
+
+        await js.InvokeVoidAsync("toastError", "ssssss");
+
+    }
+    // public async Task GetHTML()
+    // {
+    //     QuillHTMLContent = await this.QuillHtml.GetHTML();
+    // }
+
+    // public async Task SetHTML()
+    // {
+    //     string QuillContent =
+    //         @"<a href='http://BlazorHelpWebsite.com/'>" +
+    //         "<img src='images/BlazorHelpWebsite.gif' /></a>";
+
+    //     await this.QuillHtml.LoadHTMLContent(QuillContent);
+    // }
 
 
 }

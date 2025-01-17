@@ -125,17 +125,18 @@ namespace Application.Repositories.cpanel
 
 
         }
-        public async Task<ResultDto> InsertAsync(UserVM userVM)
+        public async Task<ResultDto> InsertAsync(Domain.Models.shop.Product product)
         {
             try
             {
-                var query = $@"INSERT INTO aspnetusers (username, email, Firstname,Lastname,PhoneNumber) VALUES ()";
- 
+                var query = $@"INSERT INTO products (Name, Description, Price,PriceOld,Feauchers,IsPublish,
+                                 Images,Cdate,Mdate,CatalogId) VALUES (@Name, @Description, @Price,@PriceOld,
+                                 @Feauchers,@IsPublish,@Images,@Cdate,@Mdate,@CatalogId)";
                                         
                 var res = 0;
                 using (var con = new SqlConnection(ConstantCpanel.connectionString))
                 {
-                    res = await con.ExecuteAsync(query);
+                    res = await con.ExecuteAsync(query,product);
                 }
                 if (res == 0)
                 {
