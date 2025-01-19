@@ -158,6 +158,22 @@
 
     </div>
 </div>
+<div class="row">
+    <div class="col-md-5 col-xl-4">
+        <div class="card rounded">
+            <div class="card-body">
+                <h5 class="text-info">بارگزاری تصویر</h5>
+                <img src="@userVM.GetAvatar()" class="img-fluid m-auto d-block img-thumbnail" />
+                <div class="mt-3">
+                    <InputFile class="form-control" onchange="HandleInputFile" />
+                    <button class="btn btn-success mt-3 float-right @(file==null? "disabled":"")" @onclick="UploadFile">بارگزاری تصویر</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
     .ql-editor, .ql-container {
     direction:rtl;
@@ -249,6 +265,43 @@
         await js.InvokeVoidAsync("toastError",res.Message);
 
     }
+
+
+
+
+
+
+
+    private async Task UploadFile(MouseEventArgs e)
+    {
+
+        var upload = new UploadFile();
+        var res = await upload.Upload(file, ConstantCpanel.pysicaly_image_user_path, ConstantCpanel.image_Valid_Types);
+
+        if (res.IsSuccess)
+        {
+            var service = new ProductRepository();
+            var result = await service.UpdateAvatarAsync(res.Filename, UserId);
+            if (result.IsSuccess)
+            {
+                userVM.avater = res.Filename;
+                await js.InvokeVoidAsync("toast", "تصویر آپلود شد");
+
+            }
+            else
+            {
+                await js.InvokeVoidAsync("toast", result.Message);
+            }
+
+        }
+        else
+        {
+            await js.InvokeVoidAsync("toastError", res.Message);
+        }
+
+    }
+
+
     // public async Task GetHTML()
     // {
     //     QuillHTMLContent = await this.QuillHtml.GetHTML();
