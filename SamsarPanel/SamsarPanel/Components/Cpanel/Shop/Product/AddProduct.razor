@@ -26,7 +26,7 @@
     <div class="card-body">
         <EditForm Model="product" OnSubmit="Save" Enhance FormName="f1">
             <div class="row">
-                
+
                 <div class="col-12">
                     <label class="form-label">عنوان</label>
                     <InputText @bind-Value="product.Name" class="form-control" />
@@ -159,8 +159,8 @@
                             <h5 class="text-info">بارگزاری تصویر</h5>
                             @* <img src="@userVM.GetAvatar()" class="img-fluid m-auto d-block img-thumbnail" /> *@
                             <div class="mt-3">
-                                <InputFile class="form-control" onchange="HandleInputFile" />
-                                <button class="btn btn-success mt-3 float-right @(file==null? "disabled":"")" @onclick="UploadFile">بارگزاری تصویر</button>
+                                <InputFile class="form-control" onchange="HandleInputFile" multiple />
+                                <button class="btn btn-success mt-3 float-right @(files==null? "disabled":"")" @onclick="UploadFile">بارگزاری تصویر</button>
                             </div>
 
                         </div>
@@ -204,7 +204,7 @@
     BlazoredTextEditor QuillHtmlF;
     BlazoredTextEditor QuillHtmlD;
     string QuillHTMLContent="";
-    IBrowserFile file;
+    List<IBrowserFile> files;
 
     private string FormattedPrice => product.Price.ToString("#,0 تومان");
     private string FormattedPriceOld => product.PriceOld.ToString("#,0 تومان");
@@ -269,11 +269,19 @@
 
     }
 
-    void HandleInputFile(InputFileChangeEventArgs e)
+    async void HandleInputFile(InputFileChangeEventArgs e)
     {
-        var selectFile = e.GetMultipleFiles(4).ToList();
+        if(e.FileCount>4){
+            await js.InvokeVoidAsync("toastError", "حداکثر 4 تصویر میتوانید انتخاب نمایید");
+            return;
+        }
+        var  selectedFiles = e.GetMultipleFiles(4).ToList();
+        if (selectedFiles!=null && selectedFiles.Count>0)
+        {
+            files = selectedFiles;
+        }
 
-       
+
     }
 
 
@@ -284,28 +292,18 @@
     {
 
         var upload = new UploadFile();
-        var res = await upload.Upload(file, ConstantCpanel.pysicaly_image_user_path, ConstantCpanel.image_Valid_Types);
+        var res = await upload.Uploads(files, ConstantCpanel.pysicaly_image_user_path, ConstantCpanel.image_Valid_Types);
 
-        if (res.IsSuccess)
-        {
-            // var service = new ProductRepository();
-            // var result = await service.UpdateAvatarAsync(res.Filename, UserId);
-            // if (result.IsSuccess)
-            // {
-            //     userVM.avater = res.Filename;
-            //     await js.InvokeVoidAsync("toast", "تصویر آپلود شد");
-
-            // }
-            // else
-            // {
-            //     await js.InvokeVoidAsync("toast", result.Message);
-            // }
-
-        }
-        else
-        {
+            if (res.IsSuccess)
+            {
+                 product.Images=  res.Filename;  
+            }
+             else
+             {
             await js.InvokeVoidAsync("toastError", res.Message);
-        }
+             }
+
+        
 
     }
 
