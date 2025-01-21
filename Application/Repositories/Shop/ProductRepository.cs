@@ -53,33 +53,21 @@ namespace Application.Repositories.cpanel
 
             }
         }
-        public async Task<UserVM?> GetById(string id)
-        {
-            using (var con = new SqlConnection(ConstantCpanel.connectionString))
-            {
-                var query = $@"select Email,Firstname,Lastname,PhoneNumber,Id,UserName,Avater,LastDateLogin,LoginCount
-                                             from AspNetUsers where id='{id}'";
-                return await con.QuerySingleOrDefaultAsync<UserVM>(query);
 
-            }
-        }
-
-        public async Task<ResultDto> UpdateAsync(UserVM userVM)
+        public async Task<ResultDto> DeleteAsync(int id)
         {
             try
             {
-                var query = $@"update aspnetusers 
-                                        set firstname='{userVM.Firstname}', lastname='{userVM.Lastname}',
-                                        email='{userVM.Email}', phonenumber='{userVM.PhoneNumber}'
-                                        where id='{userVM.Id}' ";
+                var query = $@"delete from products where id='{id}' ";
                 var res = 0;
                 using (var con = new SqlConnection(ConstantCpanel.connectionString))
                 {
+                    //isert update delete
                     res = await con.ExecuteAsync(query);
                 }
                 if (res == 0)
                 {
-                    return new ResultDto { IsSuccess = false, Message = "قادر به ثبت اطلاعات نشدیم . اطلاعات ورودی معتبر نمی باشد" };
+                    return new ResultDto { IsSuccess = false, Message = "قادر به حذف نشدیم" };
                 }
                 else
                 {
@@ -95,6 +83,7 @@ namespace Application.Repositories.cpanel
 
 
         }
+
         public async Task<ResultDto> UpdateStatusAsync(string id,bool status)
         {
             try
@@ -156,35 +145,7 @@ namespace Application.Repositories.cpanel
 
 
         }
-        public async Task<ResultDto> UpdateAvatarAsync(string filename,string userId)
-        {
-            //
-            try
-            {
-                var query = $@"update aspnetusers  set Avater='{filename}'   where id='{userId}' ";
-                var res = 0;
-                using (var con = new SqlConnection(ConstantCpanel.connectionString))
-                {
-                    res = await con.ExecuteAsync(query);
-                }
-                if (res == 0)
-                {
-                    return new ResultDto { IsSuccess = false, Message = "قادر به ثبت اطلاعات نشدیم . اطلاعات ورودی معتبر نمی باشد" };
-                }
-                else
-                {
-                    return new ResultDto { IsSuccess = true };
-                }
-            
-            }
-            catch (Exception ex)
-            {
-
-                return new ResultDto { IsSuccess = false, Message = ex.InnerException!=null? ex.InnerException.Message:ex.Message };
-
-            }
-
-        }
+      
 
     }
 }

@@ -2,6 +2,8 @@
 @using Application.Dtos.cpanel
 @using Application.Repositories.cpanel
 @using Domain.ViewModels
+@inject IJSRuntime js
+@rendermode InteractiveServer
 <div class="page-header">
     <div>
         <h3>لیست محصولات</h3>
@@ -38,7 +40,7 @@
                 <div class="col-md-4 col-xl-3">
                     <div class="card">
                         <div class="position-relative">
-                              <img src="/cpanel/assets/media/image/portfolio-four.jpg" class="card-img-top" alt="...">
+                            <img src="/cpanel/assets/images/products/@item.GetFirstImage()" class="card-img-top" alt="...">
                             <span class="position-absolute rounded-2 pr-2 pl-2 pt-1 pb-1 text-dark" 
                             style="bottom: 0;left: 0; background: #ccc;">@item.Price.ToString("#,0 تومان")</span>
                             @if (item.IsPublish)
@@ -49,12 +51,13 @@
                             else
                             {
                                 <span title="منتشر شده"  class="bg-success border-1 d-inline-block position-absolute "
-                                      style="width: 15px;height: 15px;top: 10px;border-radius: 50%;right: 8px;border: 2px solid#000;"></span>
+                                style="width: 15px;height: 15px;top: 10px;border-radius: 50%;right: 8px;border: 2px solid#000;"></span>
                             }
                         </div>
                         <div class="card-body">
                             <p class="card-text">@item.Name</p>
                             <a href="#" class="btn btn-primary">جزئیات</a>
+                            <button type="button" class="btn btn-danger btn-sm" @onclick="()=>Delete(item)">حذف</button>
                         </div>
                     </div>
                 </div>
@@ -72,6 +75,19 @@
 </div>
 @code{
     public PaggingDto<ProductVM> paging { get; set; } = new PaggingDto<ProductVM>();
+
+    async Task Delete(ProductVM product){
+        var repository = new ProductRepository();
+        var res=  await repository.DeleteAsync(product.Id);
+        if (res.IsSuccess)
+        {
+            await js.InvokeVoidAsync("toast", "حذف شد");
+        }
+        else{
+            await js.InvokeVoidAsync("toastError", res.Message);
+        }
+
+    }
     protected override async Task OnInitializedAsync()
     {
         ProductRepository productRepository = new ProductRepository();

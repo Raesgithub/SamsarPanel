@@ -15,5 +15,14 @@ namespace Domain.ViewModels
         public bool IsPublish { get; set; } = false;
         public required string Images { get; set; }
         public required string Mdate { get; set; }
+        public string GetFirstImage()
+        {
+            if (string.IsNullOrEmpty(Images))
+            {
+                return string.Empty;
+            }
+            return Images.Split(',')[0];
+
+        }
     }
 }

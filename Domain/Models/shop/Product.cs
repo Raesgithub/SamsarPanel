@@ -28,5 +28,9 @@ namespace Domain.Models.shop
 
         public int CatalogId { get; set; }
         public virtual Catalog? Catalog { get; set; }
+
+
+      
+
     }
 }

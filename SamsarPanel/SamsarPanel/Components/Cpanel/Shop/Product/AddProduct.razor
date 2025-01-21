@@ -51,7 +51,7 @@
                 </div>
                 <div class="col-md-6 mt-3">
                     <label class="form-label">مبلغ جاری</label>
-                    <InputNumber @bind-Value="product.Price"  class="form-control text-left" />
+                    <InputNumber @bind-Value="product.Price" class="form-control text-left" />
                     <p style="font-size:1.5em" class="text-left mb-0">@FormattedPrice</p>
                 </div>
                 <div class="col-md-6 mt-3">
@@ -100,7 +100,7 @@
                                 <button class="ql-direction" value="rtl">RTL</button> <!-- Right to Left -->
                             </span> *@
                         </ToolbarContent>
-                        <EditorContent >
+                        <EditorContent>
 
                         </EditorContent>
                     </BlazoredTextEditor>
@@ -160,7 +160,7 @@
                             @* <img src="@userVM.GetAvatar()" class="img-fluid m-auto d-block img-thumbnail" /> *@
                             <div class="mt-3">
                                 <InputFile class="form-control" onchange="HandleInputFile" multiple />
-                                <button class="btn btn-success mt-3 float-right @(files==null? "disabled":"")" @onclick="UploadFile">بارگزاری تصویر</button>
+                                <button type="button" class="btn btn-success mt-3 float-right " @onclick="UploadFile">بارگزاری تصویر</button>
                             </div>
 
                         </div>
@@ -178,22 +178,22 @@
 
 <style>
     .ql-editor, .ql-container {
-    direction:rtl;
-    color:#000;
-    text-align:right;
-    font-family: "primary-font", "segoe ui", "tahoma";
-    height:fit-content;
+        direction: rtl;
+        color: #000;
+        text-align: right;
+        font-family: "primary-font", "segoe ui", "tahoma";
+        height: fit-content;
     }
 
     .ql-ui {
-    position: relative !important;
-    padding: 0 10px;
-    right: -12px;
+        position: relative !important;
+        padding: 0 10px;
+        right: -12px;
     }
 
 
-    .ql-toolbar{
-    background:#fff;
+    .ql-toolbar {
+        background: #fff;
     }
 </style>
 @code {
@@ -203,7 +203,7 @@
     string priceSplitComa = "";
     BlazoredTextEditor QuillHtmlF;
     BlazoredTextEditor QuillHtmlD;
-    string QuillHTMLContent="";
+    string QuillHTMLContent = "";
     List<IBrowserFile> files;
 
     private string FormattedPrice => product.Price.ToString("#,0 تومان");
@@ -215,7 +215,8 @@
         catalogs = await catalogRepository.GetAllAsync();
     }
 
-    async Task<bool> CheckValidData(){
+    async Task<bool> CheckValidData()
+    {
         var isOk = true;
         if (string.IsNullOrEmpty(product.Name))
         {
@@ -228,21 +229,26 @@
             isOk = false;
         }
 
-        if (product.CatalogId ==0)
+        if (product.CatalogId == 0)
         {
             await js.InvokeVoidAsync("toastError", "دسته محصول را انتخاب کنید");
             isOk = false;
         }
+        if (string.IsNullOrEmpty(product.Images))
+        {
+            await js.InvokeVoidAsync("toastError", "تصویری انتخاب نمایید");
+            isOk = false;
+        }
         product.Description = await this.QuillHtmlD.GetHTML();
 
-        if (product.Description.Length<50)
+        if (product.Description.Length < 50)
         {
             await js.InvokeVoidAsync("toastError", "توضیحات محصول کوتاه می باشد");
             isOk = false;
         }
         product.Feauchers = await this.QuillHtmlF.GetHTML();
 
-        if (product.Feauchers.Length<50)
+        if (product.Feauchers.Length < 50)
         {
             await js.InvokeVoidAsync("toastError", "ویژگیهای محصول کوتاه می باشد");
             isOk = false;
@@ -250,14 +256,14 @@
         return isOk;
     }
 
-    async Task Save(){
+    async Task Save()
+    {
 
         if (await CheckValidData() == false) return;
         ProductRepository productRepository = new ProductRepository();
-        product.Images = "sssssss";
         product.Cdate = product.Mdate = new PersianDateTime(DateTime.Now).ToString();
 
-        var res=await productRepository.InsertAsync(product);
+        var res = await productRepository.InsertAsync(product);
         if (res.IsSuccess)
         {
             await js.InvokeVoidAsync("toast", "ذخیره شد");
@@ -265,18 +271,19 @@
         }
 
 
-        await js.InvokeVoidAsync("toastError",res.Message);
+        await js.InvokeVoidAsync("toastError", res.Message);
 
     }
 
     async void HandleInputFile(InputFileChangeEventArgs e)
     {
-        if(e.FileCount>4){
+        if (e.FileCount > 4)
+        {
             await js.InvokeVoidAsync("toastError", "حداکثر 4 تصویر میتوانید انتخاب نمایید");
             return;
         }
-        var  selectedFiles = e.GetMultipleFiles(4).ToList();
-        if (selectedFiles!=null && selectedFiles.Count>0)
+        var selectedFiles = e.GetMultipleFiles(4).ToList();
+        if (selectedFiles != null && selectedFiles.Count > 0)
         {
             files = selectedFiles;
         }
@@ -292,18 +299,24 @@
     {
 
         var upload = new UploadFile();
-        var res = await upload.Uploads(files, ConstantCpanel.pysicaly_image_user_path, ConstantCpanel.image_Valid_Types);
+        if (files == null || files.Count == 0)
+        {
+            await js.InvokeVoidAsync("toastError", "فایلی انتخاب کنید");
+            return;
+        }
+        var res = await upload.Uploads(files, ConstantCpanel.pysicaly_image_product_path, ConstantCpanel.image_Valid_Types);
 
-            if (res.IsSuccess)
-            {
-                 product.Images=  res.Filename;  
-            }
-             else
-             {
+        if (res.IsSuccess)
+        {
+            product.Images = res.Filename;
+            await js.InvokeVoidAsync("toast", "تصاویر انتخابی آپلود شدند");
+        }
+        else
+        {
             await js.InvokeVoidAsync("toastError", res.Message);
-             }
+        }
 
-        
+
 
     }
 

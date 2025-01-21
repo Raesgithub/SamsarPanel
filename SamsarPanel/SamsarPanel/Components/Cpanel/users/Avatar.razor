@@ -127,7 +127,7 @@
 
         if (UserId != "")
         {
-            var service = new ProductRepository();
+            var service = new UserRepository();
             var res= await  service.GetById(UserId);
             if (res==null)
             {
@@ -147,7 +147,7 @@
 
         if (res.IsSuccess)
         {
-            var service = new ProductRepository();
+            var service = new UserRepository();
             var result= await service.UpdateAvatarAsync(res.Filename, UserId);
             if (result.IsSuccess)
             {
