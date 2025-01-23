@@ -56,8 +56,18 @@
                         </div>
                         <div class="card-body">
                             <p class="card-text">@item.Name</p>
-                            <a href="#" class="btn btn-primary">جزئیات</a>
-                            <button type="button" class="btn btn-danger btn-sm" @onclick="()=>Delete(item)">حذف</button>
+                            <div class="row">
+                                <div class="col-6">
+                                    <a href="#" class="btn btn-primary btn-sm btn-block">جزئیات</a>
+
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-danger btn-sm  btn-block" @onclick="()=>Delete(item)">حذف</button>
+
+                                </div>
+
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -77,11 +87,16 @@
     public PaggingDto<ProductVM> paging { get; set; } = new PaggingDto<ProductVM>();
 
     async Task Delete(ProductVM product){
+        if (await js.InvokeAsync<bool>("saQuestion", "هشدار", "پس از حذف قادر به بازیابی نمی باشد") == false) return;
+
+
+
         var repository = new ProductRepository();
         var res=  await repository.DeleteAsync(product.Id);
         if (res.IsSuccess)
         {
             await js.InvokeVoidAsync("toast", "حذف شد");
+            paging.Values = paging.Values!.Where(a => a.Id != product.Id).ToList();
         }
         else{
             await js.InvokeVoidAsync("toastError", res.Message);
