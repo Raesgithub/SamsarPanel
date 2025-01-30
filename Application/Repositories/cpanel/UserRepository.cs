@@ -13,9 +13,7 @@ namespace Application.Repositories.cpanel
 {
     public class UserRepository
     {
-      // models
-      // viewmodels
-      //dtos 
+    
 
         public async Task<PaggingDto<UserVM>> GetAll(PaggingDto<UserVM> pagging)
         {
@@ -67,7 +65,6 @@ namespace Application.Repositories.cpanel
 
             }
         }
-
         public async Task<ResultDto> UpdateAsync(UserVM userVM)
         {
             try
