@@ -88,8 +88,18 @@ namespace Application.Repositories.cpanel
                 newValues.InsertRange(0, pagging.Values);
                 pagging.Values = newValues;
                 return pagging;
+            }
+        }
 
-
+        public async Task<List<ProductVM>> GetPopular(int take=12)
+        {
+            
+          
+            using (var con = new SqlConnection(ConstantCpanel.connectionString))
+            {
+                var query = $@" select top({take}) Id,Name,Price,PriceOld,seen,Images 
+                                             from Products where IsPublish=1 order by Seen DESC";
+                return  (await con.QueryAsync<ProductVM>(query)).ToList();
             }
         }
 

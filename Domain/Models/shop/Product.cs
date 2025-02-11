@@ -25,7 +25,7 @@ namespace Domain.Models.shop
         public  string Cdate { get; set; }
        
         public  string Mdate { get; set; }
-
+        public int Seen { get; set; } = 0;
         public int CatalogId { get; set; }
         public virtual Catalog? Catalog { get; set; }
 

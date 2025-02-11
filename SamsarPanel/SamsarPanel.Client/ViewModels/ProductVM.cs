@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.ViewModels
+namespace SamsarPanel.Client.ViewModels
 {
     public class ProductVM
     {
@@ -15,8 +15,6 @@ namespace Domain.ViewModels
         public bool IsPublish { get; set; } = false;
         public required string Images { get; set; }
         public required string Mdate { get; set; }
-        public int Seen { get; set; } = 0;
-        public long PriceOld { get; set; } = 0;
         public string GetFirstImage()
         {
             if (string.IsNullOrEmpty(Images))

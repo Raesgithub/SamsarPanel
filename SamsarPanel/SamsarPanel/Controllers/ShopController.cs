@@ -2,6 +2,7 @@
 using Application.Repositories.Shop;
 using Domain.Data;
 using Domain.Models.shop;
+using Domain.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,6 +23,15 @@ namespace SamsarPanel.Controllers
         {
             CatalogRepository catalogRepository = new CatalogRepository();
             return  await catalogRepository.GetAllAsync();
+        }
+
+        [Route("getpopular")]
+        [HttpGet]
+        public async Task<IEnumerable<ProductVM?>> GetPopular()
+        {
+            ProductRepository productRepository = new ProductRepository();  
+            
+            return await productRepository.GetPopular();
         }
 
 
