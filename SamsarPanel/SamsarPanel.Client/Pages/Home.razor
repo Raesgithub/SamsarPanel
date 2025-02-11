@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using SamsarPanel.Client.ViewModels
+@inject HttpClient http
 <div class="hero_banner image-cover"
 style="background: #03b97c url(/skillup/assets/img/banner-3.jpg) no-repeat"
 data-overlay="5">
@@ -110,51 +111,22 @@ data-overlay="5">
         -->
         <div class="row">
             <div class="col-md-4 col-xl-2">
-                <div class="edu_cat_2 cat-1 my-1 py-1">
-                    <div class="edu_cat_icons">
-                        <a class="pic-main" href="#">
-                            <img src="/skillup/assets/img/content.png" class="img-fluid" alt="" />
-                        </a>
+                @foreach (var item in catalogs)
+                {
+                    <div class="edu_cat_2 cat-1 my-1 py-1">
+                        <div class="edu_cat_icons">
+                            <a class="pic-main" href="#">
+                               @*  <img src="/skillup/assets/img/content.png" class="img-fluid" alt="" /> *@
+                                @(new MarkupString(item.Logo))
+                            </a>
+                        </div>
+                        <div class="edu_cat_data">
+                            <h4 class="title"><a href="#">@item.Name</a></h4>
+                        </div>
                     </div>
-                    <div class="edu_cat_data">
-                        <h4 class="title"><a href="#">مهندسی نرم افزار</a></h4>
-                    </div>
-                </div>
-                <div class="edu_cat_2 cat-1 my-1 py-1">
-                    <div class="edu_cat_icons">
-                        <a class="pic-main" href="#">
-                            <img src="/skillup/assets/img/content.png" class="img-fluid" alt="" />
-                        </a>
-                    </div>
-                    <div class="edu_cat_data">
-                        <h4 class="title"><a href="#">مهندسی نرم افزار</a></h4>
-                    </div>
-                </div>
-                <div class="edu_cat_2 cat-1 my-1 py-1">
-                    <div class="edu_cat_icons">
-                        <a class="pic-main" href="#">
-                            <img src="/skillup/assets/img/content.png" class="img-fluid" alt="" />
-                        </a>
-                    </div>
-                    <div class="edu_cat_data">
-                        <h4 class="title"><a href="#">مهندسی نرم افزار</a></h4>
-                    </div>
-                </div>
-                <div class="edu_cat_2 cat-1 my-1 py-1">
-                    <div class="edu_cat_icons">
-                        <a class="pic-main" href="#">
-                            <img src="/skillup/assets/img/content.png" class="img-fluid" alt="" />
-                        </a>
-                    </div>
-                    <div class="edu_cat_data">
-                        <h4 class="title"><a href="#">مهندسی نرم افزار</a></h4>
-                        <ul class="meta">
-                            <li class="video">
-                                <i class="ti-video-clapper"></i>23 دوره
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                }
+                
+               
             </div>
             <div class="col-md-8 col-xl-10">
                 <div class="row justify-content-center">
@@ -625,8 +597,8 @@ data-overlay="5">
 </section>
 @code{
     List<Catalog> catalogs=new  List<Catalog>();
-    // protected override Task OnInitializedAsync()
-    // {
-    //     //
-    // }
+    protected override async Task OnInitializedAsync()
+    {
+        catalogs = await http.GetFromJsonAsync<List<Catalog>>("api/shop/getcats") ?? new List<Catalog>();
+    }
 }

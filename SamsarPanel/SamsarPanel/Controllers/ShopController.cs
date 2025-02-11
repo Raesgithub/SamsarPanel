@@ -1,4 +1,5 @@
-﻿using Application.Repositories.Shop;
+﻿using Application.Repositories.cpanel;
+using Application.Repositories.Shop;
 using Domain.Data;
 using Domain.Models.shop;
 using Microsoft.AspNetCore.Http;
@@ -22,5 +23,18 @@ namespace SamsarPanel.Controllers
             CatalogRepository catalogRepository = new CatalogRepository();
             return  await catalogRepository.GetAllAsync();
         }
+
+
+        [Route("getbycatalogid")]
+        [HttpGet]
+        public async Task<IEnumerable<Catalog?>> GetProductByCatalogId(int id)
+        {
+            ProductRepository productRepository=new ProductRepository ();
+            
+
+            CatalogRepository catalogRepository = new CatalogRepository();
+            return await catalogRepository.GetAllAsync();
+        }
+
     }
 }

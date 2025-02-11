@@ -13,9 +13,48 @@ namespace Application.Repositories.cpanel
 {
     public class ProductRepository
     {
-      // models
-      // viewmodels
-      //dtos 
+        // models
+        // viewmodels
+        //dtos 
+
+
+
+        public async Task<PaggingDto<ProductVM>> GetAllByCatalogId(int catalogId,PaggingDto<ProductVM> pagging)
+        {
+            if (pagging.Page > 0)
+            {
+                if (pagging.Page + 1 > pagging.TotalPages) return pagging;
+            }
+            var page = pagging.Page * pagging.Take;
+
+            using (var con = new SqlConnection(ConstantCpanel.connectionString))
+            {
+                var where = @"where Name like N'%'+@search+'%' or Description like  N'%'+@search+'%' 
+                                             or Mdate like  N'%'+@search+'%' ";
+                var query = $@"declare @search nvarchar ='{pagging.Search}'
+                                            declare @skip int={page}
+                                            declare @take int={pagging.Take}
+                                             --تعداد کل رکوردها
+                                            select count(*)  from Products {where}
+                                             --دریافت داده
+                                             select Id,Name,Price,IsPublish,Images,Mdate 
+                                             from Products {where}
+                                             order by Mdate
+                                             offset @skip rows fetch next @take rows only ";
+                var res = await con.QueryMultipleAsync(query);
+                pagging.TotalRecords = (await res.ReadAsync<int>()).First();
+                pagging.TotalPages = (pagging.TotalRecords % pagging.Take) == 0
+                                                 ? pagging.TotalRecords / pagging.Take
+                                                 : ((int)(pagging.TotalRecords / pagging.Take)) + 1;
+
+                var newValues = (await res.ReadAsync<ProductVM>()).ToList();
+                newValues.InsertRange(0, pagging.Values);
+                pagging.Values = newValues;
+                return pagging;
+
+
+            }
+        }
 
         public async Task<PaggingDto<ProductVM>> GetAll(PaggingDto<ProductVM> pagging)
         {
