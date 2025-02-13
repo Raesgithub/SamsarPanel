@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using SamsarPanel.Client.ViewModels
 @inject HttpClient http
+@rendermode InteractiveAuto
 <div class="hero_banner image-cover"
 style="background: #03b97c url(/skillup/assets/img/banner-3.jpg) no-repeat"
 data-overlay="5">
@@ -100,34 +101,38 @@ data-overlay="5">
 <!-- ============================ Top Categories Start ================================== -->
 <section class="min">
     <div class="container-fluid">
-        <!-- <div class="row justify-content-center">
-        <div class="col-lg-7 col-md-10 text-center">
-        <div class="sec-heading center mb-4">
-        <h3 class="font-2">محورهای آموزشی <span class="theme-cl">پرمنتخب</span></h3>
-        <p>با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد.</p>
-        </div>
-        </div>
-        </div>
-        -->
+
         <div class="row">
             <div class="col-md-4 col-xl-2">
-                @foreach (var item in catalogs)
-                {
-                    <div class="edu_cat_2 cat-1 my-1 py-1">
+                @if (RendererInfo.IsInteractive){
+                    <button type="button" @onclick="GetProducts" class="edu_cat_2 cat-1 my-1 py-1 border-0">
                         <div class="edu_cat_icons">
-                            <a class="pic-main" href="#">
-                                @*  <img src="/skillup/assets/img/content.png" class="img-fluid" alt="" /> *@
-                                @(new MarkupString(item.Logo))
-                            </a>
+                            @* <a class="pic-main" ></a> *@
                         </div>
                         <div class="edu_cat_data">
-                            <h4 class="title"><a href="#">@item.Name</a></h4>
+                            <h4 class="title">محبوب ترین ها</h4>
                         </div>
-                    </div>
+                    </button>
+
                 }
-
-
-            </div>
+                                
+                @if (RendererInfo.IsInteractive){
+                        foreach (var item in catalogs)
+                        {
+                        <button @onclick="GetProducts" class="edu_cat_2 cat-1 my-1 py-1">
+                                <div class="edu_cat_icons">
+                                    <a class="pic-main" href="#">
+                                        @*  <img src="/skillup/assets/img/content.png" class="img-fluid" alt="" /> *@
+                                        @(new MarkupString(item.Logo))
+                                    </a>
+                                </div>
+                                <div class="edu_cat_data">
+                                    <h4 class="title"><a href="#">@item.Name</a></h4>
+                                </div>
+                            </button>
+                        }
+                }
+                            </div>
             <div class="col-md-8 col-xl-10">
                 <div class="row justify-content-center">
                     <div class="col-12">
@@ -146,8 +151,8 @@ data-overlay="5">
                                     <div class="crs_grid_thumb">
                                         <a href="course-detail.html" class="crs_detail_link">
                                             <img src="/cpanel/assets/images/products/@item.GetFirstImage()"
-                                                 class="img-fluid rounded"
-                                                 alt="@item.Name" />
+                                            class="img-fluid rounded"
+                                            alt="@item.Name" />
                                         </a>
                                         @* <div class="crs_video_ico">
                                             <i class="fa fa-play"></i>
@@ -160,8 +165,8 @@ data-overlay="5">
                                         <div class="crs_tutor_thumb overl_top">
                                             <a href="instructor-detail.html">
                                                 <img src="/skillup/assets/img/team-5.jpg"
-                                                     class="img-fluid circle"
-                                                     alt="" />
+                                                class="img-fluid circle"
+                                                alt="" />
                                             </a>
                                         </div>
                                         <div class="crs_cates cl_1">
@@ -185,11 +190,11 @@ data-overlay="5">
                                         <div class="preview_crs_info">
                                             <div class="progress">
                                                 <div class="progress-bar"
-                                                     role="progressbar"
-                                                     style="width: 50%"
-                                                     aria-valuenow="50"
-                                                     aria-valuemin="0"
-                                                     aria-valuemax="100"></div>
+                                                role="progressbar"
+                                                style="width: 50%"
+                                                aria-valuenow="50"
+                                                aria-valuemin="0"
+                                                aria-valuemax="100"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -205,7 +210,7 @@ data-overlay="5">
                                             <div class="crs_fl_last">
                                                 <div class="crs_linkview">
                                                     <a href="course-detail.html"
-                                                       class="btn btn_view_detail theme-bg text-light">مشاهده</a>
+                                                    class="btn btn_view_detail theme-bg text-light">مشاهده</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -214,7 +219,7 @@ data-overlay="5">
                             </div>
 
                         }
-                      </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -228,5 +233,7 @@ data-overlay="5">
         catalogs = await http.GetFromJsonAsync<List<Catalog>>("api/shop/getcats") ?? new List<Catalog>();
         products = await http.GetFromJsonAsync<List<ProductVM>>("api/shop/getpopular") ?? new List<ProductVM>();
     }
-
+    async Task GetProducts(){
+        products = await http.GetFromJsonAsync<List<ProductVM>>("api/shop/getpopular") ?? new List<ProductVM>();
+    }
 }
