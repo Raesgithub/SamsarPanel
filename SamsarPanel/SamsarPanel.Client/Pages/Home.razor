@@ -99,13 +99,13 @@ data-overlay="5">
 </section>
 <!-- ============================ Our Awards End ================================== -->
 <!-- ============================ Top Categories Start ================================== -->
-<section class="min">
+<section class="main">
     <div class="container-fluid">
 
         <div class="row">
             <div class="col-md-4 col-xl-2">
                 @if (RendererInfo.IsInteractive){
-                    <button type="button" @onclick="GetProducts" class="edu_cat_2 cat-1 my-1 py-1 border-0">
+                    <button type="button" @onclick="()=>GetProducts(0)" class="edu_cat_2 cat-1 my-1 py-1 border-0">
                         <div class="edu_cat_icons">
                             @* <a class="pic-main" ></a> *@
                         </div>
@@ -119,7 +119,7 @@ data-overlay="5">
                 @if (RendererInfo.IsInteractive){
                         foreach (var item in catalogs)
                         {
-                        <button @onclick="GetProducts" class="edu_cat_2 cat-1 my-1 py-1">
+                        <button @onclick="()=>GetProducts(item.Id)" class="edu_cat_2 cat-1 my-1 py-1">
                                 <div class="edu_cat_icons">
                                     <a class="pic-main" href="#">
                                         @*  <img src="/skillup/assets/img/content.png" class="img-fluid" alt="" /> *@
@@ -231,9 +231,9 @@ data-overlay="5">
     protected override async Task OnInitializedAsync()
     {
         catalogs = await http.GetFromJsonAsync<List<Catalog>>("api/shop/getcats") ?? new List<Catalog>();
-        products = await http.GetFromJsonAsync<List<ProductVM>>("api/shop/getpopular") ?? new List<ProductVM>();
+        products = await http.GetFromJsonAsync<List<ProductVM>>("api/shop/getpro/0") ?? new List<ProductVM>();
     }
-    async Task GetProducts(){
-        products = await http.GetFromJsonAsync<List<ProductVM>>("api/shop/getpopular") ?? new List<ProductVM>();
+    async Task GetProducts(int id){
+        products = await http.GetFromJsonAsync<List<ProductVM>>($"api/shop/getpro/{id}") ?? new List<ProductVM>();
     }
 }

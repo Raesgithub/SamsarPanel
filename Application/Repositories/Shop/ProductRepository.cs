@@ -103,6 +103,20 @@ namespace Application.Repositories.cpanel
             }
         }
 
+
+        public async Task<List<ProductVM>> GetProducts_With_CatalogId(int id,int take = 12)
+        {
+
+
+            using (var con = new SqlConnection(ConstantCpanel.connectionString))
+            {
+                var query = $@" select top({take}) Id,Name,Price,PriceOld,seen,Images 
+                                             from Products where IsPublish=1  and catalogid={id} order by Seen DESC";
+                return (await con.QueryAsync<ProductVM>(query)).ToList();
+            }
+        }
+
+
         public async Task<ResultDto> DeleteAsync(int id)
         {
             try

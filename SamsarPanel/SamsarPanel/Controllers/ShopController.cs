@@ -25,13 +25,20 @@ namespace SamsarPanel.Controllers
             return  await catalogRepository.GetAllAsync();
         }
 
-        [Route("getpopular")]
+        [Route("getpro/{id}")]
         [HttpGet]
-        public async Task<IEnumerable<ProductVM?>> GetPopular()
+        public async Task<IEnumerable<ProductVM?>> GetPro(int id)
         {
-            ProductRepository productRepository = new ProductRepository();  
+            ProductRepository productRepository = new ProductRepository();
+            if (id==0)
+            {
+                return await productRepository.GetPopular();
+            }
+            else
+            {
+                return await productRepository.GetProducts_With_CatalogId(id);  
+            }
             
-            return await productRepository.GetPopular();
         }
 
 
