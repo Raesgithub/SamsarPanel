@@ -104,8 +104,9 @@ data-overlay="5">
 
         <div class="row">
             <div class="col-md-4 col-xl-2">
+
                 @if (RendererInfo.IsInteractive){
-                    <button type="button" @onclick="()=>GetProducts(0)" class="edu_cat_2 cat-1 my-1 py-1 border-0">
+                    <button type="button" @onclick="()=>GetProducts(0,catname)" class="edu_cat_2 cat-1 my-1 py-1 border-0">
                         <div class="edu_cat_icons">
                             @* <a class="pic-main" ></a> *@
                         </div>
@@ -114,34 +115,32 @@ data-overlay="5">
                         </div>
                     </button>
 
-                }
-                                
-                @if (RendererInfo.IsInteractive){
-                        foreach (var item in catalogs)
-                        {
-                        <button @onclick="()=>GetProducts(item.Id)" class="edu_cat_2 cat-1 my-1 py-1">
-                                <div class="edu_cat_icons">
-                                    <a class="pic-main" href="#">
-                                        @*  <img src="/skillup/assets/img/content.png" class="img-fluid" alt="" /> *@
-                                        @(new MarkupString(item.Logo))
-                                    </a>
-                                </div>
-                                <div class="edu_cat_data">
-                                    <h4 class="title"><a href="#">@item.Name</a></h4>
-                                </div>
-                            </button>
-                        }
-                }
+                    foreach (var item in catalogs)
+                    {
+                        <button @onclick="()=>GetProducts(item.Id,item.Name)" class="edu_cat_2 cat-1 my-1 py-1">
+                            <div class="edu_cat_icons">
+                                <a class="pic-main" href="#">
+                                    @*  <img src="/skillup/assets/img/content.png" class="img-fluid" alt="" /> *@
+                                    @(new MarkupString(item.Logo))
+                                </a>
                             </div>
+                            <div class="edu_cat_data">
+                                <h4 class="title"><a href="#">@item.Name</a></h4>
+                            </div>
+                        </button>
+                    }
+                }
+            </div>
             <div class="col-md-8 col-xl-10">
                 <div class="row justify-content-center">
                     <div class="col-12">
                         <div class="sec-heading center">
                             <h3 class="font-2">
-                                جدیدترین دوره های <span class="theme-cl">رایگان</span>
+                                @catname
                             </h3>
                         </div>
                     </div>
+                </div>
                     <div class="row justify-content-center">
                         <!-- Single Grid -->
                         @foreach (var item in products)
@@ -149,9 +148,9 @@ data-overlay="5">
                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                 <div class="crs_grid">
                                     <div class="crs_grid_thumb">
-                                        <a href="course-detail.html" class="crs_detail_link">
+                                    <a href="/detail/@item.Id" class="crs_detail_link">
                                             <img src="/cpanel/assets/images/products/@item.GetFirstImage()"
-                                            class="img-fluid rounded"
+                                            class="img-fluid rounded" height="200"
                                             alt="@item.Name" />
                                         </a>
                                         @* <div class="crs_video_ico">
@@ -162,28 +161,20 @@ data-overlay="5">
                                         </div>
  *@                                    </div>
                                     <div class="crs_grid_caption">
-                                        <div class="crs_tutor_thumb overl_top">
-                                            <a href="instructor-detail.html">
-                                                <img src="/skillup/assets/img/team-5.jpg"
-                                                class="img-fluid circle"
-                                                alt="" />
-                                            </a>
-                                        </div>
-                                        <div class="crs_cates cl_1">
-                                            <span>برنامه نویسی</span>
-                                        </div>
+                                        
                                         <div class="crs_title">
                                             <h4>
-                                                <a href="course-detail.html" class="crs_title_link">@item.Name</a>
+                                            <a href="/detail/@item.Id" class="crs_title_link">@item.Name</a>
                                             </h4>
                                         </div>
                                         <div class="crs_info_detail">
                                             <ul>
+
                                                 <li>
-                                                    <strong class="text-danger" style="text-decoration:line-through;font-size:1.8em">120000</strong>
+                                                    <strong class="text-danger" style="text-decoration:line-through;font-size:1.8em">@item.PriceOld.ToString("#,0 تومان")</strong>
                                                 </li>
                                                 <li>
-                                                    <i class="fa fa-eye"></i><span>92k بازدید</span>
+                                                    <i class="fa fa-eye"></i><span>@item.Seen بازدید</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -209,7 +200,7 @@ data-overlay="5">
                                             </div>
                                             <div class="crs_fl_last">
                                                 <div class="crs_linkview">
-                                                    <a href="course-detail.html"
+                                                    <a href="/detail/@item.Id"
                                                     class="btn btn_view_detail theme-bg text-light">مشاهده</a>
                                                 </div>
                                             </div>
@@ -219,7 +210,7 @@ data-overlay="5">
                             </div>
 
                         }
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -228,12 +219,14 @@ data-overlay="5">
 @code{
     List<Catalog> catalogs=new  List<Catalog>();
     List<ProductVM> products = new List<ProductVM>();
+    string catname="محبوب ترین ها";
     protected override async Task OnInitializedAsync()
     {
         catalogs = await http.GetFromJsonAsync<List<Catalog>>("api/shop/getcats") ?? new List<Catalog>();
         products = await http.GetFromJsonAsync<List<ProductVM>>("api/shop/getpro/0") ?? new List<ProductVM>();
     }
-    async Task GetProducts(int id){
+    async Task GetProducts(int id,string name){
+        catname = name;
         products = await http.GetFromJsonAsync<List<ProductVM>>($"api/shop/getpro/{id}") ?? new List<ProductVM>();
     }
 }

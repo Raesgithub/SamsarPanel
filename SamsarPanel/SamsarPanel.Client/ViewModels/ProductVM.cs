@@ -15,6 +15,8 @@ namespace SamsarPanel.Client.ViewModels
         public bool IsPublish { get; set; } = false;
         public required string Images { get; set; }
         public required string Mdate { get; set; }
+        public int Seen { get; set; } = 0;
+        public long PriceOld { get; set; } = 0;
         public string GetFirstImage()
         {
             if (string.IsNullOrEmpty(Images))

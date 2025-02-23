@@ -1,0 +1,184 @@
+﻿@page "/detail/{id:int}"
+@using SamsarPanel.Client.ViewModels
+@inject HttpClient http
+@rendermode InteractiveAuto
+<!-- ============================ Page Title Start================================== -->
+<section class="page-title gray">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12 col-md-12">
+
+				<div class="breadcrumbs-wrap">
+					<h1 class="breadcrumb-title font-2">جزئیات محصول</h1>
+					<nav class="transparent">
+						<ol class="breadcrumb p-0">
+							<li class="breadcrumb-item"><a href="#">خانه</a></li>
+							<li class="breadcrumb-item active theme-cl" aria-current="page">جزئیات محصول</li>
+						</ol>
+					</nav>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</section>
+<!-- ============================ Page Title End ================================== -->
+<!-- ============================ Product Detail Start================================== -->
+<section class="pr_detail">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12 col-md-12">
+
+				<div class="woocommerce single_product quick_view_wrap">
+
+					<div class="woo-single-images">
+						<div class="feature-style-single">
+							<img src="assets/img/detail-13.png" alt="product-book-06" width="570">
+						</div>
+					</div>
+
+					<div class="summary entry-summary">
+						<div class="woo_inner">
+							<div class="shop_status sell">جدید</div>
+							<h2 class="woo_product_title">
+								<a href="#">آموزش تدوین و میکس ویدئو با Premier</a>
+							</h2>
+							<ul class="woo_info">
+								<li><strong>دسته بندی:</strong>گرافیک</li>
+								<li><strong>کد محصول:</strong>#CDP0147</li>
+							</ul>
+							<div class="woo_price_rate">
+								<div class="woo_rating">
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star filled"></i>
+									<i class="fas fa-star"></i>
+								</div>
+								<div class="woo_price_fix">
+									<h3 class="mb-0 theme-cl">149000 تومان</h3>
+								</div>
+							</div>
+							<div class="woo_short_desc">
+								<p>برای بسیاری از دانش آموزان معلمان، چشم انداز مواجهه با اولین تجربه کلاسی خود بسیار زیاد است. این کتاب دیدگاهی واقع گرایانه از آنچه که در کلاس با آن ها روبرو خواهد شد ارائه می دهد، اما همچنین مهارت هایی را که برای تبدیل شدن به معلمان حرفه ای و متفکر به آن ها نیاز دارند، ارائه می دهد.</p>
+							</div>
+							<div class="quantity-button-wrapper">
+								<label>تعداد</label>
+								<div class="quantity">
+									<input type="number" class="form-control qty" min="1" value="1" title="Qty" placeholder="">
+								</div>
+							</div>
+							<div class="woo_buttons">
+								<button type="submit" class="btn btn-theme2">افزودن به سبد</button>
+								<a href="javascript:void(0)" class="btn woo_btn_light" data-toggle="tooltip" data-placement="top" title="افزودن به علاقه مندی"><i class="ti-heart"></i></a>
+								<a href="javascript:void(0)" class="btn woo_btn_light" data-toggle="tooltip" data-placement="top" title="مقایسه"><i class="ti-reload"></i></a>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+</section>
+<!-- ============================ Product Detail End ================================== -->
+<!-- ============================ Product Description ================================== -->
+<section class="pt-0">
+	<div class="container">
+
+		<div class="row">
+
+			<div class="col-lg-10 col-md-12 col-sm-12">
+
+				<div class="property_block_wrap_header">
+					<ul class="nav nav-tabs customize-tab tabs_creative" id="myTab" role="tablist">
+						<li class="nav-item">
+							<a class="nav-link active" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">توضیحات</a>
+						</li>
+
+						<li class="nav-item">
+							<a class="nav-link" id="payment-tab" data-toggle="tab" href="#payment" role="tab" aria-controls="payment" aria-selected="false">جزئیات محصول</a>
+						</li>
+
+						<li class="nav-item">
+							<a class="nav-link" id="upgrade-tab" data-toggle="tab" href="#upgrade" role="tab" aria-controls="upgrade" aria-selected="false">دیدگاه</a>
+						</li>
+
+					</ul>
+				</div>
+
+				<div class="tab-content tabs_content_creative" id="myTabContent">
+
+					<!-- general Query -->
+					<div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+						<p>چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد.</p>
+						<p>در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به پایان رسد وزمان مورد نیاز شامل حروفچینی دستاوردهای اصلی و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.</p>
+					</div>
+
+					<!-- general Query -->
+					<div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
+						<div class="table-responsive">
+							<table class="table">
+								<tbody>
+									<tr>
+										<th scope="row">کد کالا</th>
+										<td>#PRT123452</td>
+									</tr>
+									<tr>
+										<th scope="row">وزن</th>
+										<td>125 کیلوگرم</td>
+									</tr>
+									<tr>
+										<th scope="row">شماره سریال</th>
+										<td>SKL125002</td>
+									</tr>
+									<tr>
+										<th scope="row">رنگ</th>
+										<td>مشکی</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<!-- general Query -->
+					<div class="tab-pane fade" id="upgrade" role="tabpanel" aria-labelledby="upgrade-tab">
+
+						<div class="alert alert-success" role="alert">
+							هنوز دیدگاهی برای این محصول ثبت نشده است.
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+</section>
+<!-- ============================ Product Description End ================================== -->
+<!-- ============================ Call To Action ================================== -->
+<section class="theme-bg call_action_wrap-wrap">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+
+				<div class="call_action_wrap">
+					<div class="call_action_wrap-head">
+						<h3 class="font-2">آیا سوالی دارید؟</h3>
+						<span>ما به شما کمک خواهیم کرد تا شغل و رشد خود را افزایش دهید.</span>
+					</div>
+					<a href="#" class="btn btn-call_action_wrap">امروز با ما تماس بگیرید</a>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</section>
+<!-- ============================ Call To Action End ================================== -->
+@code{
+	[Parameter]
+	public int Id { get; set; }
+}
