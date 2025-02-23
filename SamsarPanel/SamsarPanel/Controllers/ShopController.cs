@@ -42,6 +42,9 @@ namespace SamsarPanel.Controllers
         }
 
 
+
+
+
         [Route("getbycatalogid")]
         [HttpGet]
         public async Task<IEnumerable<Catalog?>> GetProductByCatalogId(int id)
