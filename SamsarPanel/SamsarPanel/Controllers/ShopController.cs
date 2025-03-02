@@ -40,6 +40,14 @@ namespace SamsarPanel.Controllers
             }
             
         }
+        [Route("getdetail/{id}")]
+        [HttpGet]
+        public async Task<Product?> GetDetail(int id)
+        {
+            ProductRepository productRepository = new ProductRepository();
+                return await productRepository.GetById(id);
+            
+        }
 
 
 

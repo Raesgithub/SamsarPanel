@@ -41,10 +41,10 @@
 						<div class="woo_inner">
 							<div class="shop_status sell">جدید</div>
 							<h2 class="woo_product_title">
-								<a href="#">آموزش تدوین و میکس ویدئو با Premier</a>
+								<a href="#">@Product.Name</a>
 							</h2>
 							<ul class="woo_info">
-								<li><strong>دسته بندی:</strong>گرافیک</li>
+								<li><strong>دسته بندی:</strong>@Product.Catalog.Name</li>
 								<li><strong>کد محصول:</strong>#CDP0147</li>
 							</ul>
 							<div class="woo_price_rate">
@@ -56,11 +56,11 @@
 									<i class="fas fa-star"></i>
 								</div>
 								<div class="woo_price_fix">
-									<h3 class="mb-0 theme-cl">149000 تومان</h3>
+									<h3 class="mb-0 theme-cl">@Product.Price.ToString("#,0 تومان")</h3>
 								</div>
 							</div>
 							<div class="woo_short_desc">
-								<p>برای بسیاری از دانش آموزان معلمان، چشم انداز مواجهه با اولین تجربه کلاسی خود بسیار زیاد است. این کتاب دیدگاهی واقع گرایانه از آنچه که در کلاس با آن ها روبرو خواهد شد ارائه می دهد، اما همچنین مهارت هایی را که برای تبدیل شدن به معلمان حرفه ای و متفکر به آن ها نیاز دارند، ارائه می دهد.</p>
+								@(new MarkupString(Product.Description))
 							</div>
 							<div class="quantity-button-wrapper">
 								<label>تعداد</label>
@@ -180,9 +180,10 @@
 <!-- ============================ Call To Action End ================================== -->
 @code{
 	[Parameter] 	public int Id { get; set; }
+	public Product Product { get; set; } = new Product();
 	protected override async Task OnInitializedAsync()
 	{
-		http.
+		Product = await http.GetFromJsonAsync<Product>($"api/shop/getdetail/{Id}") ?? new Product();
 	}
 
 

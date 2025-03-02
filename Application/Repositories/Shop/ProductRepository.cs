@@ -1,5 +1,6 @@
 ﻿using Application.Dtos.cpanel;
 using Dapper;
+using Domain.Models.shop;
 using Domain.Resourses;
 using Domain.ViewModels;
 using Microsoft.Data.SqlClient;
@@ -17,7 +18,14 @@ namespace Application.Repositories.cpanel
         // viewmodels
         //dtos 
 
-
+        public async Task<Product?> GetById(int id)
+        {
+            var query = $"select * from products where id={id}";
+            using (var con=new SqlConnection(ConstantCpanel.connectionString))
+            {
+                return  await  con.QuerySingleOrDefaultAsync<Product>(query);
+            }
+        }
 
         public async Task<PaggingDto<ProductVM>> GetAllByCatalogId(int catalogId,PaggingDto<ProductVM> pagging)
         {
