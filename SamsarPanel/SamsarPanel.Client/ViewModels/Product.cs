@@ -28,9 +28,25 @@ namespace SamsarPanel.Client.ViewModels
         public int Seen { get; set; } = 0;
         public int CatalogId { get; set; }
         public virtual Catalog? Catalog { get; set; }
+        public string GetFirstImage()
+        {
+            if (string.IsNullOrEmpty(Images))
+            {
+                return string.Empty;
+            }
+            return Images.Split(',')[0];
 
+        }
 
-      
+        public List<string>? GetAllImages()
+        {
+            if (string.IsNullOrEmpty(Images))
+            {
+                return null;
+            }
+            return Images.Split(',').ToList();
+            
+        }
 
     }
 }
