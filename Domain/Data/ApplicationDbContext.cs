@@ -9,5 +9,7 @@ namespace Domain.Data
     {
         public DbSet<Catalog> Catalogs { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<Order> Orders { get; set; }
+
     }
 }

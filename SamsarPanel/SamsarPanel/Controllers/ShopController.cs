@@ -40,6 +40,19 @@ namespace SamsarPanel.Controllers
             }
             
         }
+
+
+        [Route("setorder/{id}/{phone}")]
+        [HttpGet]
+        public async Task<bool> SetOrder(int id,string phone)
+        {
+            OrderRepository orderRepository = new OrderRepository();
+            
+                return await orderRepository.InsertAsync(id,phone);
+            
+        }
+
+
         [Route("getdetail/{id}")]
         [HttpGet]
         public async Task<Product?> GetDetail(int id)
