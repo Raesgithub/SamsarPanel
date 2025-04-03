@@ -3,19 +3,20 @@
 @inject HttpClient http
 @rendermode InteractiveAuto
 <!-- ============================ Page Title Start================================== -->
+<PageTitle>@Product.Name</PageTitle>
 @if (RendererInfo.IsInteractive)
 {
-    <section class="page-title gray">
+    <section class="page-title gray" style="background: linear-gradient(0deg, rgba(3,185,124,1) 0%, rgba(1,125,84,1) 93%);">
         <div class="container">
             <div class="row">
-                <div class="col-lg-12 col-md-12">
+                <div class="col-lg-12 col-md-12" >
 
                     <div class="breadcrumbs-wrap">
-                        <h1 class="breadcrumb-title font-2">جزئیات محصول</h1>
+                        <h1 class="breadcrumb-title font-2 text-light">@Product.Name</h1>
                         <nav class="transparent">
                             <ol class="breadcrumb p-0">
-                                <li class="breadcrumb-item"><a href="#">خانه</a></li>
-                                <li class="breadcrumb-item active theme-cl" aria-current="page">جزئیات محصول</li>
+                                <li class="breadcrumb-item"><a href="/">مبلمان کریمی</a></li>
+                                <li class="breadcrumb-item active theme-cl" aria-current="page">@Product.Name</li>
                             </ol>
                         </nav>
                     </div>
@@ -182,7 +183,92 @@
         </div>
     </section>
     <!-- ============================ Call To Action End ================================== -->
+    return;
 }
+<style>
+    .loading{
+        background:#ccc;
+        height:20px;
+        
+    }
+</style>
+<section class="page-title gray" style="background: linear-gradient(0deg, rgba(3,185,124,1) 0%, rgba(1,125,84,1) 93%);">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+
+                <div class="breadcrumbs-wrap">
+                    <h1 class="breadcrumb-title font-2 text-light loading"></h1>
+                    <nav class="transparent">
+                        <ol class="breadcrumb p-0">
+                            <li class="breadcrumb-item"></li>
+                            <li class="breadcrumb-item active theme-cl loading" aria-current="page"></li>
+                        </ol>
+                    </nav>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ============================ Page Title End ================================== -->
+<!-- ============================ Product Detail Start================================== -->
+<section class="pr_detail">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+
+                <div class="woocommerce single_product quick_view_wrap">
+
+                    <div class="woo-single-images">
+                        <div class="feature-style-single loading" style="height:200px">
+                            
+                        </div>
+                 
+
+                    </div>
+
+                    <div class="summary entry-summary">
+                        <div class="woo_inner">
+                            <h2 class="woo_product_title loading">
+                               
+                            </h2>
+                            <ul class="woo_info">
+                                @* <li><strong>دسته بندی:</strong>@Product.Catalog.Name</li> *@
+                                <li class="loading"></li>
+                            </ul>
+                            <div class="woo_price_rate">
+                                <div class="woo_rating">
+                                    <i class="fas fa-star filled"></i>
+                                    <i class="fas fa-star filled"></i>
+                                    <i class="fas fa-star filled"></i>
+                                    <i class="fas fa-star filled"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="woo_price_fix">
+                                    <h3 class="mb-0 theme-cl loading"></h3>
+                                </div>
+                            </div>
+                            <div class="woo_short_desc loading" style="height:200px">
+                             
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ============================ Product Detail End ================================== -->
+<!-- ============================ Product Description ================================== -->
+
+
+
+
+
 
 @code {
     [Parameter] public int Id { get; set; }
