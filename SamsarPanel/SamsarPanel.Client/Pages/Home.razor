@@ -150,7 +150,7 @@ data-overlay="5">
                                     <div class="crs_grid_thumb">
                                     <a href="/detail/@item.Id" class="crs_detail_link">
                                             <img src="/cpanel/assets/images/products/@item.GetFirstImage()"
-                                            class="img-fluid rounded" height="200"
+                                             class="img-fluid rounded" style="    height: 144px;   width: 100%;  object-fit: cover;"
                                             alt="@item.Name" />
                                         </a>
                                         @* <div class="crs_video_ico">
@@ -171,7 +171,7 @@ data-overlay="5">
                                             <ul>
 
                                                 <li>
-                                                    <strong class="text-danger" style="text-decoration:line-through;font-size:1.8em">@item.PriceOld.ToString("#,0 تومان")</strong>
+                                                    <strong class="text-danger" style="text-decoration:line-through;font-size:1.2em">@item.PriceOld.ToString("#,0 تومان")</strong>
                                                 </li>
                                                 <li>
                                                     <i class="fa fa-eye"></i><span>@item.Seen بازدید</span>

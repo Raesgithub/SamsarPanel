@@ -3196,22 +3196,29 @@ span.esli_vd {
     display: block;
     width: 100%;
 }
-.crs_info_detail ul {
-    padding: 0;
-    margin: 0;
-    display: flex;
-    align-items: center;
-}
-.crs_info_detail ul li {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 33.333333%;
-    flex: 0 0 33.333333%;
-    color: #4e6579;
-    font-size: 13px;
-    list-style: none;
-}
+    .crs_info_detail ul {
+        padding: 0;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-content: space-between;
+        justify-content: center;
+    }
+    .crs_info_detail ul li {
+        display: flex;
+        width: 33.333333%;
+        flex: 0 0 33.333333%;
+        color: #4e6579;
+        font-size: 13px;
+        list-style: none;
+        align-content: stretch;
+        flex-direction: row-reverse;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
 .crs_info_detail ul li i{
     margin-left:5px;
 }
