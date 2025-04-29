@@ -1,4 +1,7 @@
-﻿@inject NavigationManager nav
+﻿@using Domain.Data
+@using Microsoft.AspNetCore.Identity
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager nav
 <!-- cpanel template-->
 @if (witchHTML=="cpanel")
 {
@@ -25,7 +28,7 @@
         <!-- begin::theme color -->
         <meta name="theme-color" content="#3f51b5" />
         <!-- end::theme color -->
-        
+
         <HeadOutlet />
     </head>
     <body class="dark">
@@ -66,12 +69,13 @@
     <meta name="author" content="Themezhub" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="/skillup/assets/css/styles.css" rel="stylesheet" />
-   <base href="/" />
+    <base href="/" />
     <HeadOutlet />
 </head>
 
 <body dir="rtl">
     <Routes />
+   
     <script src="/skillup/assets/js/jquery.min.js"></script>
     <script src="/skillup/assets/js/popper.min.js"></script>
     <script src="/skillup/assets/js/bootstrap.min.js"></script>
@@ -91,30 +95,6 @@
 
 
 
-@* <!DOCTYPE html>
-    <html lang="en">
-
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <base href="/" />
-        <link rel="stylesheet" href="bootstrap/bootstrap.min.css" />
-        <link rel="stylesheet" href="app.css" />
-        <link rel="stylesheet" href="SamsarPanel.styles.css" />
-        <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="stylesheet" href="/cpanel/assets/plugin/tostify/toastify.min.css" type="text/css">
-        <HeadOutlet />
-    </head>
-
-    <body>
-        <Routes />
-    <script src="/cpanel/assets/plugin/tostify/toastify-js.js"></script>
-        <script src="_framework/blazor.web.js"></script>
-    </body>
-
-    </html> 
- *@
-
 @code{
     string witchHTML = "";
     protected override void OnInitialized()
@@ -130,4 +110,6 @@
             witchHTML = "";
         }
     }
+    /// 
+  
 }

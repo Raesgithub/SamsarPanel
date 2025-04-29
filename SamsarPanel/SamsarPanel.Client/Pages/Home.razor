@@ -2,6 +2,7 @@
 @using SamsarPanel.Client.ViewModels
 @inject HttpClient http
 @rendermode InteractiveAuto
+
 <div class="hero_banner image-cover"
 style="background: #03b97c url(/skillup/assets/img/banner-3.jpg) no-repeat"
 data-overlay="5">
@@ -216,10 +217,14 @@ data-overlay="5">
         </div>
     </div>
 </section>
+
 @code{
     List<Catalog> catalogs=new  List<Catalog>();
     List<ProductVM> products = new List<ProductVM>();
     string catname="محبوب ترین ها";
+
+    
+
     protected override async Task OnInitializedAsync()
     {
         catalogs = await http.GetFromJsonAsync<List<Catalog>>("api/shop/getcats") ?? new List<Catalog>();

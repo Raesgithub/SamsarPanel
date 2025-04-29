@@ -1,8 +1,7 @@
 ﻿@using Domain.Data
 @using Microsoft.AspNetCore.Identity
 @inherits LayoutComponentBase
-@inject UserManager<ApplicationUser> userManager
-@inject SignInManager<ApplicationUser> signInManager
+
 
 <div id="main-wrapper">
     <!-- ============================================================== -->
@@ -16,16 +15,14 @@
                     <a class="nav-brand static-logo" href="#">
                         <img src="assets/img/logo-light.png" class="logo" alt="" />
                     </a>
-                    <a class="nav-brand fixed-logo" href="#">
+                    <a class="nav-brand fixed-logo" href="/login">
                         <img src="assets/img/logo.png" class="logo" alt="" />
                     </a>
                     <div class="nav-toggle"></div>
                     <div class="mobile_nav">
                         <ul>
                             <li>
-                                <a href="javascript:void(0);"
-                                data-toggle="modal"
-                                data-target="#login"
+                                <a href="/login"
                                 class="crs_yuo12 w-auto text-white theme-bg">
                                     <span class="embos_45">
                                         <i class="fas fa-sign-in-alt ml-1 rotate-img"></i>ورود
@@ -184,7 +181,7 @@
     <!-- ============================================================== -->
     <!-- Top header  -->
     <!-- ============================================================== -->
-    <!-- ============================ Hero Banner  Start================================== -->
+    <!-- ============================ Hero Banner  Start ================================== -->
     @Body
 
     <footer class="light-footer skin-light-footer style-2">
@@ -289,95 +286,14 @@
     </footer>
     <!-- ============================ Footer End ================================== -->
     <!-- Log In Modal -->
-    <div class="modal fade"
-    id="login"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="loginmodal"
-    aria-hidden="true">
-        <div class="modal-dialog modal-xl login-pop-form" role="document">
-            <div class="modal-content overli" id="loginmodal">
-                <div class="modal-header">
-                    <h5 class="modal-title">ورود به حساب کاربری</h5>
-                    <button type="button"
-                    class="close"
-                    data-dismiss="modal"
-                    aria-label="Close">
-                        <span aria-hidden="true">
-                            <i class="fas fa-times-circle"></i>
-                        </span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="login-form">
-                        <div>
-                            <div class="form-group">
-                                <label>نام کاربری</label>
-                                <div class="input-with-icon">
-                                    <input type="text" @bind-value="un"
-                                    class="form-control"
-                                    placeholder="نام کاربری/ ایمیل" />
-                                    <i class="ti-user"></i>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>رمز عبور</label>
-                                <div class="input-with-icon">
-                                    <input type="password"
-                                    class="form-control" @bind-value="pa"
-                                    placeholder="*******" />
-                                    <i class="ti-unlock"></i>
-                                </div>
-                            </div>
-
-
-
-                            <div class="form-group">
-                                @if (mes != "")
-                                {
-                                    <div class="alert alert-danger my-3">
-                                        <strong>@mes</strong>
-                                    </div>
-                                }
-                                <button type="button" @onclick="LoginButton"
-                                class="btn btn-md full-width theme-bg text-white">
-                                    ورود به حساب
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
     <!-- End Modal -->
 
     <a id="back2Top" class="top-scroll" title="Back to top" href="#">
         <i class="ti-arrow-up"></i>
     </a>
 </div>
+
 @code{
-    string un="", pa = "",mes="";
-    private async Task LoginButton(MouseEventArgs args)
-    {
-        var user=await userManager.FindByNameAsync(un);
-        if (user==null)
-        {
-            user =await userManager.FindByEmailAsync(un);
-            if (user==null)
-            {
-                mes = "کاربری با مشخصات وارد شده پیدا نشد";
-                return;
-            }
-        }
-        var res= await userManager.CheckPasswordAsync(user, pa);
-        if (res==false)
-        {
-            mes = "کاربری با مشخصات وارد شده پیدا نشد";
-            return;
-        }
-        await signInManager.SignInAsync(user, true);
-    }
+
+
 }

@@ -1,0 +1,61 @@
+﻿@page "/login"
+@using Domain.Data
+@using Domain.Models
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> userManager
+@inject SignInManager<ApplicationUser> signInManager
+@rendermode InteractiveServer
+<h3>Login</h3>
+
+
+<h3>ورود به سیستم</h3>
+
+<EditForm FormName="ffff" Model="_loginModel" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary/>
+    <div class="form-group">
+        <label>نام کاربری</label>
+        <InputText @bind-Value="_loginModel.un" class="form-control" />
+        <ValidationMessage For="()=>_loginModel.un"/>
+    </div>
+
+    <div class="form-group">
+        <label>رمز عبور</label>
+        <InputText @bind-Value="_loginModel.pa" type="password" class="form-control" />
+        <ValidationMessage For="()=>_loginModel.pa" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">ورود</button>
+</EditForm>
+
+@code {
+    private LoginModel _loginModel = new LoginModel();
+    private string _errorMessage = string.Empty;
+    
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            
+            var user = await userManager.FindByNameAsync(_loginModel.un) ??
+                      await userManager.FindByEmailAsync(_loginModel.un);
+
+            if (user == null || !await userManager.CheckPasswordAsync(user, _loginModel.pa))
+            {
+                _errorMessage = "نام کاربری یا رمز عبور اشتباه است";
+                return;
+            }
+
+            await signInManager.SignInAsync(user, isPersistent: true);
+            // هدایت به صفحه اصلی پس از ورود موفق
+//            navigationManager.NavigateTo("/");
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = "خطا در ورود به سیستم";
+            Console.WriteLine($"Login error: {ex.Message}");
+        }
+    }
+
+
+}
