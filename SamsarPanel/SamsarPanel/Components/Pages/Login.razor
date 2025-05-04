@@ -6,28 +6,31 @@
 @inject SignInManager<ApplicationUser> signInManager
 @rendermode InteractiveServer
 
-<h3>Login</h3>
 
-
-<h3>ورود به سیستم</h3>
+<h3 class="my-3">ورود به سیستم</h3>
 
 <EditForm FormName="ffff" Model="_loginModel" OnValidSubmit="HandleValidSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary/>
     <div class="form-group">
-        <label>نام کاربری</label>
+        <label class="form-label">نام کاربری</label>
         <InputText @bind-Value="_loginModel.un" class="form-control" />
         <ValidationMessage For="()=>_loginModel.un"/>
     </div>
 
     <div class="form-group">
-        <label>رمز عبور</label>
+        <label class="form-label">رمز عبور</label>
         <InputText @bind-Value="_loginModel.pa" type="password" class="form-control" />
         <ValidationMessage For="()=>_loginModel.pa" />
     </div>
 
-    <button type="submit" class="btn btn-primary">ورود</button>
+    <button type="submit" class="btn btn-success my-3" >ورود به حساب کاربری</button>
 </EditForm>
+@if (_errorMessage!="")
+{
+    <p>@_errorMessage</p>
+}
+    
 
 @code {
     private LoginModel _loginModel = new LoginModel();
@@ -37,7 +40,8 @@
     {
         try
         {
-            
+            //
+
             var user = await userManager.FindByNameAsync(_loginModel.un) ??
                       await userManager.FindByEmailAsync(_loginModel.un);
 
