@@ -19,42 +19,21 @@ builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
 
-//builder.Services.AddAuthentication(options =>
-//    {
-//        options.DefaultScheme = IdentityConstants.ApplicationScheme;
-//        options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-//    })
-//    .AddIdentityCookies();
-
+// Database Configuration
 var connectionString = ConstantCpanel.connectionString;
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-//builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-//    .AddEntityFrameworkStores<ApplicationDbContext>()
-//    .AddSignInManager()
-//    .AddDefaultTokenProviders();
-
-
-/////////////////////////////
+// HttpClient Configuration
 builder.Services.AddControllers();
 builder.Services.AddScoped(a => new HttpClient
 {
-  
     BaseAddress = new Uri("https://localhost:7163/")
 });
 builder.Services.AddMemoryCache();
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.Cookie.Name = ".identity"; // نام کوکی
-    options.Cookie.HttpOnly = true; // فقط برای HTTP
-    options.ExpireTimeSpan = TimeSpan.FromHours(8); // زمان انقضا
-    options.SlidingExpiration = true; // فعال‌سازی انقضای لغزشی
-    options.LoginPath = "/Account/Login"; // مسیر ورود
-    options.LogoutPath = "/Account/Logout"; // مسیر خروج
-    options.AccessDeniedPath = "/Account/AccessDenied"; // مسیر دسترسی ممنوع
-});
+
+// Identity Configuration (Keep only this one)
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedPhoneNumber = false;
@@ -67,12 +46,25 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
     options.Password.RequireLowercase = false;
-}).AddRoles<IdentityRole>()
+})
+.AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
-///////////////////////////
-builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
+// Cookie Configuration
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.Name = ".identity";
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromHours(8);
+    options.SlidingExpiration = true;
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+});
+
+// No need for extra AddAuthentication() since AddIdentity already configures it.
+builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
