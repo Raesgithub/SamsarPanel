@@ -23,7 +23,7 @@
                 <hr />
                 <ValidationSummary class="text-danger" role="alert" />
                 <div class="form-floating mb-3">
-                    <InputText dir="ltr" @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    <InputText dir="ltr" @bind-Value="Input.UserName" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                     <label for="email" class="form-label">نام کاربری</label>
                     <ValidationMessage For="() => Input.Email" class="text-danger" />
                 </div>
@@ -76,12 +76,21 @@
     {
         // This doesn't count login failures towards account lockout
         // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-        var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+
+
+        var user =await UserManager.FindByNameAsync(Input.UserName) ?? await UserManager.FindByEmailAsync(Input.UserName);
+        if (user==null)
+        {
+            errorMessage = "ورود با شکست مواجه شد";
+            return;
+        }
+
+        var result = await SignInManager.PasswordSignInAsync(user, Input.Password, Input.RememberMe, lockoutOnFailure: false);
         if (result.Succeeded)
         {
 
             //  var user = await Context.Users.Where(a => a.Email == Input.Email).AsNoTracking().FirstOrDefaultAsync();
-            var user = await UserManager.FindByEmailAsync(Input.Email);
+            //var user = await UserManager.FindByEmailAsync(Input.Email);
 
             user.LoginCount += 1;
             user.LastDateLogin = new PersianDateTime(DateTime.Now).ToString();

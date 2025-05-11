@@ -160,14 +160,27 @@
                     </ul>
 
                     <ul class="nav-menu nav-menu-social align-to-left">
-                        <li>
-                            <NavLink href="/Account/Login
+                        <AuthorizeView>
+                            <NotAuthorized>
+                                <li>
+                                    <NavLink href="/Account/Login
 "
-                            class="alio_green"
-                            >
-                                <i class="fas fa-sign-in-alt ml-1 rotate-img"></i><span class="dn-lg">ورود</span>
-                            </NavLink>
-                        </li>
+                                             class="alio_green">
+                                        <i class="fas fa-sign-in-alt ml-1 rotate-img"></i><span class="dn-lg">ورود</span>
+                                    </NavLink>
+                                </li>
+                            </NotAuthorized>
+                            <Authorized>
+                                <li>
+                                    <NavLink href="/Account/Login
+"
+                                             class="alio_green">
+                                        <i class="fas fa-sign-in-alt ml-1 rotate-img"></i><span class="dn-lg">خروج</span>
+                                    </NavLink>
+                                </li>
+                            </Authorized>
+                        </AuthorizeView>
+                        
                         <li class="add-listing theme-bg">
                             <a href="signup.html" class="text-white">ثبت نام</a>
                         </li>
