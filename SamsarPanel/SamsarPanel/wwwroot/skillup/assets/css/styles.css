@@ -124,9 +124,9 @@ a.white-link:hover, a.white-link:focus {
     outline: 0;
     box-shadow: none;
 }
-section{
-	padding:80px 0 80px;
-	position:relative;
+section {
+    padding: 101px 0 24px;
+    position: relative;
 }
 section.min{
 	padding:80px 0 50px;
