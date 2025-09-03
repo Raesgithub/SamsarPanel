@@ -1,0 +1,20 @@
+﻿@page "/Account/Logout"
+@using System.ComponentModel.DataAnnotations
+@using MD.PersianDateTime
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Identity
+@using Domain.Data
+@using Microsoft.EntityFrameworkCore
+@inject SignInManager<ApplicationUser> SignInManager
+
+<NavLink href="/">Back</NavLink>
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await SignInManager.SignOutAsync();
+        //RedirectManager.RedirectTo("/");
+    }
+
+   
+}

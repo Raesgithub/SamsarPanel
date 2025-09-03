@@ -32,7 +32,7 @@ builder.Services.AddScoped(a => new HttpClient
     BaseAddress = new Uri("https://localhost:7163/")
 });
 builder.Services.AddMemoryCache();
-
+//builder.Services.AddScoped<navigataion>
 // Identity Configuration (Keep only this one)
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
