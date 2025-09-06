@@ -1,6 +1,6 @@
 ﻿@using Domain.Data
 @using Microsoft.AspNetCore.Identity
- @rendermode InteractiveServer
+@rendermode InteractiveServer
 <div class="header header-transparent change-logo">
     <div class="container">
         <nav id="navigation" class="navigation navigation-landscape">
@@ -12,7 +12,7 @@
                     <img src="assets/img/logo.png" class="logo" alt="" />
                 </a>
                 <div class="nav-toggle"></div>
-@*                 <div class="mobile_nav">
+                @*                 <div class="mobile_nav">
                     <ul>
                         <li>
                             <NavLink href="/Account/Login"
@@ -152,7 +152,7 @@
                     <li><a href="dashboard.html">حساب کاربری</a></li>
                 </ul>
 
-     @*            <ul class="nav-menu nav-menu-social align-to-left">
+                @*            <ul class="nav-menu nav-menu-social align-to-left">
                     <AuthorizeView>
                         <NotAuthorized>
                             <li>
@@ -187,6 +187,6 @@
 
     private void Logout(MouseEventArgs args)
     {
-         //SignInManager.Sig();
+        //SignInManager.Sig();
     }
 }
