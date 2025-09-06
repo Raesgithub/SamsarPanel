@@ -1,192 +1,152 @@
-﻿@using Domain.Data
-@using Microsoft.AspNetCore.Identity
-@rendermode InteractiveServer
-<div class="header header-transparent change-logo">
+﻿@page "/"
+@using SamsarPanel.Client.ViewModels
+@inject HttpClient http
+@rendermode InteractiveAuto
+
+<div class="hero_banner image-cover"
+     style="background: #03b97c url(/skillup/assets/img/banner-3.jpg) no-repeat"
+     data-overlay="5">
     <div class="container">
-        <nav id="navigation" class="navigation navigation-landscape">
-            <div class="nav-header">
-                <a class="nav-brand static-logo" href="#">
-                    <img src="assets/img/logo-light.png" class="logo" alt="" />
-                </a>
-                <a class="nav-brand fixed-logo" href="/Account/Login">
-                    <img src="assets/img/logo.png" class="logo" alt="" />
-                </a>
-                <div class="nav-toggle"></div>
-                @*                 <div class="mobile_nav">
-                    <ul>
-                        <li>
-                            <NavLink href="/Account/Login"
-                                     class="crs_yuo12 w-auto text-white theme-bg">
-                                <span class="embos_45">
-                                    <i class="fas fa-sign-in-alt ml-1 rotate-img"></i>ورود
-                                </span>
-                            </NavLink>
-                        </li>
-                    </ul>
-                </div> *@
+        <div class="row align-items-center">
+            <div class="col-xl-6 col-lg-7 col-md-8 col-sm-12">
+                <div class="simple-search-wrap text-right">
+                    <div class="hero_search-2">
+                        <div class="elsio_tag">طرح تخفیف تابستان آموزشی</div>
+                        <h1 class="banner_title mb-4 font-2">
+                            در بین هزاران ساعت آموزش جستجو کنید...
+                        </h1>
+                        <!-- <p class="font-lg mb-4">
+                        مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی
+                        تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای
+                        کاربردی می باشد.
+                        </p>
+                        <div class="input-group simple_search">
+                        <i class="fa fa-search ico"></i>
+                        <input
+                        type="text"
+                        class="form-control"
+                        placeholder="نام دوره آموزش..."
+                        />
+                        <div class="input-group-append">
+                        <button class="btn theme-bg" type="button">جستجو</button>
+                        </div>
+                        </div> -->
+                    </div>
+                </div>
             </div>
-            <div class="nav-menus-wrapper">
-                <ul class="nav-menu">
-                    <li class="active">
-                        <a href="#">خانه<span class="submenu-indicator"></span></a>
-                        <ul class="nav-dropdown nav-submenu">
-                            <li><a href="index.html">خانه 1</a></li>
-                            <li><a href="home-2.html">خانه 2</a></li>
-                            <li><a href="home-3.html">خانه 3</a></li>
-                            <li><a href="home-4.html">خانه 4</a></li>
-                            <li><a href="home-5.html">خانه 5</a></li>
-                            <li><a href="home-6.html">خانه 6</a></li>
-                            <li><a href="home-7.html">خانه 7</a></li>
-                        </ul>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            دوره های آموزشی<span class="submenu-indicator"></span>
-                        </a>
-                        <ul class="nav-dropdown nav-submenu">
-                            <li>
-                                <a href="#">
-                                    نمای شبکه ای<span class="submenu-indicator"></span>
-                                </a>
-                                <ul class="nav-dropdown nav-submenu">
-                                    <li>
-                                        <a href="grid-layout-with-sidebar.html">نسخه 1</a>
-                                    </li>
-                                    <li>
-                                        <a href="grid-layout-with-sidebar-2.html">نسخه 2</a>
-                                    </li>
-                                    <li>
-                                        <a href="grid-layout-with-sidebar-3.html">نسخه 3</a>
-                                    </li>
-                                    <li>
-                                        <a href="grid-layout-with-sidebar-4.html">نسخه 4</a>
-                                    </li>
-                                    <li>
-                                        <a href="grid-layout-with-sidebar-5.html">نسخه 5</a>
-                                    </li>
-                                    <li>
-                                        <a href="grid-layout-full.html">نمای تمام صفحه نسخه 1</a>
-                                    </li>
-                                    <li>
-                                        <a href="grid-layout-full-2.html">نمای تمام صفحه نسخه 2</a>
-                                    </li>
-                                    <li>
-                                        <a href="grid-layout-full-3.html">نمای تمام صفحه نسخه 3</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    نمای لیستی<span class="submenu-indicator"></span>
-                                </a>
-                                <ul class="nav-dropdown nav-submenu">
-                                    <li>
-                                        <a href="list-layout-with-sidebar.html">با سایدبار</a>
-                                    </li>
-                                    <li>
-                                        <a href="list-layout-with-full.html">تمام صفحه</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    جزئیات دوره<span class="submenu-indicator"></span>
-                                </a>
-                                <ul class="nav-dropdown nav-submenu">
-                                    <li><a href="course-detail.html">نسخه 1</a></li>
-                                    <li><a href="course-detail-2.html">نسخه 2</a></li>
-                                    <li><a href="course-detail-3.html">نسخه 3</a></li>
-                                    <li><a href="course-detail-4.html">نسخه 4</a></li>
-                                </ul>
-                            </li>
-
-                            <li>
-                                <a href="explore-category.html">انتخاب دسته بندی</a>
-                            </li>
-                            <li><a href="find-instructor.html">لیست مدرسین</a></li>
-                            <li><a href="instructor-detail.html">جزئیات مدرس</a></li>
-                        </ul>
-                    </li>
-
-                    <li>
-                        <a href="#">صفحات<span class="submenu-indicator"></span></a>
-                        <ul class="nav-dropdown nav-submenu">
-                            <li>
-                                <a href="#">
-                                    فروشگاه<span class="submenu-indicator"></span>
-                                </a>
-                                <ul class="nav-dropdown nav-submenu">
-                                    <li>
-                                        <a href="shop-with-sidebar.html">سایدبار راست</a>
-                                    </li>
-                                    <li>
-                                        <a href="shop-with-left-sidebar.html">سایدبار چپ</a>
-                                    </li>
-                                    <li>
-                                        <a href="list-shop-with-sidebar.html">نمای لیستی با سایدبار</a>
-                                    </li>
-                                    <li><a href="product-detail.html">جزئیات محصول</a></li>
-                                    <li><a href="wishlist.html">موردعلاقه ها</a></li>
-                                    <li><a href="checkout.html">تسویه حساب</a></li>
-                                    <li>
-                                        <a href="add-to-cart.html">افزون به سبد خرید</a>
-                                    </li>
-                                    <li><a href="success-payment.html">پرداخت موفق</a></li>
-                                    <li><a href="failed-payment.html">پرداخت ناموفق</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="about.html">درباره ما</a></li>
-                            <li><a href="contact.html">تماس با ما</a></li>
-                            <li><a href="blogs.html">لیست وبلاگ</a></li>
-                            <li><a href="pricing.html">قیمت گذاری</a></li>
-                            <li><a href="404.html">صفحه 404</a></li>
-                            <li><a href="component.html">المان ها</a></li>
-                            <li><a href="faq.html">سوالات متداول</a></li>
-                            <li><NavLink href="/Account/Login">ورود</NavLink></li>
-
-                            <li><a href="forgot.html">فراموشی رمز عبور</a></li>
-                        </ul>
-                    </li>
-
-                    <li><a href="dashboard.html">حساب کاربری</a></li>
-                </ul>
-
-                @*            <ul class="nav-menu nav-menu-social align-to-left">
-                    <AuthorizeView>
-                        <NotAuthorized>
-                            <li>
-                                <NavLink href="/Account/Login"
-                                         class="add-listing theme-bg p-3 mt-3">
-                                    <i class="fas fa-sign-in-alt ml-1 rotate-img"></i><span class="dn-lg">ورود</span>
-                                </NavLink>
-                            </li>
-                        </NotAuthorized>
-                        <Authorized>
-                            <li>
-                                <button  @onclick='() => nav.NavigateTo("/cpanel/users/",true)'
-                                        class="btn btn-outline-success">
-                                    <span class="dn-lg">پنل</span>
-                                </button>
-                                <NavLink href="/Account/Logout"
-                                        class="alio_green">
-                                    <i class="fas fa-sign-in-alt ml-1 rotate-img"></i><span class="dn-lg">خروج</span>
-                                </NavLink>
-                            </li>
-                        </Authorized>
-                    </AuthorizeView>
-
-
-                </ul> *@
-            </div>
-        </nav>
+        </div>
     </div>
 </div>
-@inject NavigationManager nav
-@code {
+<!-- ============================ Hero Banner End ================================== -->
+<!-- ============================ Our Awards Start ================================== -->
 
-    private void Logout(MouseEventArgs args)
+<!-- ============================ Our Awards End ================================== -->
+<!-- ============================ Top Categories Start ================================== -->
+<section class="main">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-md-8 col-xl-10">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <div class="sec-heading center">
+                            <h3 class="font-2">
+                                @catname
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <!-- Single Grid -->
+                    @foreach (var item in products)
+                    {
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                            <div class="crs_grid">
+                                <div class="crs_grid_thumb">
+                                    <a href="/detail/@item.Id" class="crs_detail_link">
+                                        <img src="/cpanel/assets/images/products/@item.GetFirstImage()"
+                                             class="img-fluid rounded" style="    height: 144px;   width: 100%;  object-fit: cover;"
+                                             alt="@item.Name" />
+                                    </a>
+                                    @* <div class="crs_video_ico">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                        <div class="crs_locked_ico">
+                                            <i class="fa fa-lock"></i>
+                                        </div>
+ *@                                    </div>
+                                <div class="crs_grid_caption">
+
+                                    <div class="crs_title">
+                                        <h4>
+                                            <a href="/detail/@item.Id" class="crs_title_link">@item.Name</a>
+                                        </h4>
+                                    </div>
+                                    <div class="crs_info_detail">
+                                        <ul>
+
+                                            <li>
+                                                <strong class="text-danger" style="text-decoration:line-through;font-size:1.2em">@item.PriceOld.ToString("#,0 تومان")</strong>
+                                            </li>
+                                            <li>
+                                                <i class="fa fa-eye"></i><span>@item.Seen </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="preview_crs_info">
+                                        <div class="progress">
+                                            <div class="progress-bar"
+                                                 role="progressbar"
+                                                 style="width: 50%"
+                                                 aria-valuenow="50"
+                                                 aria-valuemin="0"
+                                                 aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="crs_grid_foot">
+                                    <div class="crs_flex">
+                                        <div class="crs_fl_first">
+                                            <div class="crs_price">
+                                                <h2>
+                                                    <span class="theme-cl">@item.Price.ToString("#,0")</span><span class="currency">تومان</span>
+                                                </h2>
+                                            </div>
+                                        </div>
+                                        <div class="crs_fl_last">
+                                            <div class="crs_linkview">
+                                                <a href="/detail/@item.Id"
+                                                   class="btn btn_view_detail theme-bg text-light">مشاهده</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@code {
+    List<Catalog> catalogs = new List<Catalog>();
+    List<ProductVM> products = new List<ProductVM>();
+    string catname = "محبوب ترین ها";
+
+
+
+    protected override async Task OnInitializedAsync()
     {
-        //SignInManager.Sig();
+        catalogs = await http.GetFromJsonAsync<List<Catalog>>("api/shop/getcats") ?? new List<Catalog>();
+        products = await http.GetFromJsonAsync<List<ProductVM>>("api/shop/getpro/0") ?? new List<ProductVM>();
+    }
+    async Task GetProducts(int id, string name)
+    {
+        catname = name;
+        products = await http.GetFromJsonAsync<List<ProductVM>>($"api/shop/getpro/{id}") ?? new List<ProductVM>();
     }
 }
