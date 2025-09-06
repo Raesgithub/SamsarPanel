@@ -63,11 +63,31 @@ data-overlay="5">
                             <div class="col-xl-10 col-lg-9 col-md-8 col-sm-12">
                                 <div class="part_rcp">
                                     <ul>
+                                        <li>
+                                        <button type="button" @onclick="() => GetProducts(0, catname)" class="edu_cat_2 cat-1 my-1 py-1 border-0">
+                                            <div class="edu_cat_icons">
+                                                @* <a class="pic-main" ></a> *@
+                                            </div>
+                                            <div class="edu_cat_data">
+                                                <h4 class="title">محبوب ترین ها</h4>
+                                            </div>
+                                        </button>
+                                        </li>
                                         @foreach (var item in catalogs)
                                         {
                                             <li>
                                                 <div class="crp_img">
-                                                    @(new MarkupString(item.Logo))
+                                                    <button @onclick="() => GetProducts(item.Id, item.Name)" class="edu_cat_2 cat-1 my-1 py-1">
+                                                        <div class="edu_cat_icons">
+                                                            <a class="pic-main" href="#">
+                                                                @*  <img src="/skillup/assets/img/content.png" class="img-fluid" alt="" /> *@
+                                                                @(new MarkupString(item.Logo))
+                                                            </a>
+                                                        </div>
+                                                        <div class="edu_cat_data">
+                                                            <h4 class="title"><a href="#">@item.Name</a></h4>
+                                                        </div>
+                                                    </button>
                                                     
                                                 </div>
                                             </li>
@@ -93,34 +113,6 @@ data-overlay="5">
     <div class="container-fluid">
 
         <div class="row">
-            <div class="col-md-4 col-xl-2">
-
-                @if (RendererInfo.IsInteractive){
-                    <button type="button" @onclick="()=>GetProducts(0,catname)" class="edu_cat_2 cat-1 my-1 py-1 border-0">
-                        <div class="edu_cat_icons">
-                            @* <a class="pic-main" ></a> *@
-                        </div>
-                        <div class="edu_cat_data">
-                            <h4 class="title">محبوب ترین ها</h4>
-                        </div>
-                    </button>
-
-                    foreach (var item in catalogs)
-                    {
-                        <button @onclick="()=>GetProducts(item.Id,item.Name)" class="edu_cat_2 cat-1 my-1 py-1">
-                            <div class="edu_cat_icons">
-                                <a class="pic-main" href="#">
-                                    @*  <img src="/skillup/assets/img/content.png" class="img-fluid" alt="" /> *@
-                                    @(new MarkupString(item.Logo))
-                                </a>
-                            </div>
-                            <div class="edu_cat_data">
-                                <h4 class="title"><a href="#">@item.Name</a></h4>
-                            </div>
-                        </button>
-                    }
-                }
-            </div>
             <div class="col-md-8 col-xl-10">
                 <div class="row justify-content-center">
                     <div class="col-12">
@@ -164,7 +156,7 @@ data-overlay="5">
                                                     <strong class="text-danger" style="text-decoration:line-through;font-size:1.2em">@item.PriceOld.ToString("#,0 تومان")</strong>
                                                 </li>
                                                 <li>
-                                                    <i class="fa fa-eye"></i><span>@item.Seen بازدید</span>
+                                                    <i class="fa fa-eye"></i><span>@item.Seen </span>
                                                 </li>
                                             </ul>
                                         </div>
