@@ -86,13 +86,19 @@ else if (witchHTML == "account")
 else
 {
     <!DOCTYPE html>
-    <html lang="en">
+    <html lang="fa">
     <head>
 
         <meta charset="utf-8" />
         <meta name="author" content="Themezhub" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <!-- استایل‌های بوت‌استرپ -->
+        <link href="/bootstrap/bootstrap.min.css" rel="stylesheet" />
+
+        <!-- استایل اصلی سایت -->
         <link href="/skillup/assets/css/styles.css" rel="stylesheet" />
+
         <base href="/" />
         <HeadOutlet />
     </head>
@@ -100,6 +106,7 @@ else
     <body dir="rtl">
         <Routes />
 
+        <!-- کتابخانه‌های لازم -->
         <script src="/skillup/assets/js/jquery.min.js"></script>
         <script src="/skillup/assets/js/popper.min.js"></script>
         <script src="/skillup/assets/js/bootstrap.min.js"></script>
@@ -116,8 +123,8 @@ else
     </body>
 
     </html>
-
 }
+
 
 
 @code{
