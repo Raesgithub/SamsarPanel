@@ -2520,17 +2520,17 @@ span.expiration {
 }
 
 /*------ transparent --------*/
-.header.header-transparent {
-    background: transparent;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    display: inline-block;
-    width: 100%;
-    z-index:6;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
+    .header.header-transparent {
+         background: radial-gradient(circle,rgba(0, 17, 102, 1) 0%, rgba(112, 0, 22, 1) 100%);
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: inline-block;
+        width: 100%;
+        z-index: 6;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
 .header.header-transparent.header-fixed{
     box-shadow: 0 5px 30px rgba(0, 22, 84, 0.1);
     -webkit-box-shadow: 0 5px 30px rgba(0, 22, 84, 0.1);
@@ -6736,7 +6736,7 @@ ul.woo_info li {
     border-radius: .25rem;
 }
 .breadcrumb-item.active {
-    color:#03b97c;
+    color:#000!important;
 }
 
 .dashboard-navbar, .dashboard-wraper {
