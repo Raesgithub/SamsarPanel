@@ -1,7 +1,8 @@
 ﻿@using Domain.Data
 @using Microsoft.AspNetCore.Identity
 @rendermode InteractiveServer
-<div class="header header-transparent change-logo">
+
+<div class="header header-transparent change-logo" style="background: radial-gradient(circle,rgba(0, 17, 102, 1) 0%, rgba(112, 0, 22, 1) 100%);">
     <div class="container">
         <nav id="navigation" class="navigation navigation-landscape">
             <div class="nav-header">
@@ -12,7 +13,7 @@
                     <img src="assets/img/logo.png" class="logo" alt="" />
                 </a>
                 <div class="nav-toggle"></div>
-                @*                 <div class="mobile_nav">
+                <div class="mobile_nav">
                     <ul>
                         <li>
                             <NavLink href="/Account/Login"
@@ -23,7 +24,7 @@
                             </NavLink>
                         </li>
                     </ul>
-                </div> *@
+                </div>
             </div>
             <div class="nav-menus-wrapper">
                 <ul class="nav-menu">
@@ -148,28 +149,23 @@
                             <li><a href="forgot.html">فراموشی رمز عبور</a></li>
                         </ul>
                     </li>
-
-                    <li><a href="dashboard.html">حساب کاربری</a></li>
                 </ul>
-
-                @*            <ul class="nav-menu nav-menu-social align-to-left">
+                <ul class="nav-menu nav-menu-social align-to-right">
                     <AuthorizeView>
                         <NotAuthorized>
                             <li>
-                                <NavLink href="/Account/Login"
-                                         class="add-listing theme-bg p-3 mt-3">
+                                <NavLink href="/Account/Login">
                                     <i class="fas fa-sign-in-alt ml-1 rotate-img"></i><span class="dn-lg">ورود</span>
                                 </NavLink>
                             </li>
                         </NotAuthorized>
                         <Authorized>
                             <li>
-                                <button  @onclick='() => nav.NavigateTo("/cpanel/users/",true)'
+                                <button @onclick='() => nav.NavigateTo("/cpanel/users/", true)'
                                         class="btn btn-outline-success">
                                     <span class="dn-lg">پنل</span>
                                 </button>
-                                <NavLink href="/Account/Logout"
-                                        class="alio_green">
+                                <NavLink href="/home">
                                     <i class="fas fa-sign-in-alt ml-1 rotate-img"></i><span class="dn-lg">خروج</span>
                                 </NavLink>
                             </li>
@@ -177,7 +173,7 @@
                     </AuthorizeView>
 
 
-                </ul> *@
+                </ul>
             </div>
         </nav>
     </div>
