@@ -5,22 +5,29 @@
 <div class="header  change-logo">
     <div class="container">
         <nav id="navigation" class="navigation navigation-landscape">
-            <div class="nav-header">
+            <div class="nav-header" style="width:auto">
                 <a class="nav-brand static-logo" href="#">
-                    <img src="assets/img/logo-light.png" class="logo" alt="" />
+                    <img src="/skillup/assets/img/logo.png" class="logo" alt="" />
                 </a>
-                <a class="nav-brand fixed-logo" href="/Account/Login">
-                    <img src="assets/img/logo.png" class="logo" alt="" />
+                <a class="nav-brand fixed-logo" href="/Account/Login" style="    position: absolute; left: 0px; top: -11px;">
+                    <img src="/skillup/assets/img/logo.png" class="logo" alt="" />
                 </a>
-                <div class="nav-toggle"></div>
+                <div class="nav-toggle"></div> 
                 <div class="mobile_nav">
-                    <ul>
-                        <li>
-                            <NavLink href="/Account/Login">
-                                <i class="fas fa-sign-in-alt ml-1 rotate-img"></i><span class="dn-lg">ورود</span>
-                            </NavLink>
-                        </li>
-                    </ul>
+                    <AuthorizeView>
+                        <NotAuthorized>
+                            <ul>
+                                <li>
+                                    <NavLink href="/Account/Login">
+                                        <i class="fas fa-sign-in-alt ml-1 rotate-img"></i><span class="dn-lg">ورود</span>
+                                    </NavLink>
+                                </li>
+                            </ul>
+                        </NotAuthorized>
+                        
+                    </AuthorizeView>
+
+                    
                 </div>
             </div>
             <div class="nav-menus-wrapper">
@@ -46,30 +53,25 @@
                             <li><a href="forgot.html">فراموشی رمز عبور</a></li>
                         </ul>
                     </li>
-                </ul>
-                <ul class="nav-menu nav-menu-social align-to-left">
                     <AuthorizeView>
                         <NotAuthorized>
                             <li>
-                                <NavLink href="/Account/Login">
-                                    <i class="fas fa-sign-in-alt ml-1 rotate-img"></i><span class="dn-lg">ورود</span>
-                                </NavLink>
+                                <a href="/Account/Login"> ورود</a>
                             </li>
                         </NotAuthorized>
                         <Authorized>
                             <li>
-                                <NavLink href="/cpanel/users" class="btn btn-outline-success">
-                                    <span class="dn-lg">پنل</span>
-                                </NavLink>
-                                <NavLink href="/">
-                                    <i class="fas fa-sign-in-alt ml-1 rotate-img"></i><span class="dn-lg">خروج</span>
-                                </NavLink>
+                                <a href="/cpanel/users"> پنل</a>
                             </li>
+                            <li>
+                                <a href="/"> خروج</a>
+                            </li>
+                            
                         </Authorized>
                     </AuthorizeView>
 
-
                 </ul>
+              
             </div>
         </nav>
     </div>
