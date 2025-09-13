@@ -185,6 +185,37 @@ namespace Application.Repositories.cpanel
 
 
         }
+
+        public async Task<ResultDto> UpdateSeenAsync(int id, int count)
+        {
+            try
+            {
+                var query = $@"update products  set Seen={count}   where id={id} ";
+                var res = 0;
+                using (var con = new SqlConnection(ConstantCpanel.connectionString))
+                {
+                    //isert update delete
+                    res = await con.ExecuteAsync(query);
+                }
+                if (res == 0)
+                {
+                    return new ResultDto { IsSuccess = false, Message = "قادر به تغییر وضعیت نشدیم" };
+                }
+                else
+                {
+                    return new ResultDto { IsSuccess = true };
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new ResultDto { IsSuccess = false, Message = ex.InnerException != null ? ex.InnerException.Message : ex.Message };
+
+            }
+
+
+        }
+
         public async Task<ResultDto> InsertAsync(Domain.Models.shop.Product product)
         {
             try

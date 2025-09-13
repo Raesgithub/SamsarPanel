@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.11.35312.102
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11010.61
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SamsarPanel", "SamsarPanel\SamsarPanel\SamsarPanel.csproj", "{FFDC6D3D-1641-4FA1-BCD8-72C65C775330}"
 EndProject
@@ -10,6 +10,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{18233B64-C1FF-415F-8C1D-51F4A1EB0622}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{61431023-8F1C-4F39-916E-63847E44AD91}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamsarPanel.AppHost", "SamsarPanel.AppHost\SamsarPanel.AppHost.csproj", "{7EBC6F57-E0F0-4998-AD47-2FCD4ABAA6D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamsarPanel.ServiceDefault", "SamsarPanel.ServiceDefault\SamsarPanel.ServiceDefault.csproj", "{986A6AE7-1A75-45DA-A43C-BD9F189C673B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{61431023-8F1C-4F39-916E-63847E44AD91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61431023-8F1C-4F39-916E-63847E44AD91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61431023-8F1C-4F39-916E-63847E44AD91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EBC6F57-E0F0-4998-AD47-2FCD4ABAA6D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EBC6F57-E0F0-4998-AD47-2FCD4ABAA6D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EBC6F57-E0F0-4998-AD47-2FCD4ABAA6D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EBC6F57-E0F0-4998-AD47-2FCD4ABAA6D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{986A6AE7-1A75-45DA-A43C-BD9F189C673B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{986A6AE7-1A75-45DA-A43C-BD9F189C673B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{986A6AE7-1A75-45DA-A43C-BD9F189C673B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{986A6AE7-1A75-45DA-A43C-BD9F189C673B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

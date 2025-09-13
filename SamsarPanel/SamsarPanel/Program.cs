@@ -18,7 +18,7 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
-
+builder.AddServiceDefaults();
 // Database Configuration
 var connectionString = ConstantCpanel.connectionString;
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

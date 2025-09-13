@@ -58,8 +58,14 @@ namespace SamsarPanel.Controllers
         public async Task<Product?> GetDetail(int id)
         {
             ProductRepository productRepository = new ProductRepository();
-                return await productRepository.GetById(id);
-            
+                var shop= await productRepository.GetById(id);
+            if (shop==null)
+            {
+                return null;
+            }
+            shop.Seen+=1;
+            await productRepository.UpdateSeenAsync(id, shop.Seen);
+            return shop;    
         }
 
 
