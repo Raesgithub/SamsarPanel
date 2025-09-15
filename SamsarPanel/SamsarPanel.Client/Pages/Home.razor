@@ -5,39 +5,44 @@
 @rendermode InteractiveAuto
 
 <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-        @if (sliders.Any())
+    <!-- Indicators -->
+    <div class="carousel-indicators">
+        @int index = 0;
+        @foreach (var _ in Sliders)
         {
-            @for (int i = 0; i < sliders.Count; i++)
-            {
-                var s = sliders[i];
-                <div class="carousel-item @(i == 0 ? "active" : "")">
-                    <img src="@s.ImageUrl" class="d-block w-100" style="height:92vh; object-fit:cover;" />
-                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
-                        @if (!string.IsNullOrEmpty(s.Title))
-                        {
-                            <h5>@s.Title</h5>
-                        }
-                        @if (!string.IsNullOrEmpty(s.Description))
-                        {
-                            <p>@s.Description</p>
-                        }
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <div class="carousel-item active">
-                <img src="/images/default.jpg" class="d-block w-100" style="height:92vh; object-fit:cover;" />
-            </div>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="@index" class="@(index == 0 ? "active" : "")" aria-current="@(index == 0 ? "true" : "false")" aria-label="Slide @(index + 1)"></button>
+            index++;
         }
     </div>
+
+    <!-- Slides -->
+    <div class="carousel-inner">
+        bool first = true;
+        @foreach (var item in Sliders)
+        {
+            <div class="carousel-item @(first ? "active" : "")">
+                <img src="@item.ImageUrl" class="d-block w-100" style="height:92vh; object-fit:cover;" />
+                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+                    @if (!string.IsNullOrEmpty(item.Title))
+                    {
+                        <h5>@item.Title</h5>
+                    }
+                    @if (!string.IsNullOrEmpty(item.Description))
+                    {
+                        <p>@item.Description</p>
+                    }
+                </div>
+            </div>
+            first = false;
+        }
+    </div>
+
+    <!-- Controls -->
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
     </button>
     <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
     </button>
 </div>
 <!-- ============================ Hero Banner End ================================== -->
@@ -163,14 +168,14 @@
 @code {
     List<Catalog> catalogs = new List<Catalog>();
     List<ProductVM> products = new List<ProductVM>();
-    List<SliderViewModel> sliders = new List<SliderViewModel>();
+    List<SliderViewModel> Sliders = new List<SliderViewModel>();
     string catname = "محبوب ترین ها";
 
     protected override async Task OnInitializedAsync()
     {
         catalogs = await http.GetFromJsonAsync<List<Catalog>>("api/shop/getcats") ?? new List<Catalog>();
         products = await http.GetFromJsonAsync<List<ProductVM>>("api/shop/getpro/0") ?? new List<ProductVM>();
-        sliders  = await http.GetFromJsonAsync<List<SliderViewModel>>("api/shop/getpro/0") ?? new List<SliderViewModel>();
+        Sliders =  await http.GetFromJsonAsync<List<SliderViewModel>>("api/slider/getsliders")?? new List<SliderViewModel>();
     }
     async Task GetProducts(int id, string name)
     {
