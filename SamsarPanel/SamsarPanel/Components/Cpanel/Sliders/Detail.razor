@@ -1,4 +1,8 @@
-﻿@page "/upload-slider"
+﻿@page "/Slider/add"
+@page "/Slider/edit/{id:int}"
+
+@using Application.Helpers
+@using Domain.Models.panel
 @using SamsarPanel.Client.ViewModels
 @using Domain.Data
 @using Domain.Models
@@ -49,7 +53,7 @@
     private async Task SaveSlider()
     {
         string imagePath = "/images/default.jpg";
-
+        UploadFile uploadFile = new UploadFile();
         if (selectedFile != null)
         {
             var uploads = Path.Combine(Env.WebRootPath, "uploads");
@@ -65,14 +69,15 @@
             imagePath = $"/uploads/{fileName}";
         }
 
-        var slider = new SliderViewModel
+        var slider = new  Slider
         {
             ImageUrl = imagePath,
-            Title = string.IsNullOrWhiteSpace(Title) ? null : Title,
-            Description = string.IsNullOrWhiteSpace(Description) ? null : Description
+            Title = string.IsNullOrEmpty(Title) ? null : Title,
+            //LinkButton
+            Description = string.IsNullOrEmpty(Description) ? null : Description
         };
 
-        Db.Sliders.Add();
+        Db.Sliders.Add(slider);
         await Db.SaveChangesAsync();
 
         // ریست فرم

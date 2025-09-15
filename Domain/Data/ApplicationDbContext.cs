@@ -1,4 +1,4 @@
-﻿using Domain.Models;
+﻿using Domain.Models.panel;
 using Domain.Models.shop;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
