@@ -177,11 +177,11 @@
             <div class="col-lg-12 col-md-12">
 
                 <div class="breadcrumbs-wrap">
-                    <h1 class="breadcrumb-title font-2 text-light loading"></h1>
+                    <h1 class="breadcrumb-title font-2 text-light">loading...</h1>
                     <nav class="transparent">
                         <ol class="breadcrumb p-0">
-                            <li class="breadcrumb-item"></li>
-                            <li class="breadcrumb-item active theme-cl loading" aria-current="page"></li>
+                            <li class="breadcrumb-item"><a href="/">مبلمان کریمی</a></li>
+                            <li class="breadcrumb-item active theme-cl" aria-current="page">loading ...</li>
                         </ol>
                     </nav>
                 </div>
@@ -200,21 +200,32 @@
                 <div class="woocommerce single_product quick_view_wrap">
 
                     <div class="woo-single-images">
-                        <div class="feature-style-single loading" style="height:200px">
-                            
+                        <div class="feature-style-single">
+                            <div  width="570" style=" background:#ccc;  height: 385px;">
                         </div>
-                 
+                            <div class="row mt-3">
+                                @for (int i = 0; i < 3; i++)
+                            {
+                                <div class="col-md-2 p-1 border">
+
+                                    <div  class="w-100" height="70"></div>
+                                </div>
+                            }
+                              
+                                
+                            </div>
 
                     </div>
 
                     <div class="summary entry-summary">
                         <div class="woo_inner">
-                            <h2 class="woo_product_title loading">
-                               
+
+                            <h2 class="woo_product_title">
+                                <a href="#">loading...</a>
                             </h2>
                             <ul class="woo_info">
                                 @* <li><strong>دسته بندی:</strong>@Product.Catalog.Name</li> *@
-                                <li class="loading"></li>
+                                <li><strong>کد محصول:</strong>loading...</li>
                             </ul>
                             <div class="woo_price_rate">
                                 <div class="woo_rating">
@@ -225,11 +236,11 @@
                                     <i class="fas fa-star"></i>
                                 </div>
                                 <div class="woo_price_fix">
-                                    <h3 class="mb-0 theme-cl loading"></h3>
+                                    <h3 class="mb-0 theme-cl">loading...</h3>
                                 </div>
                             </div>
-                            <div class="woo_short_desc loading" style="height:200px">
-                             
+                            <div class="woo_short_desc">
+                                <div style="width:100%;height:100px;background:#ccc"></div>
                             </div>
 
                         </div>
@@ -240,9 +251,79 @@
             </div>
         </div>
     </div>
+    </div>
 </section>
 <!-- ============================ Product Detail End ================================== -->
 <!-- ============================ Product Description ================================== -->
+<section class="pt-0">
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-lg-10 col-md-12 col-sm-12">
+
+                <div class="property_block_wrap_header">
+                    <ul class="nav nav-tabs customize-tab tabs_creative" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general" aria-selected="true">توضیحات</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" id="payment-tab" data-toggle="tab" href="#payment" role="tab" aria-controls="payment" aria-selected="false">جزئیات محصول</a>
+                        </li>
+
+
+                    </ul>
+                </div>
+
+                <div class="tab-content tabs_content_creative" id="myTabContent">
+
+                    <!-- general Query -->
+                    <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+                        <div style="width:100%;height:200px;background:#ccc"></div>
+
+                    </div>
+
+                    <!-- general Query -->
+                    <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
+                        <div style="width:100%;height:200px;background:#ccc"></div>
+                    </div>
+
+                    <!-- general Query -->
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- ============================ Product Description End ================================== -->
+<!-- ============================ Call To Action ================================== -->
+<section class="theme-bg call_action_wrap-wrap">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="call_action_wrap">
+                    <div class="call_action_wrap-head">
+                        <h3 class="font-2">ثبت سفارش</h3>
+                        <span>
+                            جهت ثبت سفارش یا هرگونه سوال، با ما تماس بگیرید.
+
+                        </span>
+                    </div>
+                    <div>
+                        <input type="text" class="form-control" placeholder="09*******" @bind-value="tel">
+                        <button  class="btn btn-call_action_wrap d-block mt-2">امروز با ما تماس بگیرید</button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
 
 
 
@@ -257,8 +338,8 @@
     async Task SetOrder(){
         try
         {
-             await http.GetFromJsonAsync<Product>($"api/shop/setorder/{Id}/{tel}");
-            
+            await http.GetFromJsonAsync<Product>($"api/shop/setorder/{Id}/{tel}");
+
         }
         catch (Exception ex)
         {
@@ -268,18 +349,32 @@
     }
 
 
+
+    private bool hasLoaded = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !hasLoaded)
+        {
+            hasLoaded = true;
+            try
+            {
+                Product = await http.GetFromJsonAsync<Product>($"api/shop/getdetail/{Id}");
+                image = Product.GetFirstImage();
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                var a = 1;
+            }
+        }
+    }
+
+
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            Product = await http.GetFromJsonAsync<Product>($"api/shop/getdetail/{Id}");
-            image = Product.GetFirstImage();
-        }
-        catch (Exception ex)
-        {
-            var a = 1;
-        }
 
+     
     }
     void SetImage(string img)
     {
