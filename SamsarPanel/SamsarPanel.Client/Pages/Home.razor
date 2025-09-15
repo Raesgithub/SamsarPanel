@@ -1,70 +1,45 @@
 ﻿@page "/"
 @using SamsarPanel.Client.ViewModels
+@using static SamsarPanel.Client.ViewModels.SliderViewModel
 @inject HttpClient http
 @rendermode InteractiveAuto
 
-<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-    <ol class="carousel-indicators">
-        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-    </ol>
-
+<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
-
-        <!-- اسلاید ۱ -->
-        <div class="carousel-item active">
-            <img style="height:100vh;object-fit:cover" class="d-block w-100" src="/skillup/assets/img/b-3.png" alt="First slide">
-
-        </div>
-
-        <!-- اسلاید ۲ -->
-        <div class="carousel-item">
-            <img style="height:100vh;object-fit:cover" class="d-block w-100" src="/skillup/assets/img/b-6.png" alt="Second slide">
-        </div>
-
-        <!-- اسلاید ۳ -->
-        <div class="carousel-item">
-            <img style="height:100vh;object-fit:cover" class="d-block w-100" src="/skillup/assets/img/b-2.png" alt="Third slide">
-        </div>
-
+        @if (sliders.Any())
+        {
+            @for (int i = 0; i < sliders.Count; i++)
+            {
+                var s = sliders[i];
+                <div class="carousel-item @(i == 0 ? "active" : "")">
+                    <img src="@s.ImageUrl" class="d-block w-100" style="height:92vh; object-fit:cover;" />
+                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+                        @if (!string.IsNullOrEmpty(s.Title))
+                        {
+                            <h5>@s.Title</h5>
+                        }
+                        @if (!string.IsNullOrEmpty(s.Description))
+                        {
+                            <p>@s.Description</p>
+                        }
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="carousel-item active">
+                <img src="/images/default.jpg" class="d-block w-100" style="height:92vh; object-fit:cover;" />
+            </div>
+        }
     </div>
-
-    <!-- کنترل‌ها -->
-    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">قبلی</span>
-    </a>
-    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">بعدی</span>
-    </a>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
 </div>
-
-@* <style>
-    .elsio_tag {
-        background: #03b97c; /* رنگ سبز مثل حالت اول */
-        color: #fff;
-        font-size: 14px;
-        font-weight: 600;
-        display: inline-block;
-        padding: 6px 15px;
-        border-radius: 4px;
-        margin-bottom: 15px;
-    }
-
-    .banner_title {
-        font-size: 32px; /* سایز اصلی مثل بنر */
-        font-weight: 700;
-        line-height: 1.4;
-        color: #fff;
-    }
-
-    .carousel-caption {
-        bottom: 20%;
-    }
-</style> *@
-
 <!-- ============================ Hero Banner End ================================== -->
 <!-- ============================ Our Awards Start ================================== -->
 <section class="main">
@@ -143,7 +118,7 @@
                                                 <strong class="text-danger" style="text-decoration:line-through;font-size:1.2em">@item.PriceOld.ToString("#,0 تومان")</strong>
                                             </li>
                                             <li>
-                                                <i class="fa fa-eye"></i><span>@item.Seen بازدید</span>
+                                                <i class="fa fa-eye"></i><span>@item.Seen </span>
                                             </li>
                                         </ul>
                                     </div>
@@ -188,14 +163,14 @@
 @code {
     List<Catalog> catalogs = new List<Catalog>();
     List<ProductVM> products = new List<ProductVM>();
+    List<SliderViewModel> sliders = new List<SliderViewModel>();
     string catname = "محبوب ترین ها";
-    
-
 
     protected override async Task OnInitializedAsync()
     {
         catalogs = await http.GetFromJsonAsync<List<Catalog>>("api/shop/getcats") ?? new List<Catalog>();
         products = await http.GetFromJsonAsync<List<ProductVM>>("api/shop/getpro/0") ?? new List<ProductVM>();
+        sliders  = await http.GetFromJsonAsync<List<SliderViewModel>>("api/shop/getpro/0") ?? new List<SliderViewModel>();
     }
     async Task GetProducts(int id, string name)
     {
