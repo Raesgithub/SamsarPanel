@@ -1,5 +1,5 @@
-﻿@page "/Slider/add"
-@page "/Slider/edit/{id:int}"
+﻿@page "/Cpanel/Slider/add"
+@page "/Cpanel/Slider/edit/{id:int}"
 
 @using Application.Helpers
 @using Domain.Models.panel
@@ -14,9 +14,10 @@
 <EditForm FormName="FormSlider" Enhance OnSubmit="SaveSlider">
 <div class="card p-4" style="max-width:500px;">
     <InputFile OnChange="HandleSelected" />
-
+        <InputText @bind-Value="Bio" class="form-control" />
     <div class="mt-3 text-center">
         <img src="@PreviewImage" style="max-width:100%; max-height:300px;" class="img-thumbnail" />
+        
     </div>
 
     <div class="mt-3">
@@ -31,9 +32,10 @@
 </EditForm>
 @code {
     private IBrowserFile? selectedFile;
-    private string PreviewImage = "/images/default.jpg";
+    private string PreviewImage = "/Skillup/assets/img/b-4.png";
     private string? Title;
     private string? Description;
+    private string? Bio;
 
     private void HandleSelected(InputFileChangeEventArgs e)
     {

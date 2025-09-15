@@ -1,11 +1,41 @@
-﻿@page "/Slider/"
+﻿@page "/Cpanel/Slider/"
+@using Domain.Models.panel
 @using SamsarPanel.Client.ViewModels
 @using Domain.Data
 @using Domain.Models
 @inject IWebHostEnvironment Env
 @inject ApplicationDbContext Db
 
+<div class="container-fluid">
+	<div class="row">
+		<div class="col">
+		@foreach (var item in Sliders)
+		{
+			<div class="card" style="width: 18rem;">
+				<img src="@item.ImageUrl" class="card-img-top" alt="@item.Bio">
+				<div class="card-body">
+					<h5 class="card-title">@item.Title</h5>
+					<div>
+					<button @onclick="Delete" class="btn btn-sm btn-danger">حذف</button>
+					<button @onclick="Edit" class="btn btn-sm btn-info">حذف</button>
+					</div>
+				</div>
+			</div>
+		}
+		</div>
+	</div>
+</div>
 
 @code {
+	List<Slider> Sliders = new List<Slider>();
 
+	private void Delete(MouseEventArgs args)
+	{
+		
+	}
+
+	private void Edit(MouseEventArgs args)
+	{
+		
+	}
 }
