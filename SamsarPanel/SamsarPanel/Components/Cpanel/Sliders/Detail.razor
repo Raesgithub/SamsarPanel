@@ -1,21 +1,23 @@
 ﻿@page "/Cpanel/Slider/add"
 @page "/Cpanel/Slider/edit/{Id:int}"
 
+@using Application.Helpers
 @using Domain.Models.panel
 @using Domain.Data
+@using Domain.Resourses
 @inject ApplicationDbContext Db
 @inject IWebHostEnvironment Env
-
+@rendermode InteractiveServer
 <h3>@(CurrentSlider?.Id == 0 ? "افزودن اسلایدر جدید" : "ویرایش اسلایدر")</h3>
 
-@if (IsLoaded && EditContext != null)
-{
-    <EditForm EditContext="@EditContext" OnValidSubmit="SaveSlider">
+    <EditForm Model="CurrentSlider" OnValidSubmit="SaveSlider" FormName="sliderform" Enhance>
+        <DataAnnotationsValidator />
         <div class="card p-4" style="max-width:500px;">
             <InputFile OnChange="HandleSelected" class="form-control" />
 
             <div class="mt-2">
                 <InputText @bind-Value="CurrentSlider.Alt" class="form-control" placeholder="متن جایگزین تصویر" />
+                <ValidationMessage For="() => CurrentSlider.Alt" />
             </div>
 
             <div class="mt-3 text-center">
@@ -24,14 +26,17 @@
 
             <div class="mt-3">
                 <InputText @bind-Value="CurrentSlider.Title" class="form-control" placeholder="عنوان (اختیاری)" />
+                <ValidationMessage For="() => CurrentSlider.Title" />
             </div>
 
             <div class="mt-2">
                 <InputTextArea @bind-Value="CurrentSlider.Description" class="form-control" placeholder="توضیح (اختیاری)" />
+                <ValidationMessage For="() => CurrentSlider.Description" />
             </div>
 
             <div class="mt-2">
                 <InputText @bind-Value="CurrentSlider.LinkButton" class="form-control" placeholder="لینک دکمه (اختیاری)" />
+                <ValidationMessage For="() => CurrentSlider.LinkButton" />
             </div>
 
             <div class="form-check mt-3">
@@ -42,35 +47,24 @@
             <button type="submit" class="btn btn-success mt-3">ذخیره</button>
         </div>
     </EditForm>
-}
-else
-{
-    <p>در حال بارگذاری فرم...</p>
-}
 
 @code {
     [Parameter] public int? Id { get; set; }
+    [SupplyParameterFromForm] public Slider CurrentSlider { get; set; } = new Slider();
 
-    private Slider CurrentSlider;
+
     private IBrowserFile? selectedFile;
     private string PreviewImage = "/images/default.jpg";
-    private bool IsLoaded = false;
-    private EditContext? EditContext;
+    //private bool IsLoaded = false;
+
 
     protected override async Task OnParametersSetAsync()
     {
         if (Id.HasValue)
         {
             CurrentSlider = await Db.Sliders.FindAsync(Id.Value) ?? new Slider();
+            PreviewImage = CurrentSlider.ImageUrl ?? "/images/default.jpg";
         }
-        else
-        {
-            CurrentSlider = new Slider();
-        }
-
-        EditContext = new EditContext(CurrentSlider);
-        PreviewImage = CurrentSlider.ImageUrl ?? "/images/default.jpg";
-        IsLoaded = true;
     }
 
     private async Task HandleSelected(InputFileChangeEventArgs e)
@@ -79,7 +73,7 @@ else
         if (selectedFile != null)
         {
             var buffer = new byte[selectedFile.Size];
-            using var stream = selectedFile.OpenReadStream(1024 * 1024 * 15);
+            using var stream = selectedFile.OpenReadStream(1024 * 1024 * 4);
             await stream.ReadAsync(buffer);
             PreviewImage = $"data:{selectedFile.ContentType};base64,{Convert.ToBase64String(buffer)}";
         }
@@ -87,34 +81,33 @@ else
 
     private async Task SaveSlider()
     {
-        if (selectedFile != null)
-        {
-            var uploads = Path.Combine(Env.WebRootPath, "uploads");
-            if (!Directory.Exists(uploads))
-                Directory.CreateDirectory(uploads);
+        if (selectedFile == null) return;
 
-            var fileName = $"{Guid.NewGuid()}_{selectedFile.Name}";
-            var filePath = Path.Combine(uploads, fileName);
+        UploadFile uploadFile = new UploadFile();
+        var res = await uploadFile.Upload(selectedFile, ConstantCpanel.pysicaly_image_slider_path, ConstantCpanel.image_Valid_Types);
+        if (res.IsSuccess)
+            {
+                CurrentSlider.ImageUrl = $"{res.Filename}";
+            }
+            else
+            {
+                //res.Message
+                return;
+            }
 
-            using var fs = new FileStream(filePath, FileMode.Create);
-            await selectedFile.OpenReadStream().CopyToAsync(fs);
-
-            CurrentSlider.ImageUrl = $"/uploads/{fileName}";
-        }
+            
+        
 
         if (CurrentSlider.Id == 0)
         {
             Db.Sliders.Add(CurrentSlider);
-        }
-
-        await Db.SaveChangesAsync();
-
-        if (CurrentSlider.Id == 0)
-        {
+            await Db.SaveChangesAsync();
             CurrentSlider = new Slider();
-            EditContext = new EditContext(CurrentSlider);
             PreviewImage = "/images/default.jpg";
             selectedFile = null;
         }
+
+        
+
     }
 }
