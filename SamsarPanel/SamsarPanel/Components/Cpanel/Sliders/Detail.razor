@@ -1,61 +1,92 @@
 ﻿@page "/Cpanel/Slider/add"
-@page "/Cpanel/Slider/edit/{id:int}"
+@page "/Cpanel/Slider/edit/{Id:int}"
 
-@using Application.Helpers
 @using Domain.Models.panel
-@using SamsarPanel.Client.ViewModels
 @using Domain.Data
-@using Domain.Models
-@inject IWebHostEnvironment Env
 @inject ApplicationDbContext Db
+@inject IWebHostEnvironment Env
 
-<h3>آپلود اسلایدر</h3>
+<h3>@(CurrentSlider?.Id == 0 ? "افزودن اسلایدر جدید" : "ویرایش اسلایدر")</h3>
 
-<EditForm FormName="FormSlider" Enhance OnSubmit="SaveSlider">
-<div class="card p-4" style="max-width:500px;">
-    <InputFile OnChange="HandleSelected" />
-        <InputText @bind-Value="Bio" class="form-control" />
-    <div class="mt-3 text-center">
-        <img src="@PreviewImage" style="max-width:100%; max-height:300px;" class="img-thumbnail" />
-        
-    </div>
+@if (IsLoaded && EditContext != null)
+{
+    <EditForm EditContext="@EditContext" OnValidSubmit="SaveSlider">
+        <div class="card p-4" style="max-width:500px;">
+            <InputFile OnChange="HandleSelected" class="form-control" />
 
-    <div class="mt-3">
-        <InputText @bind-Value="Title" class="form-control" placeholder="عنوان (اختیاری)" />
-    </div>
-    <div class="mt-2">
-        <InputTextArea @bind-Value="Description" class="form-control" placeholder="توضیح (اختیاری)" />
-    </div>
+            <div class="mt-2">
+                <InputText @bind-Value="CurrentSlider.Alt" class="form-control" placeholder="متن جایگزین تصویر" />
+            </div>
 
-    <button class="btn btn-primary mt-3" @onclick="SaveSlider">ذخیره اسلایدر</button>
-</div>
-</EditForm>
+            <div class="mt-3 text-center">
+                <img src="@PreviewImage" class="img-thumbnail" style="max-width:100%; max-height:300px;" />
+            </div>
+
+            <div class="mt-3">
+                <InputText @bind-Value="CurrentSlider.Title" class="form-control" placeholder="عنوان (اختیاری)" />
+            </div>
+
+            <div class="mt-2">
+                <InputTextArea @bind-Value="CurrentSlider.Description" class="form-control" placeholder="توضیح (اختیاری)" />
+            </div>
+
+            <div class="mt-2">
+                <InputText @bind-Value="CurrentSlider.LinkButton" class="form-control" placeholder="لینک دکمه (اختیاری)" />
+            </div>
+
+            <div class="form-check mt-3">
+                <InputCheckbox @bind-Value="CurrentSlider.IsPublish" class="form-check-input" id="publishCheck" />
+                <label class="form-check-label" for="publishCheck">انتشار</label>
+            </div>
+
+            <button type="submit" class="btn btn-success mt-3">ذخیره</button>
+        </div>
+    </EditForm>
+}
+else
+{
+    <p>در حال بارگذاری فرم...</p>
+}
+
 @code {
-    private IBrowserFile? selectedFile;
-    private string PreviewImage = "/Skillup/assets/img/b-4.png";
-    private string? Title;
-    private string? Description;
-    private string? Bio;
+    [Parameter] public int? Id { get; set; }
 
-    private void HandleSelected(InputFileChangeEventArgs e)
+    private Slider CurrentSlider;
+    private IBrowserFile? selectedFile;
+    private string PreviewImage = "/images/default.jpg";
+    private bool IsLoaded = false;
+    private EditContext? EditContext;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id.HasValue)
+        {
+            CurrentSlider = await Db.Sliders.FindAsync(Id.Value) ?? new Slider();
+        }
+        else
+        {
+            CurrentSlider = new Slider();
+        }
+
+        EditContext = new EditContext(CurrentSlider);
+        PreviewImage = CurrentSlider.ImageUrl ?? "/images/default.jpg";
+        IsLoaded = true;
+    }
+
+    private async Task HandleSelected(InputFileChangeEventArgs e)
     {
         selectedFile = e.File;
-
         if (selectedFile != null)
         {
-            // پیش‌نمایش عکس
-            var format = "image/png";
-            using var stream = selectedFile.OpenReadStream(1024 * 1024 * 15); // 15MB max
             var buffer = new byte[selectedFile.Size];
-            stream.Read(buffer, 0, buffer.Length);
-            PreviewImage = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+            using var stream = selectedFile.OpenReadStream(1024 * 1024 * 15);
+            await stream.ReadAsync(buffer);
+            PreviewImage = $"data:{selectedFile.ContentType};base64,{Convert.ToBase64String(buffer)}";
         }
     }
 
     private async Task SaveSlider()
     {
-        string imagePath = "/images/default.jpg";
-        UploadFile uploadFile = new UploadFile();
         if (selectedFile != null)
         {
             var uploads = Path.Combine(Env.WebRootPath, "uploads");
@@ -68,24 +99,22 @@
             using var fs = new FileStream(filePath, FileMode.Create);
             await selectedFile.OpenReadStream().CopyToAsync(fs);
 
-            imagePath = $"/uploads/{fileName}";
+            CurrentSlider.ImageUrl = $"/uploads/{fileName}";
         }
 
-        var slider = new  Slider
+        if (CurrentSlider.Id == 0)
         {
-            ImageUrl = imagePath,
-            Title = string.IsNullOrEmpty(Title) ? null : Title,
-            //LinkButton
-            Description = string.IsNullOrEmpty(Description) ? null : Description
-        };
+            Db.Sliders.Add(CurrentSlider);
+        }
 
-        Db.Sliders.Add(slider);
         await Db.SaveChangesAsync();
 
-        // ریست فرم
-        selectedFile = null;
-        PreviewImage = "/images/default.jpg";
-        Title = null;
-        Description = null;
+        if (CurrentSlider.Id == 0)
+        {
+            CurrentSlider = new Slider();
+            EditContext = new EditContext(CurrentSlider);
+            PreviewImage = "/images/default.jpg";
+            selectedFile = null;
+        }
     }
 }

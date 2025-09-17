@@ -4,25 +4,29 @@
 @inject HttpClient http
 @rendermode InteractiveAuto
 
-<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
-    <!-- Indicators -->
+<div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
     <div class="carousel-indicators">
-        @int index = 0;
-        @foreach (var _ in Sliders)
+        @foreach (var (item, index) in Sliders.Select((s, i) => (s, i)))
         {
-            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="@index" class="@(index == 0 ? "active" : "")" aria-current="@(index == 0 ? "true" : "false")" aria-label="Slide @(index + 1)"></button>
-            index++;
+            <button type="button"
+                    data-bs-target="#carouselExampleDark"
+                    data-bs-slide-to="@index"
+                    class="@(index == 0 ? "active" : "")"
+                    aria-current="@(index == 0 ? "true" : "false")"
+                    aria-label="Slide @(index + 1)">
+            </button>
         }
     </div>
 
-    <!-- Slides -->
     <div class="carousel-inner">
-        bool first = true;
+        @{
+            bool first = true;
+        }
         @foreach (var item in Sliders)
         {
-            <div class="carousel-item @(first ? "active" : "")">
-                <img src="@item.ImageUrl" class="d-block w-100" style="height:92vh; object-fit:cover;" />
-                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+            <div class="carousel-item @(first ? "active" : "")" data-bs-interval="5000">
+                <img src="@item.ImageUrl" class="d-block w-100" alt="@item.Alt" />
+                <div class="carousel-caption d-none d-md-block">
                     @if (!string.IsNullOrEmpty(item.Title))
                     {
                         <h5>@item.Title</h5>
@@ -31,18 +35,23 @@
                     {
                         <p>@item.Description</p>
                     }
+                    @if (!string.IsNullOrEmpty(item.LinkButton))
+                    {
+                        <a href="@item.LinkButton" class="btn btn-primary">بیشتر</a>
+                    }
                 </div>
             </div>
             first = false;
         }
     </div>
 
-    <!-- Controls -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">قبلی</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">بعدی</span>
     </button>
 </div>
 <!-- ============================ Hero Banner End ================================== -->
@@ -139,7 +148,7 @@
                                     </div>
                                 </div>
                                 <div class="crs_grid_foot">
-                                    <div class="crs_flex">
+
                                         <div class="crs_fl_first">
                                             <div class="crs_price">
                                                 <h2>
@@ -153,7 +162,6 @@
                                                    class="btn btn_view_detail theme-bg text-light">مشاهده</a>
                                             </div>
                                         </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
