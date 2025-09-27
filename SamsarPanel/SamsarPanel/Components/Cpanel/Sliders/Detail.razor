@@ -105,6 +105,7 @@
 	{
 		if (selectedFile == null) return;
 
+
 		UploadFile uploadFile = new UploadFile();
 		var res = await uploadFile.Upload(selectedFile, ConstantCpanel.pysicaly_image_slider_path, ConstantCpanel.image_Valid_Types);
 		if (res.IsSuccess)

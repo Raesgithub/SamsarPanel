@@ -98,7 +98,7 @@ namespace Application.Repositories.Shop
             }
         }
 
-        public async Task<List<Catalog?>> GetAllAsync()
+        public async Task<List<Catalog>?> GetAllAsync()
         {
             using (var con = new SqlConnection(ConstantCpanel.connectionString))
             {

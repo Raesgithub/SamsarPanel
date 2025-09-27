@@ -1,4 +1,6 @@
-﻿@using Domain.Data
+﻿@using Application.Repositories.Shop
+@using Domain.Data
+@using Domain.Models.shop
 @using Microsoft.AspNetCore.Identity
 
 
@@ -40,17 +42,12 @@
                     <li>
                         <a href="#">دسته بندی<span class="submenu-indicator"></span></a>
                         <ul class="nav-dropdown nav-submenu">
-                           
-                            <li><a href="about.html">درباره ما</a></li>
-                            <li><a href="contact.html">تماس با ما</a></li>
-                            <li><a href="blogs.html">لیست وبلاگ</a></li>
-                            <li><a href="pricing.html">قیمت گذاری</a></li>
-                            <li><a href="404.html">صفحه 404</a></li>
-                            <li><a href="component.html">المان ها</a></li>
-                            <li><a href="faq.html">سوالات متداول</a></li>
-                            <li><NavLink href="/Account/Login">ورود</NavLink></li>
-
-                            <li><a href="forgot.html">فراموشی رمز عبور</a></li>
+                            @foreach (var item in Catalogs)
+                            {
+                                
+                            }
+                            
+                        
                         </ul>
                     </li>
                     <AuthorizeView>
@@ -76,9 +73,13 @@
         </nav>
     </div>
 </div>
+
 @code{
+    public List<Catalog>? Catalogs { get; set; } = new List<Catalog>();    
     protected override async Task OnInitializedAsync()
     {
-        var x = 1;
+        CatalogRepository catalogRepository = new CatalogRepository();
+        Catalogs = await catalogRepository.GetAllAsync() ;
+        
     }
 }
