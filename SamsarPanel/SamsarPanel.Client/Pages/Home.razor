@@ -4,52 +4,39 @@
 @inject HttpClient http
 @rendermode InteractiveAuto
 
-<div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
-    <div class="carousel-indicators">
+<div id="carouselCards" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+
         @foreach (var (item, index) in Sliders.Select((s, i) => (s, i)))
         {
-            <button type="button"
-                    data-bs-target="#carouselExampleDark"
-                    data-bs-slide-to="@index"
-                    class="@(index == 0 ? "active" : "")"
-                    aria-current="@(index == 0 ? "true" : "false")"
-                    aria-label="Slide @(index + 1)">
-            </button>
-        }
-    </div>
-
-    <div class="carousel-inner">
-        @{
-            bool first = true;
-        }
-        @foreach (var item in Sliders)
-        {
-            <div class="carousel-item @(first ? "active" : "")" data-bs-interval="5000">
-                <img src="@item.ImageUrl" class="d-block w-100" alt="@item.Alt" />
-                <div class="carousel-caption d-none d-md-block">
-                    @if (!string.IsNullOrEmpty(item.Title))
-                    {
-                        <h5>@item.Title</h5>
-                    }
-                    @if (!string.IsNullOrEmpty(item.Description))
-                    {
-                        <p>@item.Description</p>
-                    }
-                    @if (!string.IsNullOrEmpty(item.LinkButton))
-                    {
-                        <a href="@item.LinkButton" class="btn btn-primary">بیشتر</a>
-                    }
+            <div class="carousel-item @(index == 0 ? "active" : "")">
+                <div class="card text-center mx-auto" style="max-width: 600px;">
+                    <img src="/cpanel/assets/images/products/@item.ImageUrl" class="card-img-top" alt="@item.Alt" />
+                    <div class="card-body">
+                        @if (!string.IsNullOrEmpty(item.Title))
+                        {
+                            <h5 class="card-title">@item.Title</h5>
+                        }
+                        @if (!string.IsNullOrEmpty(item.Description))
+                        {
+                            <p class="card-text">@item.Description</p>
+                        }
+                        @if (!string.IsNullOrEmpty(item.LinkButton))
+                        {
+                            <a href="@item.LinkButton" class="btn btn-primary">بیشتر</a>
+                        }
+                    </div>
                 </div>
             </div>
-            first = false;
         }
+
     </div>
 
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselCards" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">قبلی</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselCards" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">بعدی</span>
     </button>
@@ -72,21 +59,28 @@
                             <h4 class="title">محبوب ترین ها</h4>
                         </div>
                     </button>
-
-                    foreach (var item in catalogs)
+          
+                    @foreach (var (item, index) in Sliders.Select((s, i) => (s, i)))
                     {
-                        <button @onclick="() => GetProducts(item.Id, item.Name)" class="edu_cat_2 cat-1 my-1 py-1">
-                            <div class="edu_cat_icons">
-                                <a class="pic-main" href="#">
-                                    @*  <img src="/skillup/assets/img/content.png" class="img-fluid" alt="" /> *@
-                                    @(new MarkupString(item.Logo))
-                                </a>
+                        <div class="carousel-item @(index == 0 ? "active" : "")" data-bs-interval="5000">
+                            <img src="/cpanel/assets/images/products/@item.ImageUrl" class="d-block w-100" alt="@item.Alt" />
+                            <div class="carousel-caption d-none d-md-block">
+                                @if (!string.IsNullOrEmpty(item.Title))
+                                {
+                                    <h5>@item.Title</h5>
+                                }
+                                @if (!string.IsNullOrEmpty(item.Description))
+                                {
+                                    <p>@item.Description</p>
+                                }
+                                @if (!string.IsNullOrEmpty(item.LinkButton))
+                                {
+                                    <a href="@item.LinkButton" class="btn btn-primary">بیشتر</a>
+                                }
                             </div>
-                            <div class="edu_cat_data">
-                                <h4 class="title"><a href="#">@item.Name</a></h4>
-                            </div>
-                        </button>
+                        </div>
                     }
+
                 }
             </div>
             <div class="col-md-8 col-xl-10"style="margin-top:-55px">
