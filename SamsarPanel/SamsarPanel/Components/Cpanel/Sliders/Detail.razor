@@ -109,9 +109,9 @@
 		var res = await uploadFile.Upload(selectedFile, ConstantCpanel.pysicaly_image_slider_path, ConstantCpanel.image_Valid_Types);
 		if (res.IsSuccess)
 		{
-			await js.InvokeVoidAsync("toast", "ذخیره شد");
+			
 			CurrentSlider.ImageUrl = $"{res.Filename}";
-			return;
+			
 		}
 		else
 		{
@@ -129,6 +129,7 @@
 			CurrentSlider = new Slider();
 			PreviewImage = "/images/default.png";
 			selectedFile = null;
+			await js.InvokeVoidAsync("toast", "ذخیره شد");
 		}
 
 
