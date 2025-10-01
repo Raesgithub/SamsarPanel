@@ -2,6 +2,7 @@
 @using Domain.Data
 @using Domain.Models.shop
 @using Microsoft.AspNetCore.Identity
+@using SharedLibrary.Services
 
 
 <div class="header  change-logo">
@@ -36,7 +37,6 @@
                 <ul class="nav-menu">
                     <li class="active">
                         <a href="/">مبلمان کریمی<span class="submenu-indicator"></span></a>
-                    
                     </li>
 
                     <li>
@@ -44,7 +44,7 @@
                         <ul class="nav-dropdown nav-submenu">
                             @foreach (var item in Catalogs)
                             {
-                                
+                                <li><a href="/@item.Id">@item.Name</a></li>
                             }
                             
                         
@@ -73,13 +73,26 @@
         </nav>
     </div>
 </div>
-
+@inject ICookieService CookieService
+@inject IJSRuntime JSRuntime
 @code{
     public List<Catalog>? Catalogs { get; set; } = new List<Catalog>();    
     protected override async Task OnInitializedAsync()
     {
-        CatalogRepository catalogRepository = new CatalogRepository();
-        Catalogs = await catalogRepository.GetAllAsync() ;
-        
+        // Try to get from cookie first
+       // Catalogs = await CookieService.GetAsync<List<Catalog>>("cats");
+
+        //if (Catalogs == null || !Catalogs.Any())
+       // {
+            // If not in cookie, fetch from repository
+            CatalogRepository catalogRepository = new CatalogRepository();
+            Catalogs = await catalogRepository.GetAllAsync();
+
+            // Store in cookie with 30 minutes expiration
+           // await CookieService.SetAsync("cats", Catalogs, TimeSpan.FromMinutes(30));
+        }
+
+
     }
+    
 }

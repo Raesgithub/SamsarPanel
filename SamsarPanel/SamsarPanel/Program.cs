@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+﻿using Domain.Data;
+using Domain.Resourses;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SamsarPanel.Client.Pages;
 using SamsarPanel.Components;
 using SamsarPanel.Components.Account;
-using Domain.Data;
-using Domain.Resourses;
+
+using SharedLibrary.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +34,7 @@ builder.Services.AddScoped(a => new HttpClient
     BaseAddress = new Uri("https://localhost:7163/")
 });
 builder.Services.AddMemoryCache();
+builder.Services.AddScoped<ICookieService, CookieService>();
 //builder.Services.AddScoped<navigataion>
 // Identity Configuration (Keep only this one)
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
