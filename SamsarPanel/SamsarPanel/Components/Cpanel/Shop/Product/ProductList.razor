@@ -87,20 +87,23 @@
     public PaggingDto<ProductVM> paging { get; set; } = new PaggingDto<ProductVM>();
 
     async Task Delete(ProductVM product){
-        if (await js.InvokeAsync<bool>("saQuestion", "هشدار", "پس از حذف قادر به بازیابی نمی باشد") == false) return;
-
-
-
-        var repository = new ProductRepository();
-        var res=  await repository.DeleteAsync(product.Id);
-        if (res.IsSuccess)
+        var x = await js.InvokeAsync<bool>("saQuestion", "حدف شود ؟", "پس از حذف قادر به بازیابی نمی باشد");
+        if (x)
         {
-            await js.InvokeVoidAsync("toast", "حذف شد");
-            paging.Values = paging.Values!.Where(a => a.Id != product.Id).ToList();
+            var repository = new ProductRepository();
+            var res = await repository.DeleteAsync(product.Id);
+            if (res.IsSuccess)
+            {
+                await js.InvokeVoidAsync("toast", "حذف شد");
+                paging.Values = paging.Values!.Where(a => a.Id != product.Id).ToList();
+            }
+            else
+            {
+                await js.InvokeVoidAsync("toastError", res.Message);
+            }
         }
-        else{
-            await js.InvokeVoidAsync("toastError", res.Message);
-        }
+
+       
 
     }
     protected override async Task OnInitializedAsync()

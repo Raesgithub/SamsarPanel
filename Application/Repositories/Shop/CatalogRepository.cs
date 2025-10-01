@@ -97,15 +97,21 @@ namespace Application.Repositories.Shop
 
             }
         }
-
+        public static List<Catalog> catalogs = new List<Catalog>();
         public async Task<List<Catalog>?> GetAllAsync()
         {
-            using (var con = new SqlConnection(ConstantCpanel.connectionString))
+            if (catalogs == null || catalogs.Count==0)
             {
-                var query = $@"select Id,Name,Logo from Catalogs";
-                 return  (await con.QueryAsync<Catalog>(query)).ToList();
+
+                using (var con = new SqlConnection(ConstantCpanel.connectionString))
+                {
+                    var query = $@"select Id,Name,Logo from Catalogs";
+                    catalogs= (await con.QueryAsync<Catalog>(query)).ToList();
+                }
+
+               
             }
-            
+            return catalogs;
         }
 
     }

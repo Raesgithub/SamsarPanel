@@ -75,7 +75,7 @@
         if (Id.HasValue)
         {
             CurrentSlider = await Db.Sliders.FindAsync(Id.Value) ?? new Slider();
-            PreviewImage = CurrentSlider.ImageUrl ?? "/images/default.png";
+            PreviewImage = "/cpanel/assets/images/sliders/" + CurrentSlider.ImageUrl ?? "/images/default.png";
         }
     }
 
