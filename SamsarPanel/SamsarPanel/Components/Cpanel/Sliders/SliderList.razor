@@ -4,7 +4,8 @@
 @using Microsoft.EntityFrameworkCore
 @inject ApplicationDbContext Db
 @inject IWebHostEnvironment Env
-
+@inject NavigationManager Nav
+@rendermode InteractiveServer
 <h3>مدیریت اسلایدرها</h3>
 
 <div class="row" style="float:left">
@@ -22,78 +23,36 @@
                 <div class="card-body">
                     <h5 class="card-title">@item.Title</h5>
                     <p class="card-text">@item.Description</p>
-                    <button class="btn btn-info btn-sm me-2" @onclick="() => Edit(item.Id)">ویرایش</button>
-                    <button class="btn btn-danger btn-sm" @onclick="() => Delete(item.Id)">حذف</button>
+                    <button type="button" class="btn btn-info btn-sm me-2" @onclick="() => Edit(item.Id)">ویرایش</button>
+                    <button type="button" class="btn btn-danger btn-sm" @onclick="() => Delete(item.Id)">حذف</button>
+
                 </div>
             </div>
         </div>
     }
 </div>
 
-@if (ShowForm)
-{
-    <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
-        <div class="modal-dialog">
-            <div class="modal-content p-3">
-                <h5>@(EditingSlider.Id == 0 ? "افزودن اسلایدر" : "ویرایش اسلایدر")</h5>
-                <InputFile OnChange="HandleSelected" />
-                <div class="mt-2 text-center">
-                    <img src="@PreviewImage" style="max-width:100%; max-height:200px;" class="img-thumbnail" />
-                </div>
-                <InputText class="form-control mt-2" placeholder="عنوان (اختیاری)" @bind-Value="EditingSlider.Title" />
-                <InputTextArea class="form-control mt-2" placeholder="توضیح (اختیاری)" @bind-Value="EditingSlider.Description" />
-                <InputText class="form-control mt-2" placeholder="لینک دکمه (اختیاری)" @bind-Value="EditingSlider.LinkButton" />
-                <div class="mt-2 text-end">
-                    <button class="btn btn-secondary me-2" @onclick="CancelForm">انصراف</button>
-                    <button class="btn btn-primary">ذخیره</button>
-                </div>
-            </div>
-        </div>
-    </div>
-}
-
 @code {
     List<Slider> Sliders = new List<Slider>();
-    bool ShowForm = false;
-    Slider EditingSlider = new Slider();
-    IBrowserFile? selectedFile;
-    string PreviewImage = "/Skillup/assets/img/b-4.png";
 
     protected override async Task OnInitializedAsync()
     {
         Sliders = await Db.Sliders.ToListAsync();
     }
 
-
-
     void Edit(int id)
     {
-
+        Nav.NavigateTo($"/Cpanel/Slider/edit/{id}");
     }
-
-    void CancelForm()
-    {
-        return;
-    }
-
-    async Task HandleSelected(InputFileChangeEventArgs e)
-    {
-        selectedFile = e.File;
-
-        if (selectedFile != null)
-        {
-            var format = selectedFile.ContentType;
-            using var stream = selectedFile.OpenReadStream(1024 * 1024 * 15);
-            var buffer = new byte[selectedFile.Size];
-            await stream.ReadAsync(buffer, 0, buffer.Length);
-            PreviewImage = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
-        }
-    }
-
-
 
     async Task Delete(int id)
     {
-
+        var slider = await Db.Sliders.FindAsync(id);
+        if (slider != null)
+        {
+            Db.Sliders.Remove(slider);
+            await Db.SaveChangesAsync();
+            Sliders = await Db.Sliders.ToListAsync();
+        }
     }
 }
