@@ -8,20 +8,28 @@
 
 <div id="carouselExampleDark" class="carousel carousel-dark slide" style="height: 60vh">
     <div class="carousel-indicators">
-
-    @foreach (var (item, index) in Sliders.Select((s, i) => (s, i)))
-    {
-            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="@index" class="@(index == 0 ? "active" : "")"  aria-current="true" aria-label="Slide @index"></button>
-    }
-
+        @foreach (var (item, index) in Sliders.Select((s, i) => (s, i)))
+        {
+            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="@index" class="@(index == 0 ? "active" : "")" aria-current="true" aria-label="Slide @index"></button>
+        }
     </div>
     <div class="carousel-inner" style="height: 60vh">
-    @foreach (var (item, index) in Sliders.Select((s, i) => (s, i)))
+        @foreach (var (item, index) in Sliders.Select((s, i) => (s, i)))
         {
             <div class="carousel-item @(index == 0 ? "active" : "")" data-bs-interval="4000">
-                <img src="/cpanel/assets/images/sliders/@item.ImageUrl" class="d-block w-100 " style="object-fit:cover ;height: 60vh" alt="@item.Alt">
+                @* کل عکس لینک می‌شود *@
+                @if (!string.IsNullOrEmpty(item.LinkButton))
+                {
+                    <a href="@item.LinkButton" target="_blank" style="display:block; width:100%; height:100%;">
+                        <img src="/cpanel/assets/images/sliders/@item.ImageUrl" class="d-block w-100" style="object-fit:cover; height:60vh" alt="@item.Alt">
+                    </a>
+                }
+                else
+                {
+                    <img src="/cpanel/assets/images/sliders/@item.ImageUrl" class="d-block w-100" style="object-fit:cover; height:60vh" alt="@item.Alt">
+                }
+
                 <div class="carousel-caption d-none d-md-block">
-                    
                     @if (!string.IsNullOrEmpty(item.Title))
                     {
                         <h5>@item.Title</h5>
@@ -30,18 +38,11 @@
                     {
                         <p>@item.Description</p>
                     }
-                    @if (!string.IsNullOrEmpty(item.LinkButton))
-                    {
-                        <div><a href="@item.LinkButton" class="btn btn-primary">بیشتر</a></div>
-                        
-                    }
-                    
                 </div>
             </div>
         }
-
-        
     </div>
+
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
@@ -51,6 +52,7 @@
         <span class="visually-hidden">Next</span>
     </button>
 </div>
+
 <!-- ============================ Hero Banner End ================================== -->
 <!-- ============================ Our Awards Start ================================== -->
 <section class="main">
