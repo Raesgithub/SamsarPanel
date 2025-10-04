@@ -125,29 +125,24 @@
                                             <a href="/detail/@item.Id" class="crs_title_link">@item.Name</a>
                                         </h4>
                                     </div>
-                                    <div class="crs_info_detail">
+                                    <div class="crs_info_detail" style="display:block">
                                         <ul>
 
                                             <li>
-                                                <strong class="text-danger" style="text-decoration:line-through;font-size:1.2em">@item.PriceOld.ToString("#,0 تومان")</strong>
+                                                <strong class="text-danger" style="margin-left:50%;text-decoration:line-through;font-size:1.2em">@item.PriceOld.ToString("#,0 تومان")</strong>
                                             </li>
-                                            <li>
-                                                <i class="fa fa-eye"></i><span>@item.Seen </span>
+                                            <li style="float:left">
+                                               <strong  style="margin-right:50%;font-size:1.2em">  <i class="fa fa-eye"></i><span>@item.Seen</span></strong>
                                             </li>
                                         </ul>
                                     </div>
                                     <div class="preview_crs_info">
                                         <div class="progress">
-                                            <div class="progress-bar"
-                                                 role="progressbar"
-                                                 style="width: 50%"
-                                                 aria-valuenow="50"
-                                                 aria-valuemin="0"
-                                                 aria-valuemax="100"></div>
-                                        </div>
+                                            <div class="progress-bar"role="progressbar" style="width: 50%" aria-valuenow="50"aria-valuemin="0"aria-valuemax="100"></div> 
+                                            </div>
                                     </div>
                                 </div>
-                                <div class="crs_grid_foot">
+                                <div class="crs_grid_foot mt-10">
 
                                         <div class="crs_fl_first">
                                             <div class="crs_price">

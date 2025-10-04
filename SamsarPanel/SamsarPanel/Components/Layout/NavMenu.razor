@@ -6,93 +6,126 @@
 
 
 <div class="header  change-logo">
-    <div class="container">
-        <nav id="navigation" class="navigation navigation-landscape">
-            <div class="nav-header" style="width:auto">
-                <a class="nav-brand static-logo" href="#">
-                    <img src="/skillup/assets/img/logo.png" class="logo" alt="" />
-                </a>
-                <a class="nav-brand fixed-logo" href="/Account/Login" style="    position: absolute; left: 0px; top: -11px;">
-                    <img src="/skillup/assets/img/logo.png" class="logo" alt="" />
-                </a>
-                <div class="nav-toggle"></div> 
-                <div class="mobile_nav">
-                    <AuthorizeView>
-                        <NotAuthorized>
-                            <ul>
-                                <li>
-                                    <NavLink href="/Account/Login">
-                                        <i class="fas fa-sign-in-alt ml-1 rotate-img"></i><span class="dn-lg">ورود</span>
-                                    </NavLink>
-                                </li>
-                            </ul>
-                        </NotAuthorized>
-                        
-                    </AuthorizeView>
+	<div class="container">
+		<nav id="navigation" class="navigation navigation-landscape">
+			<div class="nav-header" style="width:auto">
 
-                    
-                </div>
-            </div>
-            <div class="nav-menus-wrapper">
-                <ul class="nav-menu">
-                    <li class="active">
-                        <a href="/">مبلمان کریمی<span class="submenu-indicator"></span></a>
-                    </li>
+				<a class="nav-brand static-logo" href="#">
+					<img src="/images/logo.png" style="margin-right:-50%" alt="Logo" />
+				</a>
 
-                    <li>
-                        <a href="#">دسته بندی<span class="submenu-indicator"></span></a>
-                        <ul class="nav-dropdown nav-submenu">
-                            @foreach (var item in Catalogs)
-                            {
-                                <li><a href="/@item.Id">@item.Name</a></li>
-                            }
-                            
-                        
-                        </ul>
-                    </li>
-                    <AuthorizeView>
-                        <NotAuthorized>
-                            <li>
-                                <a href="/Account/Login"> ورود</a>
-                            </li>
-                        </NotAuthorized>
-                        <Authorized>
-                            <li>
-                                <a style="background:#03b97c;padding-left:20px;padding-right:20px" href="/cpanel/users"> پنل</a>
-                            </li>
-                            <li>
-                                <a style="background:red;" href="/"> خروج</a>
-                            </li>
-                            
-                        </Authorized>
-                    </AuthorizeView>
+				<a class="nav-brand fixed-logo" href="/Account/Login" style="    position: absolute; left: 0px; top: -11px;">
+					<img src="/images/logo.png" style="" alt="Logo" />
+				</a>
 
-                </ul>
-              
-            </div>
-        </nav>
-    </div>
+			</div>
+
+			<div class="nav-menus-wrapper">
+				<ul class="nav-menu">
+
+					<li class="active">
+						<a href="/">مبلمان کریمی<span class="submenu-indicator"></span></a>
+					</li>
+
+					<li>
+						<a href="#">دسته بندی<span class="submenu-indicator"></span></a>
+						<ul class="nav-dropdown nav-submenu">
+							@foreach (var item in Catalogs)
+							{
+								<li><a href="/@item.Id">@item.Name</a></li>
+							}
+
+
+						</ul>
+					</li>
+					<li>
+						<a href="/">ارتباط با ما<span class="submenu-indicator"></span></a>
+						<ul class="nav-dropdown nav-submenu">
+
+							<li><a href="/aboutUs">درباره ما</a></li>
+							<li><a href="/contact">تماس با ما</a></li>
+							<li><a @onclick="OpenPopup"> راه های ارتباطی</a></li>
+						</ul>
+					</li>
+
+					@if (isOpen)
+					{
+						<div class="popup-container">
+							<div class="popup-body">
+								<button class="btn popup-close" @onclick="ClosePopup">× انصراف</button>
+								<div class="popup-inner-body">
+									<div class="popup-content">
+										<div class="m-callus diflex-spabet">
+											<p>راه های ارتباط با ما</p>
+											<a rel="nofollow" href="tg://resolve?domain=+989910144115" class="telegramno">
+												<span>تلگرام</span>
+											</a>
+											<a rel="nofollow" href="whatsapp://send?phone=+989910144115" class="whatsno">
+												<span>واتس اپ</span>
+											</a>
+											<a href="tel://SamyarU" class="mobno">
+												<span>تماس با ما</span>
+											</a>
+											<a class="support" target="_blank" href="/contact" style=" text-align: center;">پشتیبانی</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					}
+					<AuthorizeView>
+						<NotAuthorized>
+							<li>
+								<a href="/Account/Login"> ورود</a>
+							</li>
+						</NotAuthorized>
+						<Authorized>
+							<li>
+								<a style="background:#03b97c;padding-left:20px;padding-right:20px" href="/cpanel/users"> پنل</a>
+							</li>
+							<li>
+								<a style="background:red;" href="/"> خروج</a>
+							</li>
+
+						</Authorized>
+					</AuthorizeView>
+
+				</ul>
+
+			</div>
+		</nav>
+	</div>
 </div>
 @inject ICookieService CookieService
 @inject IJSRuntime JSRuntime
-@code{
-    public List<Catalog>? Catalogs { get; set; } = new List<Catalog>();    
-    protected override async Task OnInitializedAsync()
-    {
-        // Try to get from cookie first
-       // Catalogs = await CookieService.GetAsync<List<Catalog>>("cats");
+@code {
+	private bool isOpen = false;
+	public List<Catalog>? Catalogs { get; set; } = new List<Catalog>();
+	protected override async Task OnInitializedAsync()
+	{
+		// Try to get from cookie first
+		// Catalogs = await CookieService.GetAsync<List<Catalog>>("cats");
 
-        //if (Catalogs == null || !Catalogs.Any())
-       // {
-            // If not in cookie, fetch from repository
-            CatalogRepository catalogRepository = new CatalogRepository();
-            Catalogs = await catalogRepository.GetAllAsync();
+		//if (Catalogs == null || !Catalogs.Any())
+		// {
+		// If not in cookie, fetch from repository
+		CatalogRepository catalogRepository = new CatalogRepository();
+		Catalogs = await catalogRepository.GetAllAsync();
 
-            // Store in cookie with 30 minutes expiration
-           // await CookieService.SetAsync("cats", Catalogs, TimeSpan.FromMinutes(30));
-        }
+		// Store in cookie with 30 minutes expiration
+		// await CookieService.SetAsync("cats", Catalogs, TimeSpan.FromMinutes(30));
+	}
 
+	private void OpenPopup()
+	{
+		isOpen = true;
+	}
 
-    }
-    
+	// وقتی کاربر روی دکمه انصراف کلیک کرد
+	private void ClosePopup()
+	{
+		isOpen = false;
+	}
+}
+
 }

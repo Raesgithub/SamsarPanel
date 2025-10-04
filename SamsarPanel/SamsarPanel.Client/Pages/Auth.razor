@@ -5,10 +5,8 @@
 @attribute [Authorize]
 @rendermode InteractiveAuto
 
-<PageTitle>Auth</PageTitle>
-
-<h1>You are authenticated</h1>
+<h1>شما در حالت مهمان هستید</h1>
 
 <AuthorizeView>
-    Hello @context.User.Identity?.Name!
+    سلام @context.User.Identity?.Name!
 </AuthorizeView>

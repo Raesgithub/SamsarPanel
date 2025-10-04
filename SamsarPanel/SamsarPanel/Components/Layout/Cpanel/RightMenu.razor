@@ -17,25 +17,32 @@
              <li>
                 <a href="#"><i class="icon ti-layers-alt"></i> <span>کاربران</span> </a>
                 <ul>
-                    <li><a  @onclick="ShowUserList"> لیست کاربران </a></li>                
-                    <li><a @onclick='()=> nav.NavigateTo("/cpanel/users/profile/add" , true)'>کاربران جدید </a></li>
-                    <li><a href="chat.html">کاربران ویژه </a></li>                
+                    <li><NavLink @onclick="ShowUserList"> لیست کاربران </NavLink></li>
+                    <li><NavLink @onclick='() => nav.NavigateTo("/cpanel/users/profile/add", true)'>کاربران جدید </NavLink></li>
+                    <li><NavLink href="chat.html">کاربران ویژه </NavLink></li>
                 </ul>
             </li>       
-            <li>
+@*             <li>
                 <a href="#"><i class="icon ti-clipboard"></i> <span>یادداشت ها</span> </a>
                 <ul>
                     <li><a href="chat.html"> نوشتن یاد داشت </a></li>                
                     <li><a href="chat.html"> نظرات </a></li>                
                     <li><a href="chat.html"> انتقادات و پیش نهادات </a></li>                
                 </ul>
-            </li>
+            </li> *@
             <li>
                 <a href="#"><i class="icon ti-clipboard"></i> <span> محصولات</span> </a>
                 <ul>
-                    <li><a @onclick='()=> nav.NavigateTo("/cpanel/shop/products" , true)'>لیست محصولات </a></li>
-                    <li><a @onclick='()=> nav.NavigateTo("/cpanel/shop/products/add" , true)'> محصول جدید </a></li>
+                    <li><NavLink @onclick='() => nav.NavigateTo("/cpanel/shop/products", true)'>لیست محصولات </NavLink></li>
+                    <li><NavLink @onclick='() => nav.NavigateTo("/cpanel/shop/products/add", true)'> محصول جدید </NavLink></li>
                     <li><NavLink @onclick='()=> nav.NavigateTo("/cpanel/shop/catalog" , true)'>  دسته بندی محصول  </NavLink></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="icon ti-clipboard"></i> <span>اسلایدر</span> </a>
+                <ul>
+                    <li><NavLink @onclick='() => nav.NavigateTo("/cpanel/slider", true)'>لیست اسلایدر ها </NavLink></li>
+                    <li><NavLink @onclick='() => nav.NavigateTo("/cpanel/slider/add", true)'> افزودن اسلایدر </NavLink></li>
                 </ul>
             </li>
         </ul>
