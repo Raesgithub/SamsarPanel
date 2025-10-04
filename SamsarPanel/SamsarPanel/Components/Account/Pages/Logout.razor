@@ -7,13 +7,14 @@
 @using Microsoft.EntityFrameworkCore
 @inject SignInManager<ApplicationUser> SignInManager
 
-<NavLink href="/">Back</NavLink>
+@inject NavigationManager nav
 @code {
 
     protected override async Task OnInitializedAsync()
     {
         await SignInManager.SignOutAsync();
-        //RedirectManager.RedirectTo("/");
+
+        nav.NavigateTo("/");//   RedirectTo("/");
     }
 
    

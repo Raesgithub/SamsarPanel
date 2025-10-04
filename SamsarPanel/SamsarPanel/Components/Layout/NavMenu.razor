@@ -17,7 +17,23 @@
 				<a class="nav-brand fixed-logo" href="/Account/Login" style="    position: absolute; left: 0px; top: -11px;">
 					<img src="/images/logo.png" style="" alt="Logo" />
 				</a>
+				<div class="nav-toggle"></div>
+				<div class="mobile_nav">
+					<AuthorizeView>
+						<NotAuthorized>
+							<ul>
+								<li>
+									<NavLink href="/Account/Login">
+										<i class="fas fa-sign-in-alt ml-1 rotate-img"></i><span class="dn-lg">ورود</span>
+									</NavLink>
+								</li>
+							</ul>
+						</NotAuthorized>
 
+					</AuthorizeView>
+
+
+				</div>
 			</div>
 
 			<div class="nav-menus-wrapper">
@@ -28,22 +44,20 @@
 					</li>
 
 					<li>
-						<a href="#">دسته بندی<span class="submenu-indicator"></span></a>
+						<NavLink  href="#">دسته بندی<span class="submenu-indicator"></span></NavLink>
 						<ul class="nav-dropdown nav-submenu">
 							@foreach (var item in Catalogs)
 							{
-								<li><a href="/@item.Id">@item.Name</a></li>
+								<li><a href="javascript:void(0)" onclick="navigateToPath('/@item.Id')">@item.Name</a></li>
 							}
-
-
 						</ul>
 					</li>
 					<li>
-						<a href="/">ارتباط با ما<span class="submenu-indicator"></span></a>
+						<NavLink href="/">ارتباط<span class="submenu-indicator"></span></NavLink>
 						<ul class="nav-dropdown nav-submenu">
 
-							<li><a href="/aboutUs">درباره ما</a></li>
-							<li><a href="/contact">تماس با ما</a></li>
+							<li><a href="javascript:void(0)" onclick="navigateToPath('/aboutus')">درباره ما</a></li>
+							<li><a href="javascript:void(0)" onclick="navigateToPath('/contact')">تماس با ما</a></li>
 							<li><a @onclick="OpenPopup"> راه های ارتباطی</a></li>
 						</ul>
 					</li>
@@ -81,12 +95,16 @@
 						</NotAuthorized>
 						<Authorized>
 							<li>
-								<a style="background:#03b97c;padding-left:20px;padding-right:20px" href="/cpanel/users"> پنل</a>
-							</li>
-							<li>
-								<a style="background:red;" href="/"> خروج</a>
+								<NavLink href="/">مدیریت حساب<span class="submenu-indicator"></span></NavLink>
+								<ul class="nav-dropdown nav-submenu">
+
+									<li><a href="javascript:void(0)" onclick="navigateToPath('/cpanel/users')">پنل مدیریت</a></li>
+									<li><a href="javascript:void(0)" onclick="navigateToPath('/Account/Logout')">خروج از حساب کاربری</a></li>
+									
+								</ul>
 							</li>
 
+							
 						</Authorized>
 					</AuthorizeView>
 
@@ -96,11 +114,19 @@
 		</nav>
 	</div>
 </div>
-@inject ICookieService CookieService
+<script>
+	function navigateToPath(path) {
+
+		window.location.href = path;
+	}
+	
+	
+</script>
 @inject IJSRuntime JSRuntime
 @code {
 	private bool isOpen = false;
 	public List<Catalog>? Catalogs { get; set; } = new List<Catalog>();
+	
 	protected override async Task OnInitializedAsync()
 	{
 		// Try to get from cookie first
@@ -128,4 +154,3 @@
 	}
 }
 
-}
