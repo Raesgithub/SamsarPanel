@@ -31,7 +31,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddControllers();
 builder.Services.AddScoped(a => new HttpClient
 {
-    BaseAddress = new Uri("https://localhost:7163/")
+    BaseAddress = new Uri("https://react.door-amooz.ir/")
 });
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<ICookieService, CookieService>();

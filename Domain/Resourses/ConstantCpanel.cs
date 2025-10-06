@@ -18,7 +18,8 @@ namespace Domain.Resourses
         public static string pysicaly_image_product_path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", image_product_Path);
 
         public  const string image_user_no_avatar = "/Cpanel/assets/media/image/user.png";
-        
-        public const string connectionString= "Server=(localdb)\\mssqllocaldb;Database=aspnet-SamsarPanel-3353ccfb-a532-47d2-b5f2-9c5d23693f62;Trusted_Connection=True;MultipleActiveResultSets=true";
+
+        //public const string connectionString= "Server=(localdb)\\mssqllocaldb;Database=aspnet-SamsarPanel-3353ccfb-a532-47d2-b5f2-9c5d23693f62;Trusted_Connection=True;MultipleActiveResultSets=true";
+        public const string connectionString = "Data Source=185.191.78.226,2019;Initial Catalog=dooramoo_eghbalSamsar;User ID=dooramoo_samsar;Trust Server Certificate=True;password=~eXNpi%f00uJn5ed";
     }
 }
