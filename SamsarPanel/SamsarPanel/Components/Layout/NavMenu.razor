@@ -4,153 +4,207 @@
 @using Microsoft.AspNetCore.Identity
 @using SharedLibrary.Services
 
+<div class="header change-logo">
+    <div class="container">
+        <nav id="navigation" class="navigation navigation-landscape">
+            <div class="nav-header" style="width:auto">
+                <a class="nav-brand static-logo" href="javascript:void(0)" onclick="navigateToPath('/')">
+                    <img src="/images/logo.png" style="margin-right:-50%" alt="Logo" />
+                </a>
+                <a class="nav-brand fixed-logo" href="javascript:void(0)" onclick="navigateToPath('/Account/Login')" style="position: absolute; left: 0px; top: -11px;">
+                    <img src="/images/logo.png" alt="Logo" />
+                </a>
+                <div class="nav-toggle"></div>
+                <div class="mobile_nav">
+                    <AuthorizeView>
+                        <NotAuthorized>
+                            @* <ul>
+                                <li>
+                                    <a href="javascript:void(0)" onclick="navigateToPath('/Account/Login')">
+                                        <span class="dn-lg">ورود</span>
+                                    </a>
+                                </li>
+                            </ul> *@
+                        </NotAuthorized>
+                    </AuthorizeView>
+                </div>
+            </div>
 
-<div class="header  change-logo">
-	<div class="container">
-		<nav id="navigation" class="navigation navigation-landscape">
-			<div class="nav-header" style="width:auto">
+            <div class="nav-menus-wrapper">
+                <ul class="nav-menu">
+                    <li class="active">
+                        <a href="javascript:void(0)" onclick="navigateToPath('/')">مبلمان کریمی<span class="submenu-indicator"></span></a>
+                    </li>
 
-				<a class="nav-brand static-logo" href="#">
-					<img src="/images/logo.png" style="margin-right:-50%" alt="Logo" />
-				</a>
+                    <li>
+                        <a href="javascript:void(0)">دسته بندی<span class="submenu-indicator"></span></a>
+                        <ul class="nav-dropdown nav-submenu">
+                            @foreach (var item in Catalogs)
+                            {
+                                <li><a href="javascript:void(0)" onclick="navigateToPath('/@item.Id')">@item.Name</a></li>
+                            }
+                        </ul>
+                    </li>
 
-				<a class="nav-brand fixed-logo" href="/Account/Login" style="    position: absolute; left: 0px; top: -11px;">
-					<img src="/images/logo.png" style="" alt="Logo" />
-				</a>
-				<div class="nav-toggle"></div>
-				<div class="mobile_nav">
-					<AuthorizeView>
-						<NotAuthorized>
-							<ul>
-								<li>
-									<NavLink href="/Account/Login">
-										<i class="fas fa-sign-in-alt ml-1 rotate-img"></i><span class="dn-lg">ورود</span>
-									</NavLink>
-								</li>
-							</ul>
-						</NotAuthorized>
+                    <li>
+                        <a href="javascript:void(0)">ارتباط<span class="submenu-indicator"></span></a>
+                        <ul class="nav-dropdown nav-submenu">
+                            <li><a href="javascript:void(0)" onclick="navigateToPath('/aboutus')">درباره ما</a></li>
+                            <li><a href="javascript:void(0)" onclick="navigateToPath('/contact')">تماس با ما</a></li>
+                            <li><a href="javascript:void(0)" onclick="openContactPopup()">راه های ارتباطی</a></li>
+                        </ul>
+                    </li>
 
-					</AuthorizeView>
-
-
-				</div>
-			</div>
-
-			<div class="nav-menus-wrapper">
-				<ul class="nav-menu">
-
-					<li class="active">
-						<a href="/">مبلمان کریمی<span class="submenu-indicator"></span></a>
-					</li>
-
-					<li>
-						<NavLink  href="#">دسته بندی<span class="submenu-indicator"></span></NavLink>
-						<ul class="nav-dropdown nav-submenu">
-							@foreach (var item in Catalogs)
-							{
-								<li><a href="javascript:void(0)" onclick="navigateToPath('/@item.Id')">@item.Name</a></li>
-							}
-						</ul>
-					</li>
-					<li>
-						<NavLink href="/">ارتباط<span class="submenu-indicator"></span></NavLink>
-						<ul class="nav-dropdown nav-submenu">
-
-							<li><a href="javascript:void(0)" onclick="navigateToPath('/aboutus')">درباره ما</a></li>
-							<li><a href="javascript:void(0)" onclick="navigateToPath('/contact')">تماس با ما</a></li>
-							<li><a @onclick="OpenPopup"> راه های ارتباطی</a></li>
-						</ul>
-					</li>
-
-					@if (isOpen)
-					{
-						<div class="popup-container">
-							<div class="popup-body">
-								<button class="btn popup-close" @onclick="ClosePopup">× انصراف</button>
-								<div class="popup-inner-body">
-									<div class="popup-content">
-										<div class="m-callus diflex-spabet">
-											<p>راه های ارتباط با ما</p>
-											<a rel="nofollow" href="tg://resolve?domain=+989910144115" class="telegramno">
-												<span>تلگرام</span>
-											</a>
-											<a rel="nofollow" href="whatsapp://send?phone=+989910144115" class="whatsno">
-												<span>واتس اپ</span>
-											</a>
-											<a href="tel://SamyarU" class="mobno">
-												<span>تماس با ما</span>
-											</a>
-											<a class="support" target="_blank" href="/contact" style=" text-align: center;">پشتیبانی</a>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					}
-					<AuthorizeView>
-						<NotAuthorized>
-							<li>
-								<a href="/Account/Login"> ورود</a>
-							</li>
-						</NotAuthorized>
-						<Authorized>
-							<li>
-								<NavLink href="/">مدیریت حساب<span class="submenu-indicator"></span></NavLink>
-								<ul class="nav-dropdown nav-submenu">
-
-									<li><a href="javascript:void(0)" onclick="navigateToPath('/cpanel/users')">پنل مدیریت</a></li>
-									<li><a href="javascript:void(0)" onclick="navigateToPath('/Account/Logout')">خروج از حساب کاربری</a></li>
-									
-								</ul>
-							</li>
-
-							
-						</Authorized>
-					</AuthorizeView>
-
-				</ul>
-
-			</div>
-		</nav>
-	</div>
+                    <AuthorizeView>
+                        <NotAuthorized>
+                            <li>
+                                <a href="javascript:void(0)" onclick="navigateToPath('/Account/Login')">ورود</a>
+                            </li>
+                        </NotAuthorized>
+                        <Authorized>
+                            <li>
+                                <a href="javascript:void(0)">مدیریت حساب<span class="submenu-indicator"></span></a>
+                                <ul class="nav-dropdown nav-submenu">
+                                    <li><a href="javascript:void(0)" onclick="navigateToPath('/cpanel/users')">پنل مدیریت</a></li>
+                                    <li><a href="javascript:void(0)" onclick="navigateToPath('/Account/Logout')">خروج از حساب کاربری</a></li>
+                                </ul>
+                            </li>
+                        </Authorized>
+                    </AuthorizeView>
+                </ul>
+            </div>
+        </nav>
+    </div>
 </div>
-<script>
-	function navigateToPath(path) {
 
-		window.location.href = path;
-	}
-	
-	
-</script>
-@inject IJSRuntime JSRuntime
-@code {
-	private bool isOpen = false;
-	public List<Catalog>? Catalogs { get; set; } = new List<Catalog>();
-	
-	protected override async Task OnInitializedAsync()
-	{
-		// Try to get from cookie first
-		// Catalogs = await CookieService.GetAsync<List<Catalog>>("cats");
-
-		//if (Catalogs == null || !Catalogs.Any())
-		// {
-		// If not in cookie, fetch from repository
-		CatalogRepository catalogRepository = new CatalogRepository();
-		Catalogs = await catalogRepository.GetAllAsync();
-
-		// Store in cookie with 30 minutes expiration
-		// await CookieService.SetAsync("cats", Catalogs, TimeSpan.FromMinutes(30));
-	}
-
-	private void OpenPopup()
-	{
-		isOpen = true;
-	}
-
-	// وقتی کاربر روی دکمه انصراف کلیک کرد
-	private void ClosePopup()
-	{
-		isOpen = false;
-	}
+@if (isOpen)
+{
+    <div class="popup-container">
+        <div class="popup-body">
+            <button class="btn popup-close" onclick="closePopup()">× انصراف</button>
+            <div class="popup-inner-body">
+                <div class="popup-content">
+                    <div class="m-callus diflex-spabet">
+                        <p>راه های ارتباط با ما</p>
+                        <a rel="nofollow" href="tg://resolve?domain=+989910144115" class="telegramno">
+                            <span>تلگرام</span>
+                        </a>
+                        <a rel="nofollow" href="whatsapp://send?phone=+989910144115" class="whatsno">
+                            <span>واتس اپ</span>
+                        </a>
+                        <a href="tel://+989910144115" class="mobno">
+                            <span>تماس با ما</span>
+                        </a>
+                        <a class="support" href="javascript:void(0)" onclick="navigateToPath('/contact')" style="text-align: center;">پشتیبانی</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
+<style>
+    /* استایل‌های مخصوص موبایل و دسکتاپ */
+    @@media (min-width: 992px) {
+        .nav-menu li:hover > .nav-dropdown {
+            display: block !important;
+        }
+    }
+
+    @@media (max-width: 991px) {
+        .submenu-indicator {
+            cursor: pointer;
+        }
+
+        .nav-menu li > a:not(:only-child)::after {
+            content: " ›";
+            float: right;
+            margin-left: 5px;
+        }
+
+        .nav-dropdown {
+            display: none !important;
+        }
+
+            .nav-dropdown.show {
+                display: block !important;
+            }
+    }
+</style>
+
+<script>
+    function navigateToPath(path) {
+        window.location.href = path;
+    }
+
+    function openContactPopup() {
+        // اگر از Blazor استفاده می‌کنید
+        if (typeof DotNet !== 'undefined') {
+            // فراخوانی متد Blazor
+        } else {
+            // نمایش پاپاپ با JavaScript
+            document.querySelector('.popup-container').style.display = 'block';
+        }
+    }
+
+    function closePopup() {
+        // اگر از Blazor استفاده می‌کنید
+        if (typeof DotNet !== 'undefined') {
+            // فراخوانی متد Blazor
+        } else {
+            // بستن پاپاپ با JavaScript
+            document.querySelector('.popup-container').style.display = 'none';
+        }
+    }
+
+    // کد مدیریت منو در موبایل
+    document.addEventListener('DOMContentLoaded', function() {
+        initMobileMenu();
+    });
+
+    function initMobileMenu() {
+        const menuItems = document.querySelectorAll('.nav-menu > li > a');
+
+        menuItems.forEach(menuItem => {
+            if (menuItem.querySelector('.submenu-indicator')) {
+                menuItem.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 991) {
+                        e.preventDefault();
+                        const submenu = this.nextElementSibling;
+                        if (submenu && submenu.classList.contains('nav-dropdown')) {
+                            // بستن سایر منوها
+                            document.querySelectorAll('.nav-dropdown.show').forEach(menu => {
+                                if (menu !== submenu) menu.classList.remove('show');
+                            });
+                            // toggle منوی جاری
+                            submenu.classList.toggle('show');
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>
+
+@code {
+    private bool isOpen = false;
+    public List<Catalog>? Catalogs { get; set; } = new List<Catalog>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        CatalogRepository catalogRepository = new CatalogRepository();
+        Catalogs = await catalogRepository.GetAllAsync();
+    }
+
+    private void OpenPopup()
+    {
+        isOpen = true;
+        StateHasChanged();
+    }
+
+    private void ClosePopup()
+    {
+        isOpen = false;
+        StateHasChanged();
+    }
+}
