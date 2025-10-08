@@ -9,11 +9,10 @@
 @rendermode InteractiveServer
 <h3>مدیریت اسلایدرها</h3>
 
-<div class="row" style="float:left">
-    <div class="col-12 mb-3">
-        <a class="btn btn-success" href="/Cpanel/Slider/add">اسلایدر جدید</a>
-    </div>
-</div>
+
+<div class="card">
+    <div class="card-body">
+        <a href="/cpanel/slider/add" class="btn btn-success mb-3">افزودن دسته جدید</a>
 
 <div class="row">
     @foreach (var item in Sliders)
@@ -32,7 +31,8 @@
         </div>
     }
 </div>
-
+</div>
+</div>
 @code {
     List<Slider> Sliders = new List<Slider>();
 
