@@ -2,41 +2,49 @@
 @page "/{id:int}"
 @using SamsarPanel.Client.ViewModels
 @using SharedLibrary.Services
-@using static SamsarPanel.Client.ViewModels.SliderViewModel
 @inject HttpClient http
+@inject IJSRuntime JSRuntime
 @rendermode InteractiveAuto
 
-<div id="carouselExampleDark" class="carousel carousel-dark slide" style="height: 60vh">
+<!-- ============================ Hero Carousel ================================== -->
+<div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel" data-bs-interval="4000" data-bs-pause="false">
     <div class="carousel-indicators">
         @foreach (var (item, index) in Sliders.Select((s, i) => (s, i)))
         {
-            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="@index" class="@(index == 0 ? "active" : "")" aria-current="true" aria-label="Slide @index"></button>
+            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="@index"
+                    class="@(index == 0 ? "active" : "")" aria-label="Slide @index"></button>
         }
     </div>
-    <div class="carousel-inner" style="height: 60vh">
+
+    <div class="carousel-inner" style="height: 60vh;">
         @foreach (var (item, index) in Sliders.Select((s, i) => (s, i)))
         {
             <div class="carousel-item @(index == 0 ? "active" : "")" data-bs-interval="4000">
-                @* کل عکس لینک می‌شود *@
                 @if (!string.IsNullOrEmpty(item.LinkButton))
                 {
-                    <a href="@item.LinkButton" target="_blank" style="display:block; width:100%; height:100%;">
-                        <img src="/cpanel/assets/images/sliders/@item.ImageUrl" class="d-block w-100" style="object-fit:cover; height:60vh" alt="@item.Alt">
+                    <a href="@item.LinkButton" target="_blank" style="display:block;width:100%;height:100%;">
+                        <img src="/cpanel/assets/images/sliders/@item.ImageUrl"
+                             class="d-block w-100"
+                             style="object-fit:cover;height:60vh;"
+                             alt="@item.Alt" title="@item.Title">
                     </a>
                 }
                 else
                 {
-                    <img src="/cpanel/assets/images/sliders/@item.ImageUrl" class="d-block w-100" style="object-fit:cover; height:60vh" alt="@item.Alt">
+                    <img src="/cpanel/assets/images/sliders/@item.ImageUrl"
+                         class="d-block w-100"
+                         style="object-fit:cover;height:60vh;"
+                         alt="@item.Alt" title="@item.Title">
                 }
 
-                <div class="carousel-caption d-none d-md-block">
+                <div class="carousel-caption d-none d-md-block text-shadow">
                     @if (!string.IsNullOrEmpty(item.Title))
                     {
-                        <h5>@item.Title</h5>
+                        <h5 class="text-white fw-bold">@item.Title</h5>
                     }
                     @if (!string.IsNullOrEmpty(item.Description))
                     {
-                        <p>@item.Description</p>
+                        <p class="text-light">@item.Description</p>
                     }
                 </div>
             </div>
@@ -45,174 +53,271 @@
 
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
+        <span class="visually-hidden">قبلی</span>
     </button>
     <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
+        <span class="visually-hidden">بعدی</span>
     </button>
 </div>
 
-<!-- ============================ Hero Banner End ================================== -->
-<!-- ============================ Our Awards Start ================================== -->
-<section class="main">
+<!-- ============================ Products & Catalogs ============================ -->
+<section class="main mt-4">
     <div class="container-fluid">
-
         <div class="row">
-            <div class="col-md-4 col-xl-2">
-
+            <!-- دسته‌بندی‌ها -->
+            <div class="col-md-4 col-xl-2 mb-3">
                 @if (RendererInfo.IsInteractive)
                 {
-                    <button type="button" @onclick="() => GetProducts(0, catname)" class="edu_cat_2 cat-1 my-1 py-1 border-0">
-                        <div class="edu_cat_icons">
-                            @* <a class="pic-main" ></a> *@
-                        </div>
-                        <div class="edu_cat_data">
-                            <h4 class="title">محبوب ترین ها</h4>
-                        </div>
-                    </button>
-                    foreach (var item in catalogs)
-                    {
-                        <button @onclick="() => GetProducts(item.Id, item.Name)" class="edu_cat_2 cat-1 my-1 py-1">
-                            <div class="edu_cat_icons">
-                                <a class="pic-main" href="#">
-                                    @*  <img src="/skillup/assets/img/content.png" class="img-fluid" alt="" /> *@
-                                    @(new MarkupString(item.Logo))
-                                </a>
+                    <div class="d-flex flex-column">
+                        <!-- gap کم شد -->
+                        <button class="edu_cat_2 text-center py-1 px-2 border-3 rounded-3 btn-light shadow-sm"
+                                @onclick='() => GetProducts(0, "محبوب‌ترین‌ها")'>
+                            <div class="edu_cat_icons mb-1">
+                                <i class="fa fa-star text-primary fs-5"></i>
                             </div>
-                            <div class="edu_cat_data">
-                                <h4 class="title"><a href="#">@item.Name</a></h4>
-                            </div>
+                            <h6 class="m-0 fw-bold text-primary" style="font-size:0.85rem;">محبوب‌ترین‌ها</h6>
                         </button>
-                    }
-                    
+
+                        @foreach (var item in catalogs)
+                        {
+                            <button class="edu_cat_2 text-center py-1 px-2 border-3 rounded-3 btn-outline-primary shadow-sm"
+                                    @onclick="() => GetProducts(item.Id, item.Name)">
+                                <div class="edu_cat_icons mb-1 d-flex justify-content-center">
+                                    @(new MarkupString(item.Logo))
+                                </div>
+                                <div class="edu_cat_data text-center">
+                                    <small class="fw-bold">@item.Name</small>
+                                </div>
+                            </button>
+                        }
+                    </div>
 
                 }
             </div>
-            <div class="col-md-8 col-xl-10"style="margin-top:-55px">
+
+            <!-- محصولات -->
+            <div class="col-md-8 col-xl-10" style="margin-top:-20px">
                 <div class="row justify-content-center">
                     <div class="col-12">
-                        <div class="sec-heading center">
-                            <h3 class="font-2">
-                                @catname
-                            </h3>
+                        <div class="sec-heading center mb-3">
+                            <h3 class="font-2 text-success fw-bold">@catname</h3>
                         </div>
                     </div>
                 </div>
-                <div class="row justify-content-center">
-                    <!-- Single Grid -->
-                    @foreach (var item in products)
+
+                <div class="row justify-content-center g-3">
+                    @if (products.Any())
                     {
-                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                            <div class="crs_grid">
-                                <div class="crs_grid_thumb">
-                                    <a href="/detail/@item.Id" class="crs_detail_link">
+                        @foreach (var item in products)
+                        {
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-10">
+                                <div class="crs_grid border rounded-4 shadow-sm overflow-hidden bg-white">
+                                    <a href="/detail/@item.Id">
                                         <img src="/cpanel/assets/images/products/@item.GetFirstImage()"
-                                             class="img-fluid rounded" style="    height: 144px;   width: 100%;  object-fit: cover;"
-                                             alt="@item.Name" />
+                                             class="img-fluid w-100"
+                                             style="height:180px;object-fit:cover;"
+                                             alt="@item.Name" title="@item.Name">
                                     </a>
-                                    @* <div class="crs_video_ico">
-                                            <i class="fa fa-play"></i>
-                                        </div>
-                                        <div class="crs_locked_ico">
-                                            <i class="fa fa-lock"></i>
-                                        </div>
- *@                                    </div>
-                                <div class="crs_grid_caption">
 
-                                    <div class="crs_title">
-                                        <h4>
-                                            <a href="/detail/@item.Id" class="crs_title_link">@item.Name</a>
-                                        </h4>
-                                    </div>
-                                    <div class="crs_info_detail" style="display:block">
-                                        <ul>
+                                    <div class="p-3">
+                                        <h5 class="fw-bold text-truncate">@item.Name</h5>
 
-                                            <li>
-                                                <strong class="text-danger" style="margin-left:50%;text-decoration:line-through;font-size:1.2em">@item.PriceOld.ToString("#,0 تومان")</strong>
-                                            </li>
-                                            <li style="float:left">
-                                               <strong  style="margin-right:50%;font-size:1.2em">  <i class="fa fa-eye"></i><span>@item.Seen</span></strong>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="preview_crs_info">
-                                        <div class="progress">
-                                            <div class="progress-bar"role="progressbar" style="width: 50%" aria-valuenow="50"aria-valuemin="0"aria-valuemax="100"></div> 
+                                        @if (item.PriceOld > 0)
+                                        {
+                                            <div class="text-danger text-decoration-line-through small fw-bold mt-1">
+                                                @item.PriceOld.ToString("#,0 تومان")
                                             </div>
-                                    </div>
-                                </div>
-                                <div class="crs_grid_foot mt-10">
+                                        }
 
-                                        <div class="crs_fl_first">
-                                            <div class="crs_price">
-                                                <h2>
-                                                    <span class="theme-cl">@item.Price.ToString("#,0")</span><span class="currency">تومان</span>
-                                                </h2>
-                                            </div>
+                                        <div class="progress my-2" style="height:5px;">
+                                            <div class="progress-bar" role="progressbar" style="width: 50%"></div>
                                         </div>
-                                        <div class="crs_fl_last">
-                                            <div class="crs_linkview">
-                                                <a href="/detail/@item.Id"
-                                                   class="btn btn_view_detail theme-bg text-light">مشاهده</a>
-                                            </div>
+
+                                        <div class="d-flex justify-content-between align-items-center mt-1">
+                                            <h6 class="text-danger fw-bold m-0">@item.Price.ToString("#,0") تومان</h6>
+                                            <strong class="text-secondary" style="font-size:0.9rem;">
+                                                <i class="fa fa-eye"></i> @item.Seen
+                                            </strong>
                                         </div>
+
+                                        <div class="text-end mt-3">
+                                            <a href="/detail/@item.Id" class="btn btn-sm btn-success rounded-pill px-4 shadow-sm">
+                                                مشاهده
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
+                        }
                     }
-
+                    else
+                    {
+                        <div class="text-center text-muted py-5">
+                            <i class="fa fa-box-open fa-2x mb-2"></i>
+                            <p>محصولی یافت نشد.</p>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
     </div>
 </section>
-@inject ICookieService CookieService
-@inject IJSRuntime JSRuntime
+
+<!-- Footer -->
+<footer class="mt-5 text-light text-center py-4 footer-gradient">
+    <div class="container">
+        <h6 class="fw-bold mb-2">مبلمان کریمی</h6>
+        <p class="mb-0 small">© 2025 تمامی حقوق محفوظ است</p>
+    </div>
+</footer>
+
+<style>
+    .edu_cat_2 {
+        transition: all 0.3s ease;
+        padding: 12px 16px; /* افزایش فضای داخلی دکمه */
+        border: 1px solid #dee2e6; /* کادر دور دکمه */
+        border-radius: 12px;
+        background: transparent; /* حذف بک‌گراند سفید */
+        color: #000;
+        display: flex;
+        align-items: center;
+        gap: 12px; /* فاصله لوگو و متن */
+        font-size: 0.95rem; /* اندازه متن */
+    }
+
+        .edu_cat_2:hover {
+            background: var(--bs-success);
+            color: #fff;
+        }
+
+        .edu_cat_2 .edu_cat_icons {
+            width: 48px; /* اندازه لوگو */
+            height: 48px; /* اندازه لوگو */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent; /* حذف پس‌زمینه سفید */
+        }
+
+            .edu_cat_2 .edu_cat_icons svg {
+                width: 100%;
+                height: 100%;
+            }
+
+        .edu_cat_2 .edu_cat_data {
+            display: flex;
+            align-items: center;
+        }
+
+
+        .edu_cat_2 h6 {
+            margin-top: 4px; /* فاصله کوچک از لوگو */
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+
+        .edu_cat_2:hover {
+            transform: translateY(-3px);
+            background: var(--bs-success);
+            color: #fff;
+        }
+
+    .carousel-item {
+        transition: transform 0.25s ease-in-out;
+    }
+
+    .footer-gradient {
+        background: linear-gradient(135deg,#5bb0e2 0%, #6ed4aa 50%, #8fe58d 100%);
+    }
+
+    .text-shadow h5, .text-shadow p {
+        text-shadow: 0 0 10px rgba(0,0,0,0.6);
+    }
+
+    media (max-width: 768px) {
+        #carouselExampleDark {
+            height: 35vh !important;
+        }
+
+        .carousel-inner img {
+            height: 35vh !important;
+        }
+
+        .edu_cat_2 {
+            font-size: 0.9rem;
+            padding: 6px 4px;
+        }
+
+        .crs_grid h5 {
+            font-size: 1rem;
+        }
+
+        footer {
+            font-size: 0.9rem;
+        }
+    }
+
+
+</style>
+
+<script>
+    window.setupFastCarousel = function () {
+        const carouselElement = document.querySelector('#carouselExampleDark');
+        if (!carouselElement) return;
+        const carousel = new bootstrap.Carousel(carouselElement, {
+            interval: 4000,
+            ride: false,
+            pause: false,
+            wrap: true
+        });
+        document.querySelector('.carousel-control-next')?.addEventListener('click', () => carousel.next());
+        document.querySelector('.carousel-control-prev')?.addEventListener('click', () => carousel.prev());
+    };
+</script>
+
 @code {
-    List<Catalog> catalogs = new List<Catalog>();
-    List<ProductVM> products = new List<ProductVM>();
-    List<SliderViewModel> Sliders = new List<SliderViewModel>();
-    string catname = "محبوب ترین ها";
+    List<Catalog> catalogs = new();
+    List<ProductVM> products = new();
+    List<SliderViewModel> Sliders = new();
+    string catname = "محبوب‌ترین‌ها";
     [Parameter] public int Id { get; set; } = 0;
-    
+
     protected override async Task OnInitializedAsync()
     {
-      //  catalogs = await CookieService.GetAsync<List<Catalog>>("cats");
-
-        //if (catalogs == null || !catalogs.Any())
-       // {
-            // If not in cookie, fetch from repository
-            catalogs = await http.GetFromJsonAsync<List<Catalog>>("api/shop/getcats") ?? new List<Catalog>();
-            // Store in cookie with 30 minutes expiration
-          //  await CookieService.SetAsync("cats", catalogs, TimeSpan.FromMinutes(30));
-       // }
-
-        
-        if (Id>0)
+        try
         {
-            var cat=catalogs.Where(a => a.Id == Id).FirstOrDefault();
-            if (cat==null)
+            catalogs = await http.GetFromJsonAsync<List<Catalog>>("api/shop/getcats") ?? new();
+            Sliders = await http.GetFromJsonAsync<List<SliderViewModel>>("api/slider/getsliders") ?? new();
+
+            if (Id > 0)
             {
-                Id = 0;
+                var cat = catalogs.FirstOrDefault(a => a.Id == Id);
+                catname = cat?.Name ?? "محبوب‌ترین‌ها";
+                products = await http.GetFromJsonAsync<List<ProductVM>>($"api/shop/getpro/{Id}") ?? new();
             }
             else
             {
-                catname = cat.Name;
+                products = await http.GetFromJsonAsync<List<ProductVM>>("api/shop/getpro/0") ?? new();
             }
-            products = await http.GetFromJsonAsync<List<ProductVM>>($"api/shop/getpro/{Id}") ?? new List<ProductVM>();
         }
-        else
+        catch (Exception ex)
         {
-            products = await http.GetFromJsonAsync<List<ProductVM>>("api/shop/getpro/0") ?? new List<ProductVM>();
+            Console.WriteLine($"❌ خطا در دریافت داده‌ها: {ex.Message}");
         }
-        
-        Sliders =  await http.GetFromJsonAsync<List<SliderViewModel>>("api/slider/getsliders")?? new List<SliderViewModel>();
     }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            await JSRuntime.InvokeVoidAsync("setupFastCarousel");
+    }
+
     async Task GetProducts(int id, string name)
     {
         catname = name;
-        products = await http.GetFromJsonAsync<List<ProductVM>>($"api/shop/getpro/{id}") ?? new List<ProductVM>();
+        products = await http.GetFromJsonAsync<List<ProductVM>>($"api/shop/getpro/{id}") ?? new();
+        StateHasChanged();
     }
 }

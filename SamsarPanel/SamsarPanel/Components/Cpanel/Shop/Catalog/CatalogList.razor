@@ -49,7 +49,7 @@
                             <InputText @bind-Value="catalog.Logo" class="form-control" />
                         </div>
                         <div class="mt-3 ">
-                            <button class="btn btn-sm btn-success" type="submit">ثیت دسته جدید</button>
+                            <button class="btn btn-sm btn-success" type="submit">ثبت دسته جدید</button>
                             <button class="btn btn-sm btn-warning float-right" type="button" @onclick="()=>{isAdd=false;}">انصراف</button>
                         </div>
                     </EditForm>
@@ -101,8 +101,6 @@
 
     async Task Delete(Domain.Models.shop.Catalog cat)
     {
-
-        // bool result=  await js.InvokeAsync<bool>("saQuestion", "هشدار", "پس از حذف قادر به بازیابی نمی باشد");
         if (await js.InvokeAsync<bool>("saQuestion", "هشدار", "پس از حذف قادر به بازیابی نمی باشد") == false) return;
 
         var catRepository = new CatalogRepository();
@@ -116,17 +114,13 @@
         {
             await js.InvokeVoidAsync("toastError", res.Message);
         }
-
     }
+
     protected override async Task OnInitializedAsync()
     {
-        //delete * from catalogs where id=5
         var catRepository = new CatalogRepository();
-        catalogList= await  catRepository.GetAllAsync();
-
-
+        catalogList = await catRepository.GetAllAsync();
     }
-
 
     async Task ValidSubmit()
     {
@@ -135,15 +129,23 @@
             await js.InvokeVoidAsync("toastError", "نام دسته محصول را وارد نمایید");
             return;
         }
+
+        // 🟢 اگر لوگو SVG است، سایز را 64px تنظیم کن
+        if (!string.IsNullOrWhiteSpace(catalog.Logo) && catalog.Logo.TrimStart().StartsWith("<svg", StringComparison.OrdinalIgnoreCase))
+        {
+            catalog.Logo = FixSvgSize(catalog.Logo, 64);
+        }
+
         var catRepository = new CatalogRepository();
         ResultDto resultDto;
         bool isUpdate = false;
-        if (catalog.Id==0){
-            
+        if (catalog.Id == 0)
+        {
             resultDto = await catRepository.AddAsync(catalog);
             isUpdate = false;
         }
-        else{
+        else
+        {
             resultDto = await catRepository.UpdateAsync(catalog);
             isUpdate = true;
         }
@@ -152,16 +154,17 @@
         {
             await js.InvokeVoidAsync("toast", "انجام شد");
 
-            if (isUpdate==false) //add
+            if (isUpdate == false) //add
             {
                 catalog.Id = Convert.ToInt32(resultDto.Message);
                 catalogList.Add(catalog);
                 catalog = new Domain.Models.shop.Catalog();
             }
-            else{
+            else
+            {
                 foreach (var item in catalogList)
                 {
-                    if (item.Id==catalog.Id)
+                    if (item.Id == catalog.Id)
                     {
                         item.Name = catalog.Name;
                         item.Logo = catalog.Logo;
@@ -169,13 +172,33 @@
                     }
                 }
                 isAdd = false;
-
+      
             }
-            
+
         }
-        else{
+        else
+        {
             await js.InvokeVoidAsync("toastError", resultDto.Message);
         }
     }
 
+    // 🧩 تابع جدید برای اصلاح سایز SVG
+    string FixSvgSize(string svg, int size)
+    {
+        try
+        {
+            // حذف تمام width و height های قبلی
+            svg = System.Text.RegularExpressions.Regex.Replace(svg, @"width\s*=\s*""[^""]*""", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            svg = System.Text.RegularExpressions.Regex.Replace(svg, @"height\s*=\s*""[^""]*""", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+            // افزودن سایز جدید بعد از <svg
+            svg = System.Text.RegularExpressions.Regex.Replace(svg, @"<svg", $"<svg width=\"{size}px\" height=\"{size}px\"", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+            return svg;
+        }
+        catch
+        {
+            return svg; // در صورت خطا، نسخه اصلی را برگردان
+        }
+    }
 }
