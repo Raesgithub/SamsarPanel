@@ -12,55 +12,61 @@
 @rendermode InteractiveServer
 
 <h3>@(CurrentSlider?.Id == 0 ? "افزودن اسلایدر جدید" : "ویرایش اسلایدر")</h3>
-
 <EditForm Model="CurrentSlider" OnValidSubmit="SaveSlider" FormName="sliderform" Enhance>
     <DataAnnotationsValidator />
 
-    <div style="width:67%;float:left">
-        <div class="card p-4" style="max-width:100%;">
-            <InputFile OnChange="HandleSelected" class="form-control" />
-
-            <div class="mt-2">
-                <InputText @bind-Value="CurrentSlider.Alt" class="form-control" placeholder="متن جایگزین تصویر" />
-                <ValidationMessage For="() => CurrentSlider.Alt" />
+ <div class="row">
+     <div class="col-md-4">
+            <div class="card p-4 text-center" style="max-width:100%;">
+                <img src="@PreviewImage" class="img-thumbnail" style="max-width:360px; max-height:360px;" />
             </div>
 
-            <div class="mt-3">
-                <InputText @bind-Value="CurrentSlider.Title" class="form-control" placeholder="عنوان (اختیاری)" />
-                <ValidationMessage For="() => CurrentSlider.Title" />
-            </div>
-
-            <div class="mt-2">
-                <InputTextArea @bind-Value="CurrentSlider.Description" class="form-control" placeholder="توضیح (اختیاری)" />
-                <ValidationMessage For="() => CurrentSlider.Description" />
-            </div>
-
-            <div class="mt-2">
-                <InputText @bind-Value="CurrentSlider.LinkButton" class="form-control" placeholder="لینک دکمه (اختیاری)" />
-                <ValidationMessage For="() => CurrentSlider.LinkButton" />
-            </div>
-
-            <div class="col-md-6">
-                <label class="form-label">وضعیت انتشار</label>
-                <InputSelect @bind-Value="CurrentSlider.IsPublish" class="form-control">
-                    <option value="true">منتشر شود</option>
-                    <option value="false">عدم انتشار</option>
-                </InputSelect>
-            </div>
-
-            <div class="mt-5">
-                <button type="submit" class="btn btn-success btn-large mt-5 w-25 m-auto">
-                    @(CurrentSlider.Id == 0 ? "ذخیره ......." : "ویرایش")
-                </button>
-            </div>
         </div>
-    </div>
+    <div class="col-md-8">
+            <div class="card p-4" style="max-width:100%;">
+                <InputFile OnChange="HandleSelected" class="form-control" />
 
-    <div style="width:30%;float:right">
-        <div class="card p-4 text-center" style="max-width:100%;">
-            <img src="@PreviewImage" class="img-thumbnail" style="max-width:360px; max-height:360px;" />
+                <div class="mt-2">
+                    <InputText @bind-Value="CurrentSlider.Alt" class="form-control" placeholder="متن جایگزین تصویر" />
+                    <ValidationMessage For="() => CurrentSlider.Alt" />
+                </div>
+
+                <div class="mt-3">
+                    <InputText @bind-Value="CurrentSlider.Title" class="form-control" placeholder="عنوان (اختیاری)" />
+                    <ValidationMessage For="() => CurrentSlider.Title" />
+                </div>
+
+                <div class="mt-2">
+                    <InputTextArea @bind-Value="CurrentSlider.Description" class="form-control" placeholder="توضیح (اختیاری)" />
+                    <ValidationMessage For="() => CurrentSlider.Description" />
+                </div>
+
+                <div class="mt-2">
+                    <InputText @bind-Value="CurrentSlider.LinkButton" class="form-control" placeholder="لینک دکمه (اختیاری)" />
+                    <ValidationMessage For="() => CurrentSlider.LinkButton" />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">وضعیت انتشار</label>
+                    <InputSelect @bind-Value="CurrentSlider.IsPublish" class="form-control">
+                        <option value="true">منتشر شود</option>
+                        <option value="false">عدم انتشار</option>
+                    </InputSelect>
+                </div>
+
+                <div class="mt-5">
+                    <button type="submit" class="btn btn-success btn-large mt-5 w-25 m-auto">
+                        @(CurrentSlider.Id == 0 ? "ذخیره ......." : "ویرایش")
+                    </button>
+                </div>
+            </div>
+
         </div>
-    </div>
+</div>
+
+        
+    
+    
 </EditForm>
 
 @code {
