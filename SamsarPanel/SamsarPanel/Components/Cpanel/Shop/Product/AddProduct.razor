@@ -10,6 +10,9 @@
 @inject IJSRuntime js
 @inject NavigationManager nav
  @rendermode InteractiveServer
+<link rel="stylesheet" href="/ckeditor/css/site.css" />
+<script src="/ckeditor/js/ckeditor.js"></script>
+<script src="/ckeditor/js/CKEditorInterop.js"></script>
 
 <div class="page-header">
     <div>
@@ -65,102 +68,19 @@
                 </div>
                 <div class="col-12 mt-4">
                     <label class="form-label">ویژگی های محصول</label>
-                    <BlazoredTextEditor @ref="@QuillHtmlF" EditorCssStyle="background:#fff">
-                        <ToolbarContent>
-                            <select class="ql-header">
-                                <option selected=""></option>
-                                <option value="1"></option>
-                                <option value="2"></option>
-                                <option value="3"></option>
-                                <option value="4"></option>
-                                <option value="5"></option>
-                            </select>
-                            <span class="ql-formats">
-                                <button class="ql-bold"></button>
-                                <button class="ql-italic"></button>
-                                <button class="ql-underline"></button>
-                                <button class="ql-strike"></button>
-                            </span>
-                            <span class="ql-formats">
-                                <select class="ql-color"></select>
-                                <select class="ql-background"></select>
-                            </span>
-                            <span class="ql-formats">
-                                <button class="ql-list" value="ordered"></button>
-                                <button class="ql-list" value="bullet"></button>
-                            </span>
-                            <span class="ql-formats">
-                                <button class="ql-link"></button>
-                            </span>
-                            <span class="ql-formats">
-                                <button class="ql-align" value=""></button> <!-- Left Align -->
-                                <button class="ql-align" value="center"></button> <!-- Center Align -->
-                                <button class="ql-align" value="right"></button> <!-- Right Align -->
-                                <button class="ql-align" value="justify"></button> <!-- Justify Align -->
-                            </span>
-                            <!-- New Direction Buttons -->
-                            @*  <span class="ql-formats">
-                                <button class="ql-direction" value="ltr">LTR</button> <!-- Left to Right -->
-                                <button class="ql-direction" value="rtl">RTL</button> <!-- Right to Left -->
-                            </span> *@
-                        </ToolbarContent>
-                        <EditorContent>
-
-                        </EditorContent>
-                    </BlazoredTextEditor>
+                    
+                    <CKEditorBlazor DisplayName="product.Feauchers" @bind-Value="product.Feauchers" UrlToPostImage="http://localhost:5266/api/Upload/uploadImage">
+                    </CKEditorBlazor>
 
                 </div>
                 <div class="col-12 mt-4">
                     <label class="form-label">توضیح  محصول</label>
                     <CKEditorBlazor DisplayName="product.Description" @bind-Value="product.Description" UrlToPostImage="http://localhost:5266/api/Upload/uploadImage">
-
-                </CKEditorBlazor>
+                   </CKEditorBlazor>
 
                     
                     
-                    <BlazoredTextEditor @ref="@QuillHtmlD" EditorCssStyle="background:#fff">
-                        <ToolbarContent>
-                            <select class="ql-header">
-                                <option selected=""></option>
-                                <option value="1"></option>
-                                <option value="2"></option>
-                                <option value="3"></option>
-                                <option value="4"></option>
-                                <option value="5"></option>
-                            </select>
-                            <span class="ql-formats">
-                                <button class="ql-bold"></button>
-                                <button class="ql-italic"></button>
-                                <button class="ql-underline"></button>
-                                <button class="ql-strike"></button>
-                            </span>
-                            <span class="ql-formats">
-                                <select class="ql-color"></select>
-                                <select class="ql-background"></select>
-                            </span>
-                            <span class="ql-formats">
-                                <button class="ql-list" value="ordered"></button>
-                                <button class="ql-list" value="bullet"></button>
-                            </span>
-                            <span class="ql-formats">
-                                <button class="ql-link"></button>
-                            </span>
-                            <span class="ql-formats">
-                                <button class="ql-align" value=""></button> <!-- Left Align -->
-                                <button class="ql-align" value="center"></button> <!-- Center Align -->
-                                <button class="ql-align" value="right"></button> <!-- Right Align -->
-                                <button class="ql-align" value="justify"></button> <!-- Justify Align -->
-                            </span>
-                            <!-- New Direction Buttons -->
-                            @*  <span class="ql-formats">
-                                <button class="ql-direction" value="ltr">LTR</button> <!-- Left to Right -->
-                                <button class="ql-direction" value="rtl">RTL</button> <!-- Right to Left -->
-                            </span> *@
-                        </ToolbarContent>
-                        <EditorContent>
-
-                        </EditorContent>
-                    </BlazoredTextEditor>
+                    
 
                 </div>
                 <div class="col-12">
@@ -212,8 +132,7 @@
     public Domain.Models.shop.Product? product { get; set; } = new Domain.Models.shop.Product();
     List<Domain.Models.shop.Catalog> catalogs = new List<Domain.Models.shop.Catalog>();
     string priceSplitComa = "";
-    BlazoredTextEditor QuillHtmlF;
-    BlazoredTextEditor QuillHtmlD;
+    
     string QuillHTMLContent = "";
     List<IBrowserFile> files;
 
@@ -261,14 +180,14 @@
             await js.InvokeVoidAsync("toastError", "تصویری انتخاب نمایید");
             isOk = false;
         }
-        product.Description = await this.QuillHtmlD.GetHTML();
+        //product.Description = await this.QuillHtmlD.GetHTML();
 
         if (product.Description.Length < 50)
         {
             await js.InvokeVoidAsync("toastError", "توضیحات محصول کوتاه می باشد");
             isOk = false;
         }
-        product.Feauchers = await this.QuillHtmlF.GetHTML();
+        //product.Feauchers = await this.QuillHtmlF.GetHTML();
 
         if (product.Feauchers.Length < 50)
         {
