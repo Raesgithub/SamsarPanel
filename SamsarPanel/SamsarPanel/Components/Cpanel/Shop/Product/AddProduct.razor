@@ -67,7 +67,7 @@
                     <p style="font-size:1.5em" class="text-left mb-0">@FormattedPriceOld</p>
                 </div>
                 <div class="col-12 mt-4">
-                    <label class="form-label">توضیح کوتاه محصول</label>
+                    <label class="form-label">چکیده محصول</label>
                    
                     <CKEditorBlazor DisplayName="product.ShortFeauchers" @bind-Value="product.ShortFeauchers" UrlToPostImage="http://localhost:5266/api/Upload/uploadImage">
                     </CKEditorBlazor>
@@ -140,7 +140,7 @@
     List<Domain.Models.shop.Catalog> catalogs = new List<Domain.Models.shop.Catalog>();
     string priceSplitComa = "";
     
-    string QuillHTMLContent = "";
+    
     List<IBrowserFile> files;
 
     private string FormattedPrice => product.Price.ToString("#,0 تومان");

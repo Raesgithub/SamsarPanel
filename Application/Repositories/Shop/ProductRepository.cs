@@ -221,8 +221,8 @@ namespace Application.Repositories.cpanel
             try
             {
                 var query = $@"INSERT INTO products (Name, Description, Price,PriceOld,Feauchers,IsPublish,
-                                 Images,Cdate,Mdate,CatalogId) VALUES (@Name, @Description, @Price,@PriceOld,
-                                 @Feauchers,@IsPublish,@Images,@Cdate,@Mdate,@CatalogId)";
+                                 Images,Cdate,Mdate,CatalogId,ShortFeauchers) VALUES (@Name, @Description, @Price,@PriceOld,
+                                 @Feauchers,@IsPublish,@Images,@Cdate,@Mdate,@CatalogId,@ShortFeauchers)";
                                         
                 var res = 0;
                 using (var con = new SqlConnection(ConstantCpanel.connectionString))
