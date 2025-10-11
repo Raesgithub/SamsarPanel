@@ -67,6 +67,13 @@
                     <p style="font-size:1.5em" class="text-left mb-0">@FormattedPriceOld</p>
                 </div>
                 <div class="col-12 mt-4">
+                    <label class="form-label">توضیح کوتاه محصول</label>
+                   
+                    <CKEditorBlazor DisplayName="product.ShortFeauchers" @bind-Value="product.ShortFeauchers" UrlToPostImage="http://localhost:5266/api/Upload/uploadImage">
+                    </CKEditorBlazor>
+
+                </div>
+                <div class="col-12 mt-4">
                     <label class="form-label">ویژگی های محصول</label>
                     
                     <CKEditorBlazor DisplayName="product.Feauchers" @bind-Value="product.Feauchers" UrlToPostImage="http://localhost:5266/api/Upload/uploadImage">

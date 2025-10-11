@@ -19,6 +19,7 @@ namespace Domain.Models.shop
         public long Price { get; set; }
         public long PriceOld { get; set; } = 0;
         public string? Feauchers { get; set; }
+        public string? ShortFeauchers { get; set; }
         public bool IsPublish { get; set; } = false;
         public  string Images { get; set; }
        
