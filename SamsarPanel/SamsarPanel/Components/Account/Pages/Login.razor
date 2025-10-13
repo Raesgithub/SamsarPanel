@@ -84,6 +84,11 @@
             errorMessage = "ورود با شکست مواجه شد";
             return;
         }
+        if (user.IsSuspend == true)
+        {
+            errorMessage = "حساب کاربری شما مسدود شده است . با مدیر وبسایت تماس بگیرید";
+            return;
+        }
 
         var result = await SignInManager.PasswordSignInAsync(user, Input.Password, Input.RememberMe, lockoutOnFailure: false);
         if (result.Succeeded)

@@ -13,8 +13,6 @@ namespace Application.Repositories.cpanel
 {
     public class UserRepository
     {
-    
-
         public async Task<PaggingDto<UserVM>> GetAll(PaggingDto<UserVM> pagging)
         {
             if (pagging.Page>0)
@@ -38,6 +36,7 @@ namespace Application.Repositories.cpanel
                                             select count(*)  from AspNetUsers {where}
                                              --دریافت داده
                                              select Email,Firstname,Lastname,PhoneNumber,Id,UserName,Avater,LastDateLogin,LoginCount, Firstname+' ' +Lastname as  FullName
+                                              ,IsSuspend
                                              from AspNetUsers {where}
                                              order by Email
                                              offset @skip rows fetch next @take rows only ";
@@ -100,8 +99,7 @@ namespace Application.Repositories.cpanel
         {
             try
             {
-                var query = $@"update aspnetusers 
-                                        set IsSuspend={(status==true?1:0)}   where id='{id}' ";
+                var query = $@"update aspnetusers  set IsSuspend={(status==true?0:1)}   where id='{id}' ";
                 var res = 0;
                 using (var con = new SqlConnection(ConstantCpanel.connectionString))
                 {
