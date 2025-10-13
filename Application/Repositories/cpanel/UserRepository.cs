@@ -70,7 +70,7 @@ namespace Application.Repositories.cpanel
             try
             {
                 var query = $@"update aspnetusers 
-                                        set firstname='{userVM.Firstname}', lastname='{userVM.Lastname}',
+                                        set firstname=N'{userVM.Firstname}', lastname=N'{userVM.Lastname}',
                                         email='{userVM.Email}', phonenumber='{userVM.PhoneNumber}'
                                         where id='{userVM.Id}' ";
                 var res = 0;
