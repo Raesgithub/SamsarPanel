@@ -23,8 +23,8 @@
         <h3>کاربران</h3>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">کنترل پنل</a></li>
-                <li class="breadcrumb-item active"><a href="#">کاربران</a></li>
+                <li class="breadcrumb-item"><a href="/Cpanel">کنترل پنل</a></li>
+                <li class="breadcrumb-item active"><a href="/Cpanel/users">کاربران</a></li>
             </ol>
         </nav>
     </div>
@@ -33,7 +33,7 @@
 
 <div class="card">
     <div class="card-body">
-        <a href="/cpanel/users/profile/add" class="btn btn-success mb-3">افزودن دسته جدید</a>
+        <a href="/cpanel/users/profile/add" class="btn btn-success mb-3">افزودن کاربر</a>
         <form class="search">
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="جستجو ..." @bind-value="Pagging.Search">
@@ -88,8 +88,6 @@
                                         {
                                             <button class="dropdown-item" type="button" @onclick="()=>changeStatus(item.Id,item.IsSuspend)">مسدود شود</button>
                                         }
-
-                                        <button class="dropdown-item" type="button">یک عمل دیگر</button>
                                     </div>
                                 </div>
                             </td>
