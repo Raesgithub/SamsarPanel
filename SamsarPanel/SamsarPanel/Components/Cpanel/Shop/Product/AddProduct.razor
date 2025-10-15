@@ -98,6 +98,11 @@
                             <div class="mt-3">
                                 <InputFile class="form-control" onchange="HandleInputFile" multiple />
                                 <button type="button" class="btn btn-success mt-3 float-right " @onclick="UploadFile">بارگزاری تصویر</button>
+                                @foreach (var item in extraImages)
+                                {
+                                    <img src="@ConstantCpanel.image_product_Path/@item" style="width:200px;" />
+                                }
+                                <div></div>
                             </div>
 
                         </div>
@@ -139,10 +144,10 @@
     public Domain.Models.shop.Product? product { get; set; } = new Domain.Models.shop.Product();
     List<Domain.Models.shop.Catalog> catalogs = new List<Domain.Models.shop.Catalog>();
     string priceSplitComa = "";
-    
-    
-    List<IBrowserFile> files;
 
+
+    List<IBrowserFile> files;
+    List<string> extraImages = new List<string>();
     private string FormattedPrice => product.Price.ToString("#,0 تومان");
     private string FormattedPriceOld => product.PriceOld.ToString("#,0 تومان");
 
@@ -157,10 +162,16 @@
                 nav.NavigateTo("/cpanel/shop/products",true);
                 return;
             }
-            //await this.QuillHtmlF.EditorContent   (product.Feauchers);
+
+            if (!string.IsNullOrEmpty(product.Images))
+            {
+                 extraImages = product.Images.Split(',').ToList();
+            }
         }  
         CatalogRepository catalogRepository = new CatalogRepository();
+       
         catalogs = await catalogRepository.GetAllAsync();
+        
     }
 
     async Task<bool> CheckValidData()
