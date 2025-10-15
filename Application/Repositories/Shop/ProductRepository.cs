@@ -154,6 +154,98 @@ namespace Application.Repositories.cpanel
 
 
         }
+        public async Task<ResultDto> UpdateProductAsync(Product product)
+        {
+            try
+            {
+                // Validate the product
+                if (product == null)
+                {
+                    return new ResultDto { IsSuccess = false, Message = "محصول نمی‌تواند خالی باشد" };
+                }
+
+                var query = @"UPDATE products 
+                        SET Name = @Name,
+                         Description = @Description,
+                         Price = @Price,
+                         PriceOld = @PriceOld,
+                         Feauchers = @Feauchers,
+                         ShortFeauchers = @ShortFeauchers,
+                         IsPublish = @IsPublish,
+                         Images = @Images,
+                         Mdate = @Mdate,
+                         CatalogId = @CatalogId
+                         WHERE Id = @Id";
+
+                var parameters = new
+                {
+                    product.Name,
+                    product.Description,
+                    product.Price,
+                    product.PriceOld,
+                    product.Feauchers,
+                    product.ShortFeauchers,
+                    product.IsPublish,
+                    product.Images,
+                    Mdate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), // Update modification date
+                    product.CatalogId,
+                    product.Id
+                };
+
+                var res = 0;
+                using (var con = new SqlConnection(ConstantCpanel.connectionString))
+                {
+                    res = await con.ExecuteAsync(query, parameters);
+                }
+
+                if (res == 0)
+                {
+                    return new ResultDto { IsSuccess = false, Message = "قادر به تغییر وضعیت نشدیم" };
+                }
+                else
+                {
+                    return new ResultDto { IsSuccess = true, Message = "محصول با موفقیت به‌روزرسانی شد" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new ResultDto
+                {
+                    IsSuccess = false,
+                    Message = ex.InnerException != null ? ex.InnerException.Message : ex.Message
+                };
+            }
+        }
+        public async Task<ResultDto> UpdateProductImagesAsync(int id,string filenames)
+        {
+            try
+            {
+                var query = $@"update products 
+                                        set images=N'{filenames}'   where id='{id}' ";
+                var res = 0;
+                using (var con = new SqlConnection(ConstantCpanel.connectionString))
+                {
+                    //isert update delete
+                    res = await con.ExecuteAsync(query);
+                }
+                if (res == 0)
+                {
+                    return new ResultDto { IsSuccess = false, Message = "قادر به تغییر وضعیت نشدیم" };
+                }
+                else
+                {
+                    return new ResultDto { IsSuccess = true };
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new ResultDto { IsSuccess = false, Message = ex.InnerException != null ? ex.InnerException.Message : ex.Message };
+
+            }
+
+
+        }
 
         public async Task<ResultDto> UpdateStatusAsync(string id,bool status)
         {

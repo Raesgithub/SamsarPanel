@@ -1,5 +1,6 @@
 ﻿@page "/cpanel/shop/products/add"
 @page "/cpanel/shop/products/edit/{id:int}"
+@using Application.Dtos.cpanel
 @using Application.Helpers
 @using Application.Repositories.Shop
 @using Application.Repositories.cpanel
@@ -98,11 +99,18 @@
                             <div class="mt-3">
                                 <InputFile class="form-control" onchange="HandleInputFile" multiple />
                                 <button type="button" class="btn btn-success mt-3 float-right " @onclick="UploadFile">بارگزاری تصویر</button>
+                                <div class="row mt-4">
+
                                 @foreach (var item in extraImages)
                                 {
-                                    <img src="@ConstantCpanel.image_product_Path/@item" style="width:200px;height:200px;margin:5px;object-fit:cover" />
-                                }
-                                <div></div>
+                                    <div class="col-md-4  col-xl-3 col-sm-6 position-relative">
+                                            <button class="btn btn-sm btn-danger position-absolute" style="top:15px;left:15px" type="button" @onclick="()=>DeleteImage(item)">X</button>
+                                            <img src="@ConstantCpanel.image_product_Path/@item" class="w-100 m-2" style="height:200px;object-fit:cover" />
+                                    </div>
+                                    
+                                    }
+                                </div>
+
                             </div>
 
                         </div>
@@ -150,7 +158,26 @@
     List<string> extraImages = new List<string>();
     private string FormattedPrice => product.Price.ToString("#,0 تومان");
     private string FormattedPriceOld => product.PriceOld.ToString("#,0 تومان");
+    async Task DeleteImage(string fn)
+    {
+        if (id==0)
+        {
+            return;
+        }
 
+        var upload = new UploadFile();
+        upload.DeleteFile(ConstantCpanel.pysicaly_image_product_path, fn);
+        extraImages.Remove(fn);
+        ProductRepository productRepository = new ProductRepository();
+        var filenames="";
+        foreach (var item in extraImages)
+        {
+            filenames += filenames == "" ? item : "," + item;
+        }
+        product.Images = filenames;
+        //await productRepository.UpdateProductImagesAsync(id,filenames);
+
+    }
     protected override async Task OnInitializedAsync()
     {
         if (id>0)
@@ -165,13 +192,13 @@
 
             if (!string.IsNullOrEmpty(product.Images))
             {
-                 extraImages = product.Images.Split(',').ToList();
+                extraImages = product.Images.Split(',').ToList();
             }
         }  
         CatalogRepository catalogRepository = new CatalogRepository();
-       
+
         catalogs = await catalogRepository.GetAllAsync();
-        
+
     }
 
     async Task<bool> CheckValidData()
@@ -220,9 +247,19 @@
 
         if (await CheckValidData() == false) return;
         ProductRepository productRepository = new ProductRepository();
-        product.Cdate = product.Mdate = new PersianDateTime(DateTime.Now).ToString();
+        ResultDto res = new ResultDto();
+        if (id==0) // add product
+        {
+            product.Cdate = product.Mdate = new PersianDateTime(DateTime.Now).ToString();
 
-        var res = await productRepository.InsertAsync(product);
+            res = await productRepository.InsertAsync(product);
+        }
+        else //edit product
+        {
+            res = await productRepository.UpdateProductAsync(product);
+        }
+
+
         if (res.IsSuccess)
         {
             await js.InvokeVoidAsync("toast", "ذخیره شد");
@@ -268,6 +305,7 @@
         if (res.IsSuccess)
         {
             product.Images = res.Filename;
+            extraImages = product.Images.Split(',').ToList();
             await js.InvokeVoidAsync("toast", "تصاویر انتخابی آپلود شدند");
         }
         else

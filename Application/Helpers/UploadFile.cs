@@ -62,6 +62,15 @@ namespace Application.Helpers
             return new ResultUploadDto { IsSuccess = true, Filename = filenames };
 
         }
+
+        public void DeleteFile(string fisicallyPath,string filename)
+        {
+            File.Delete(fisicallyPath + "/" + filename);
+            
+
+        }
+
+
         public async Task<ResultUploadDto> Upload(IBrowserFile file,string path, List<string> validTypes,int size=3000)
         {
             if (file == null || file.Size == 0)
