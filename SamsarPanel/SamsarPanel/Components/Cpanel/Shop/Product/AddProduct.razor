@@ -100,7 +100,7 @@
                                 <button type="button" class="btn btn-success mt-3 float-right " @onclick="UploadFile">بارگزاری تصویر</button>
                                 @foreach (var item in extraImages)
                                 {
-                                    <img src="@ConstantCpanel.image_product_Path/@item" style="width:200px;" />
+                                    <img src="@ConstantCpanel.image_product_Path/@item" style="width:200px;height:200px;margin:5px;object-fit:cover" />
                                 }
                                 <div></div>
                             </div>
