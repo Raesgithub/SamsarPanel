@@ -2,6 +2,7 @@
 @using SamsarPanel.Client.ViewModels
 @inject HttpClient http
 @rendermode InteractiveAuto
+
 <!-- ============================ Page Title Start================================== -->
 <PageTitle>@Product.Name</PageTitle>
 @if (RendererInfo.IsInteractive)
@@ -151,8 +152,8 @@
                             </span>
                         </div>
                         <div>
-                            <input type="text" class="form-control" placeholder="09*******" @bind-value="tel">
-                            <button @onclick="SetOrder" class="btn btn-call_action_wrap d-block mt-2" >امروز با ما تماس بگیرید</button>
+                        
+                            <a href="javascript:void(0)" onclick="navigateToPath('/contact')" class="btn btn-call_action_wrap d-block mt-2">امروز با ما تماس بگیرید</a>
                         </div>
 
                     </div>
@@ -314,8 +315,8 @@
                         </span>
                     </div>
                     <div>
-                        <input type="text" class="form-control" placeholder="09*******" @bind-value="tel">
-                        <button  class="btn btn-call_action_wrap d-block mt-2">امروز با ما تماس بگیرید</button>
+                        
+                        <a href="javascript:void(0)" onclick="navigateToPath('/contact')" class="btn btn-call_action_wrap d-block mt-2">امروز با ما تماس بگیرید</a>
                     </div>
 
                 </div>
@@ -326,7 +327,11 @@
 </section>
 
 
-
+<script>
+    function navigateToPath(path) {
+        window.location.href = path;
+    }
+    </script>
 
 
 
@@ -338,8 +343,8 @@
     async Task SetOrder(){
         try
         {
-            await http.GetFromJsonAsync<Product>($"api/shop/setorder/{Id}/{tel}");
-
+            //await http.GetFromJsonAsync<Product>($"api/shop/setorder/{Id}/{tel}");
+            //nav
         }
         catch (Exception ex)
         {
