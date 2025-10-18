@@ -98,7 +98,7 @@
                             @* <img src="@userVM.GetAvatar()" class="img-fluid m-auto d-block img-thumbnail" /> *@
                             <div class="mt-3">
                                 <InputFile class="form-control" onchange="HandleInputFile" multiple />
-                                <button type="button" class="btn btn-success mt-3 float-right " @onclick="UploadFile">بارگزاری تصویر</button>
+                                @* <button type="button" class="btn btn-success mt-3 float-right " @onclick="UploadFile">بارگزاری تصویر</button> *@
                                 <div class="row mt-4">
 
                                 @foreach (var item in extraImages)
@@ -282,16 +282,18 @@
         if (selectedFiles != null && selectedFiles.Count > 0)
         {
             files = selectedFiles;
+            await UploadFile();
+            StateHasChanged();
         }
 
-
+        
     }
 
 
 
 
 
-    private async Task UploadFile(MouseEventArgs e)
+    private async Task UploadFile()
     {
 
         var upload = new UploadFile();
@@ -304,7 +306,17 @@
 
         if (res.IsSuccess)
         {
-            product.Images = res.Filename;
+            product = product ??  new Domain.Models.shop.Product();
+
+            if ( !string.IsNullOrEmpty(product.Images))
+            {
+                product.Images += "," + res.Filename;
+            }
+            else
+            {
+                product.Images = res.Filename??string.Empty;
+            }
+            
             extraImages = product.Images.Split(',').ToList();
             await js.InvokeVoidAsync("toast", "تصاویر انتخابی آپلود شدند");
         }
