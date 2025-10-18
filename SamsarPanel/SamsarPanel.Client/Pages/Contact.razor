@@ -1,4 +1,5 @@
-﻿@page "/contact"
+﻿@page "/contact/{id:int}"
+@page "/contact"
 @using SamsarPanel.Client.ViewModels
 @using System.ComponentModel.DataAnnotations
 
@@ -92,7 +93,8 @@
 
 @code {
     private ContactModel contactModel = new();
-
+    [Parameter]
+    public int id { get; set; } = 0;
     private void HandleValidSubmit()
     {
         Console.WriteLine("پیام ارسال شد");
