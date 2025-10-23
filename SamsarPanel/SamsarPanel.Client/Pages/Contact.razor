@@ -84,19 +84,40 @@
                             </button>
                         </div>
                     </EditForm>
+                    @if (mes!="")
+                    {
+                        <div class="alert alert-info my-3 text-center"><strong>@mes</strong></div>
+                    }       
                 </div>
             </div>
         </div>
 
     </div>
 </div>
-
+@inject HttpClient http
 @code {
-    private ContactModel contactModel = new();
+	string mes = "";
+	[SupplyParameterFromForm]
+    public ContactModel contactModel { get; set; } = new ContactModel();
+        
     [Parameter]
     public int id { get; set; } = 0;
-    private void HandleValidSubmit()
+    private async Task HandleValidSubmit()
     {
+        //        await http.GetFromJsonAsync<Product>($"api/shop/setorder/{id}/{contactModel.Email}/{contactModel.FullName}/{contactModel.Message}/{contactModel.Phone}/{contactModel.Subject}");
+        var res= await http.PostAsJsonAsync($"api/shop/setorder/{id}", contactModel);
+        if (res.IsSuccessStatusCode)
+        {
+            mes = "درخواست شما با موفقیت ثبت گردید";
+            contactModel  = new ContactModel();
+            return;
+        }
+        else
+        {
+            mes = "خطا در ثبت درخواست. لطفاً مجدداً تلاش نمایید";
+        }
+
+
         Console.WriteLine("پیام ارسال شد");
     }
 }

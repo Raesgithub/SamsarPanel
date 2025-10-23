@@ -12,11 +12,16 @@ namespace Domain.Models.shop
         public int Id { get; set; }
         [MaxLength(11)]
         [Required]
-        public string Phone { get; set; }
+        public string Phone { get; set; } = string.Empty;
         public int ProductId { get; set; }
         public virtual Product? Product { get; set; }
-        public string Cdate { get; set; }
+        public string Cdate { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Fullname { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
+        public string Subject { get; set; } = string.Empty;
         public bool IsNew { get; set; } = true;
+
 
     }
 }

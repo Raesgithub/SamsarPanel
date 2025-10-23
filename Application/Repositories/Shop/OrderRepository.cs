@@ -15,30 +15,39 @@ namespace Application.Repositories.cpanel
 {
     public class OrderRepository
     {
-        
-        public async Task<bool> InsertAsync(int proId,string phone)
+
+        public async Task<bool> InsertAsync(int proId, ContactModel contactModel)
         {
             try
             {
-                var query = $@"INSERT INTO orders (Phone, ProductId, Cdate,IsNew)
-                                VALUES (N'{phone}', {proId}, {new PersianDateTime(DateTime.Now).ToString()},1)";
-                var res = 0;
-                using (var con = new SqlConnection(ConstantCpanel.connectionString))
+                var persianDate = new PersianDateTime(DateTime.Now).ToString("yyyy/MM/dd HH:mm:ss");
+
+                const string query = @"
+            INSERT INTO orders (Phone, ProductId, Cdate, IsNew, Email, FullName, Message, Subject)
+            VALUES (@Phone, @ProductId, @Cdate, 1, @Email, @FullName, @Message, @Subject)";
+
+                var parameters = new
                 {
-                    res = await con.ExecuteAsync(query);
-                }
+                    Phone = contactModel.Phone ?? string.Empty,
+                    ProductId = proId,
+                    Cdate = persianDate,
+                    Email = contactModel.Email ?? string.Empty,
+                    FullName = contactModel.FullName ?? string.Empty,
+                    Message = contactModel.Message ?? string.Empty,
+                    Subject = contactModel.Subject ?? string.Empty
+                };
+
+                using var con = new SqlConnection(ConstantCpanel.connectionString);
+                var res = await con.ExecuteAsync(query, parameters);
+
                 return res == 1;
             }
             catch (Exception ex)
             {
-
+                // لاگ کردن خطا برای دیباگ
+                Console.WriteLine($"خطا در ثبت سفارش: {ex.Message}");
                 return false;
-
             }
-
-
         }
-      
-
     }
 }

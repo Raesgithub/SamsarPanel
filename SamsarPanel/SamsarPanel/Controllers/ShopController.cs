@@ -6,6 +6,7 @@ using Domain.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace SamsarPanel.Controllers
 {
     [Route("api/[controller]")]
@@ -42,20 +43,18 @@ namespace SamsarPanel.Controllers
         }
 
 
-        [Route("setorder/{id}/{phone}")]
-        [HttpGet]
-        public async Task<bool> SetOrder(int id, string phone)
+        [Route("setorder/{id}")]
+        [HttpPost]
+        public async Task<bool> SetOrder(int id, [FromBody] ContactModel contactModel)
         {
             OrderRepository orderRepository = new OrderRepository();
-
-            return await orderRepository.InsertAsync(id, phone);
-
+            return await orderRepository.InsertAsync(id, contactModel);
         }
 
 
         [Route("getdetail/{id}")]
         [HttpGet]
-        public async Task<Product?> GetDetail(int id)
+        public async Task<Domain.Models.shop.Product?> GetDetail(int id)
         {
             ProductRepository productRepository = new ProductRepository();
             var shop = await productRepository.GetById(id);
