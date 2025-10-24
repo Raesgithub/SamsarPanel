@@ -104,6 +104,7 @@
     public int id { get; set; } = 0;
     private async Task HandleValidSubmit()
     {
+        
         //        await http.GetFromJsonAsync<Product>($"api/shop/setorder/{id}/{contactModel.Email}/{contactModel.FullName}/{contactModel.Message}/{contactModel.Phone}/{contactModel.Subject}");
         var res= await http.PostAsJsonAsync($"api/shop/setorder/{id}", contactModel);
         if (res.IsSuccessStatusCode)
