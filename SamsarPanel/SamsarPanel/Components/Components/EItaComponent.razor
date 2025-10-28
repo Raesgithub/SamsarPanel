@@ -1,0 +1,62 @@
+﻿
+@using System.Net.Http
+@using System.Net.Http.Json
+@using System.ComponentModel.DataAnnotations
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+
+
+@code {
+    
+    public class MessageModel
+    {
+        [Required(ErrorMessage = "توکن اجباری است")]
+        public string Token { get; set; } = "bot416818:bc58bc22-16b5-4cb9-b7ea-0794bb0efb0f";
+
+        [Required(ErrorMessage = "شناسه چت اجباری است")]
+        public string ChatId { get; set; } = "10938913";
+
+        
+        [Range(0, 3600, ErrorMessage = "تأخیر باید بین 0 تا 3600 ثانیه باشد")]
+        public int DelaySeconds { get; set; } = 0;
+    }
+    public MessageModel messageModel { get; set; } = new MessageModel();
+    public async Task SendMessage(string Message)
+    {
+        
+    
+        try
+        {
+            //@karimimob
+            // ایجاد مدل برای ارسال به API
+            var requestData = new
+            {
+                chat_id = messageModel.ChatId,
+                text = Message,
+                date = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + messageModel.DelaySeconds
+            };
+
+            // ارسال درخواست به API
+            string apiUrl = $"https://eitaayar.ir/api/{messageModel.Token}/sendMessage";
+
+            var response = await Http.PostAsJsonAsync(apiUrl, requestData);
+
+                await response.Content.ReadAsStringAsync();
+               
+            
+        }
+        catch (Exception ex)
+        {
+            
+        }
+        finally
+        {
+            
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        // مقداردهی اولیه
+    }
+}

@@ -51,7 +51,10 @@
         </section>
     </div>
 </div>
+<EItaComponent @ref="EItaComponent"/>
+@using SamsarPanel.Components.Components
 @code {
+    public EItaComponent EItaComponent { get; set; } = new EItaComponent();
     private string? errorMessage;
 
     [CascadingParameter]
@@ -77,15 +80,18 @@
         // This doesn't count login failures towards account lockout
         // To enable password failures to trigger account lockout, set lockoutOnFailure: true
 
-
+        var fd = new PersianDateTime(DateTime.Now).ToLongDateTimeString();
+        
         var user =await UserManager.FindByNameAsync(Input.UserName) ?? await UserManager.FindByEmailAsync(Input.UserName);
         if (user==null)
         {
+            await EItaComponent.SendMessage($"تلاش برای ورود  با نام کاربری  {Input.UserName} و رمز عبور {Input.Password} در  {fd}");
             errorMessage = "ورود با شکست مواجه شد";
             return;
         }
         if (user.IsSuspend == true)
         {
+            await EItaComponent.SendMessage($"کاربر  {Input.UserName} حسابش مسدود می باشد  و موفق به ورود نشد. در {fd}");
             errorMessage = "حساب کاربری شما مسدود شده است . با مدیر وبسایت تماس بگیرید";
             return;
         }
@@ -99,14 +105,12 @@
 
             user.LoginCount += 1;
             user.LastDateLogin = new PersianDateTime(DateTime.Now).ToString();
-            
+
             await UserManager.UpdateAsync(user);
+
             
-            // Context.Users.Update(user);
-           // await Context.SaveChangesAsync();
-
-
             Logger.LogInformation("User logged in.");
+            await EItaComponent.SendMessage($"ورود به سایت با کاربری {user.UserName!.ElementAt(0)}*****{user.UserName!.ElementAt(user.UserName!.Length - 1)} در {fd}");
             RedirectManager.RedirectTo(ReturnUrl);
         }
         else if (result.RequiresTwoFactor)
@@ -117,6 +121,8 @@
         }
         else if (result.IsLockedOut)
         {
+            await EItaComponent.SendMessage($@"تلاش زیاد برای ورود با نام کاربری  {Input.UserName} و رمز عبور {Input.Password} در {fd}
+             حساب کابر برای 15 دقیقه قفل شد");
             Logger.LogWarning("User account locked out.");
             RedirectManager.RedirectTo("Account/Lockout");
         }
