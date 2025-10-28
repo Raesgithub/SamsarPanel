@@ -1,8 +1,9 @@
 ﻿@page "/contact/{id:int}"
 @page "/contact"
+@using MD.PersianDateTime
 @using SamsarPanel.Client.ViewModels
 @using System.ComponentModel.DataAnnotations
-
+@inject NavigationManager nav
 <div class="container py-5">
     <div class="row g-4">
 
@@ -95,20 +96,53 @@
     </div>
 </div>
 @inject HttpClient http
+
+<EItaComponent @ref="EItaComponent"/>
+@using SamsarPanel.Client.Components
 @code {
-	string mes = "";
-	[SupplyParameterFromForm]
+    public   EItaComponent EItaComponent { get; set; } = new EItaComponent();
+    string mes = "";
+    [SupplyParameterFromForm]
     public ContactModel contactModel { get; set; } = new ContactModel();
-        
+
     [Parameter]
     public int id { get; set; } = 0;
     private async Task HandleValidSubmit()
     {
+        var path = nav.Uri.ToString();
+        var productUrl = "";
+        if (path.Contains("contact/"))
+        {
+             productUrl = nav.Uri.ToString().Replace("contact", "detail");
+        }
+        var fd = new PersianDateTime(DateTime.Now).ToLongDateTimeString();
         
         //        await http.GetFromJsonAsync<Product>($"api/shop/setorder/{id}/{contactModel.Email}/{contactModel.FullName}/{contactModel.Message}/{contactModel.Phone}/{contactModel.Subject}");
         var res= await http.PostAsJsonAsync($"api/shop/setorder/{id}", contactModel);
         if (res.IsSuccessStatusCode)
         {
+            string multiLineText = $@"یک درخواست برای شما ثبت شده است
+نام : {contactModel.FullName}
+ایمل :{contactModel.Email}
+شماره : {contactModel.Phone}
+موضوع : {contactModel.Subject}
+پیام : {contactModel.Message}
+{fd}";
+            if (productUrl!="")
+            {
+                 multiLineText = $@"یک درخواست برای شما ثبت شده است
+نام : {contactModel.FullName}
+ایمل :{contactModel.Email}
+شماره : {contactModel.Phone}
+موضوع : {contactModel.Subject}
+پیام : {contactModel.Message}
+آدرس محصول : {productUrl}
+{fd}";
+            }
+
+            
+            await EItaComponent.SendMessage(multiLineText);
+
             mes = "درخواست شما با موفقیت ثبت گردید";
             contactModel  = new ContactModel();
             return;
