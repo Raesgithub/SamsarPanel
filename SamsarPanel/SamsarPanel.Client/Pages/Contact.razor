@@ -142,8 +142,15 @@
                                             آدرس محصول : {productUrl}
                                             {fd}";
             }
-
-            await TelegramBot.SendMessageToAllMembers(multiLineText);
+            var telegramusers = await http.GetFromJsonAsync<List<string>>($"api/user/gettelegramUsers");
+            if (telegramusers != null)
+            {
+                foreach (var tg in telegramusers)
+                {
+                    await TelegramBot.SendMessageByTelegramUsername(tg, multiLineText);
+                }
+			}
+            
             await EItaComponent.SendMessage(multiLineText);
 
             mes = "درخواست شما با موفقیت ثبت گردید";

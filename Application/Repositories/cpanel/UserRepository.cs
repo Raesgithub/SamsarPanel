@@ -67,14 +67,24 @@ namespace Application.Repositories.cpanel
 
             }
         }
+        public async Task<List<string>> GetTelegramUsers()
+        {
+            using (var con = new SqlConnection(ConstantCpanel.connectionString))
+            {
+                var query = $@"select UserNameTelegram  from AspNetUsers where UserNameTelegram IS NOT NULL   AND UserNameTelegram <> ''   ";
+                return (await con.QueryAsync<string>(query)).ToList();
+
+            }
+        }
+
         public async Task<ResultDto> UpdateAsync(UserVM userVM)
         {
             try
             {
                 var query = $@"update aspnetusers 
                                         set firstname=N'{userVM.Firstname}', lastname=N'{userVM.Lastname}',
-                                        email='{userVM.Email}', phonenumber='{userVM.PhoneNumber}'
-                                        where id='{userVM.Id}' ,usernametelegram=N'{userVM.UserNameTelegram}' ";
+                                        email='{userVM.Email}', phonenumber='{userVM.PhoneNumber}' ,UserNameTelegram=N'{userVM.UserNameTelegram}'
+                                         where id='{userVM.Id}'  ";
                 var res = 0;
                 using (var con = new SqlConnection(ConstantCpanel.connectionString))
                 {
