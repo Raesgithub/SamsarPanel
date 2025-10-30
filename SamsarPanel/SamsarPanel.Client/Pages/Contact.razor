@@ -122,22 +122,22 @@
         if (res.IsSuccessStatusCode)
         {
             string multiLineText = $@"یک درخواست برای شما ثبت شده است
-نام : {contactModel.FullName}
-ایمل :{contactModel.Email}
-شماره : {contactModel.Phone}
-موضوع : {contactModel.Subject}
-پیام : {contactModel.Message}
-{fd}";
+                                                نام : {contactModel.FullName}
+                                                ایمل :{contactModel.Email}
+                                                شماره : {contactModel.Phone}
+                                                موضوع : {contactModel.Subject}
+                                                پیام : {contactModel.Message}
+                                                {fd}";
             if (productUrl!="")
             {
                  multiLineText = $@"یک درخواست برای شما ثبت شده است
-نام : {contactModel.FullName}
-ایمل :{contactModel.Email}
-شماره : {contactModel.Phone}
-موضوع : {contactModel.Subject}
-پیام : {contactModel.Message}
-آدرس محصول : {productUrl}
-{fd}";
+                                            نام : {contactModel.FullName}
+                                            ایمل :{contactModel.Email}
+                                            شماره : {contactModel.Phone}
+                                            موضوع : {contactModel.Subject}
+                                            پیام : {contactModel.Message}
+                                            آدرس محصول : {productUrl}
+                                            {fd}";
             }
 
             
