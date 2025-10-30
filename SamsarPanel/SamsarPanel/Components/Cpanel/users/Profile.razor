@@ -178,7 +178,7 @@
         user.Email = uservm.Email;
         user.PhoneNumber = uservm.PhoneNumber;
         user.UserName = uservm.UserName;
-        user.IdTel = uservm.IdTel;
+        user.UserNameTelegram = uservm.UserNameTelegram;
         var result = await userManager.CreateAsync(user, password);
         if (result.Succeeded)
         {
