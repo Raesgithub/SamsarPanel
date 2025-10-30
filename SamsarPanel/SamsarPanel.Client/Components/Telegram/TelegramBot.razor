@@ -1,0 +1,22 @@
+﻿
+@code {
+    string botToken = "8289199044:AAFWwNmpyt8gd4_FM4coj_awokIYlSxkSog";
+    long chatIdBot = 7949707627;
+    public async Task SendMessageToAllMembers(string message)
+    {
+        
+        var telegramBot = new TelegramBotService(botToken);
+        await telegramBot.SendMessageToAllMembers(message);
+        
+    }
+    public async Task SendMessageByTelegramUsername(string telegramUsername, string message)
+    {
+        var telegramBot = new TelegramBotService(botToken);
+        await telegramBot.SendMessageByUsername(telegramUsername, message);
+    }
+    public async Task SendMessageByTelegramChatId(long telegramChatId, string message)
+    {
+        var telegramBot = new TelegramBotService(botToken);
+        await telegramBot.SendMessageByChatId(telegramChatId, message);
+    }
+}

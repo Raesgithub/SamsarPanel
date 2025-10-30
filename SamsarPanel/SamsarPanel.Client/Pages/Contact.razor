@@ -98,9 +98,12 @@
 @inject HttpClient http
 
 <EItaComponent @ref="EItaComponent"/>
+<TelegramBot @ref="TelegramBot"/>
 @using SamsarPanel.Client.Components
+@using SamsarPanel.Client.Components.Telegram
 @code {
     public   EItaComponent EItaComponent { get; set; } = new EItaComponent();
+    public TelegramBot TelegramBot { get; set; } = new TelegramBot();
     string mes = "";
     [SupplyParameterFromForm]
     public ContactModel contactModel { get; set; } = new ContactModel();
@@ -140,7 +143,7 @@
                                             {fd}";
             }
 
-            
+            await TelegramBot.SendMessageToAllMembers(multiLineText);
             await EItaComponent.SendMessage(multiLineText);
 
             mes = "درخواست شما با موفقیت ثبت گردید";
