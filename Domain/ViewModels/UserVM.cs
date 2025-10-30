@@ -21,8 +21,8 @@ namespace Domain.ViewModels
         public string LastDateLogin { get; set; } = String.Empty;
         public string? avater { get; set; } = null;
         public int LoginCount { get; set; } = 0;
+        public string? IdTel { get; set; } = null;
 
-       
         public string GetAvatar()
         {
             if (string.IsNullOrEmpty(avater)) 

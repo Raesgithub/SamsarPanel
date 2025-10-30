@@ -72,10 +72,15 @@
                             <label>شماره تماس</label>
                             <InputText @bind-Value="uservm!.PhoneNumber" class="form-control" />
                         </div>
+                        <div class="col-md-6 form-group">
+                            <label>آیدی در تلگرام</label>
+                            <InputText @bind-Value="uservm!.IdTel" class="form-control" required />
+                        </div>
                         <div class="w-100">
                             <button class="btn btn-success m-3" type="submit">ذخیره تغیراتــــــــــ</button>
                             <a class="btn btn-warning m-3 float-right" href="/Cpanel/users">برگشت به لیست</a>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -173,6 +178,7 @@
         user.Email = uservm.Email;
         user.PhoneNumber = uservm.PhoneNumber;
         user.UserName = uservm.UserName;
+        user.IdTel = uservm.IdTel;
         var result = await userManager.CreateAsync(user, password);
         if (result.Succeeded)
         {

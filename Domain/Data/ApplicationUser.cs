@@ -12,7 +12,7 @@ namespace Domain.Data
         public string? LastDateLogin { get; set; } = null;
         public bool IsSuspend { get; set; } = false;
         public int LoginCount { get; set; } = 0;
-
+        public string? IdTel { get; set; } = null;
         public string UserImage()
         {
             if (string.IsNullOrEmpty(Avater))
