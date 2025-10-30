@@ -26,16 +26,19 @@ namespace Application.Repositories.cpanel
             
             using (var con = new SqlConnection(ConstantCpanel.connectionString))
             {
-                var where = @"where UserName like N'%'+@search+'%' or Firstname like  N'%'+@search+'%' 
-                                             or Lastname like  N'%'+@search+'%' or Email like  N'%'+@search+'%' 
-                                             or PhoneNumber like  N'%'+@search+'%'";
+                var where = @"where UserName like N'%'+@search+'%'
+                                             or Firstname like  N'%'+@search+'%' 
+                                             or Lastname like  N'%'+@search+'%'
+                                             or Email like  N'%'+@search+'%' 
+                                             or PhoneNumber like  N'%'+@search+'%'
+                                             or UserNameTelegram like  N'%'+@search+'%' ";
                 var query = $@"declare @search nvarchar ='{pagging.Search}'
                                             declare @skip int={page}
                                             declare @take int={pagging.Take}
                                              --تعداد کل رکوردها
                                             select count(*)  from AspNetUsers {where}
                                              --دریافت داده
-                                             select Email,Firstname,Lastname,PhoneNumber,Id,UserName,Avater,LastDateLogin,LoginCount, Firstname+' ' +Lastname as  FullName
+                                             select Email,Firstname,Lastname,PhoneNumber,UserNameTelegram,Id,UserName,Avater,LastDateLogin,LoginCount, Firstname+' ' +Lastname as  FullName
                                               ,IsSuspend
                                              from AspNetUsers {where}
                                              order by Email
@@ -58,7 +61,7 @@ namespace Application.Repositories.cpanel
         {
             using (var con = new SqlConnection(ConstantCpanel.connectionString))
             {
-                var query = $@"select Email,Firstname,Lastname,PhoneNumber,Id,UserName,Avater,LastDateLogin,LoginCount
+                var query = $@"select Email,Firstname,Lastname,PhoneNumber,Id,UserName,Avater,UserNameTelegram,LastDateLogin,LoginCount
                                              from AspNetUsers where id='{id}'";
                 return await con.QuerySingleOrDefaultAsync<UserVM>(query);
 
@@ -71,7 +74,7 @@ namespace Application.Repositories.cpanel
                 var query = $@"update aspnetusers 
                                         set firstname=N'{userVM.Firstname}', lastname=N'{userVM.Lastname}',
                                         email='{userVM.Email}', phonenumber='{userVM.PhoneNumber}'
-                                        where id='{userVM.Id}' ";
+                                        where id='{userVM.Id}' ,usernametelegram=N'{userVM.UserNameTelegram}' ";
                 var res = 0;
                 using (var con = new SqlConnection(ConstantCpanel.connectionString))
                 {
@@ -128,7 +131,7 @@ namespace Application.Repositories.cpanel
         {
             try
             {
-                var query = $@"INSERT INTO aspnetusers (username, email, Firstname,Lastname,PhoneNumber) VALUES ()";
+                var query = $@"INSERT INTO aspnetusers (username, email, Firstname,Lastname,PhoneNumber,UserNameTelegram) VALUES ()";
  
                                         
                 var res = 0;

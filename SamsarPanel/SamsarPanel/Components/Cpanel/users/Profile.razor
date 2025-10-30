@@ -55,25 +55,25 @@
                                 <InputText @bind-Value="password" class="form-control" required />
                             </div>
                         }
-                        <div class="col-md-6 form-group">
+                        <div class="col-md-4 form-group">
 
                             <label>نام</label>
                             <InputText @bind-Value="uservm!.Firstname" class="form-control" required/>
                         </div>
-                        <div class="col-md-6 form-group">
+                        <div class="col-md-4 form-group">
                             <label> نام خانوادگی</label>
                             <InputText @bind-Value="uservm!.Lastname" class="form-control" required />
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label>شماره تماس</label>
+                            <InputText @bind-Value="uservm!.PhoneNumber" class="form-control" />
                         </div>
                         <div class="col-md-6 form-group">
                             <label> ایمیل</label>
                             <InputText @bind-Value="uservm!.Email" class="form-control" required />
                         </div>
                         <div class="col-md-6 form-group">
-                            <label>شماره تماس</label>
-                            <InputText @bind-Value="uservm!.PhoneNumber" class="form-control" />
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label>آیدی در تلگرام</label>
+                            <label>نام کاربری در تلگرام (User Name : ) </label>
                             <InputText @bind-Value="uservm!.UserNameTelegram" class="form-control" required />
                         </div>
                         <div class="w-100">
