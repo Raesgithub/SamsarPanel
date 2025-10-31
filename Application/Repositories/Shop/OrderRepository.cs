@@ -83,5 +83,27 @@ namespace Application.Repositories.cpanel
                 return (Enumerable.Empty<OrderViewModel>(), 0);
             }
         }
+
+
+        public async Task<bool> UpdateSeenOrderAsync(int id)
+        {
+            try
+            {
+                
+                 string query = $"update  orders set isnew=0 where id={id}";
+
+                
+                using var con = new SqlConnection(ConstantCpanel.connectionString);
+                var res = await con.ExecuteAsync(query);
+
+                return res == 1;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ خطا در ثبت سفارش: {ex.Message}");
+                return false;
+            }
+        }
+
     }
 }
