@@ -6,7 +6,6 @@ using Domain.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace SamsarPanel.Controllers
 {
     [Route("api/[controller]")]
@@ -18,6 +17,7 @@ namespace SamsarPanel.Controllers
         {
             _context = context;
         }
+
         [Route("getcats")]
         [HttpGet]
         public async Task<IEnumerable<Catalog?>> GetCats()
@@ -39,9 +39,7 @@ namespace SamsarPanel.Controllers
             {
                 return await productRepository.GetProducts_With_CatalogId(id);
             }
-
         }
-
 
         [Route("setorder/{id}")]
         [HttpPost]
@@ -50,7 +48,6 @@ namespace SamsarPanel.Controllers
             OrderRepository orderRepository = new OrderRepository();
             return await orderRepository.InsertAsync(id, contactModel);
         }
-
 
         [Route("getdetail/{id}")]
         [HttpGet]
@@ -67,20 +64,33 @@ namespace SamsarPanel.Controllers
             return shop;
         }
 
-
-
-
-
         [Route("getbycatalogid")]
         [HttpGet]
         public async Task<IEnumerable<Catalog?>> GetProductByCatalogId(int id)
         {
             ProductRepository productRepository = new ProductRepository();
-
-
             CatalogRepository catalogRepository = new CatalogRepository();
             return await catalogRepository.GetAllAsync();
         }
 
+        // ✅ متد جدید برای دریافت سفارش‌ها (با صفحه‌بندی)
+        [Route("getorders")]
+        [HttpGet]
+        public async Task<IActionResult> GetOrders(int page = 1, int pageSize = 10)
+        {
+            try
+            {
+                OrderRepository orderRepository = new OrderRepository();
+                var result = await orderRepository.GetPagedOrdersAsync(page, pageSize);
+                var data = result.data;
+                var total = result.total;
+                return Ok(new { data, total });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ خطا در گرفتن سفارش‌ها: {ex.Message}");
+                return StatusCode(500, "خطا در دریافت اطلاعات سفارش‌ها");
+            }
+        }
     }
 }
