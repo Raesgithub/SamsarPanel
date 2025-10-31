@@ -6,85 +6,98 @@
 
 
 <div class="page-header">
-    <div>
-        <h3>لیست سفارش‌ها</h3>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/Cpanel">کنترل پنل</a></li>
-                <li class="breadcrumb-item active"><a href="/Cpanel/users">لیست سفارش‌ها</a></li>
-            </ol>
-        </nav>
-    </div>
+	<div>
+		<h3>لیست سفارش‌ها</h3>
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="/Cpanel">کنترل پنل</a></li>
+				<li class="breadcrumb-item active"><a href="/Cpanel/users">لیست سفارش‌ها</a></li>
+			</ol>
+		</nav>
+	</div>
 </div>
 <!-- end::page header -->
 
 <div class="card">
-    <div class="card-body">
-        <form class="search">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="جستجو ..." >
-                <div class="input-group-append">
-                    <button class="btn" type="button" >
-                        <i class="fa fa-search"></i>
-                    </button>
-                </div>
-            </div>
-        </form>
-        @if (orders == null)
-        {
-            <div class="text-center text-muted my-5">
-                <div class="spinner-border text-primary" role="status"></div>
-                <p class="mt-3">در حال بارگذاری...</p>
-            </div>
-        }
-        else if (!orders.Any())
-        {
-            <p class="text-center text-danger fw-bold">هیچ سفارشی ثبت نشده است.</p>
-        }
-        else{
+	<div class="card-body">
+		<form class="search">
+			<div class="input-group">
+				<input type="text" class="form-control" placeholder="جستجو ...">
+				<div class="input-group-append">
+					<button class="btn" type="button">
+						<i class="fa fa-search"></i>
+					</button>
+				</div>
+			</div>
+		</form>
+		@if (orders == null)
+		{
+			<div class="text-center text-muted my-5">
+				<div class="spinner-border text-primary" role="status"></div>
+				<p class="mt-3">در حال بارگذاری...</p>
+			</div>
+		}
+		else if (!orders.Any())
+		{
+			<p class="text-center text-danger fw-bold">هیچ سفارشی ثبت نشده است.</p>
+		}
+		else
+		{
 
 
 
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered text-center align-middle shadow-sm">
-                <thead class="">
-                    <tr>
-                        
-                        <th>نام کامل</th>
-                        <th>ایمیل</th>
-                        <th>تلفن</th>
-                        <th>موضوع</th>
-                        <th>پیام</th>
-                        <th>تاریخ</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in orders)
-                    {
-                        
-                            <tr class='@(item.IsNew==true?"bg-warning":"")'>
-                            
-                            <td>@item.FullName</td>
-                            <td>@item.Email</td>
-                            <td>@item.Phone</td>
-                            <td>@item.Subject</td>
-                            <td>@item.Message</td>
-                            <td>@item.Cdate</td>
-                            <td><button class="btn btn-success btn-sm" @onclick="()=>ItemSeen(item)">دیدم</button></td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+			<div class="table-responsive">
+				<table class="table table-striped table-bordered text-center align-middle shadow-sm">
+					<thead class="">
+						<tr>
 
-        <div class="d-flex justify-content-center align-items-center gap-3 mt-4">
-            <button class="btn btn-outline-primary px-4" @onclick="PrevPage" disabled="@(!canPrev)">قبلی</button>
-            <span class="fw-bold">صفحه @pageNumber</span>
-            <button class="btn btn-outline-primary px-4" @onclick="NextPage" disabled="@(!canNext)">بعدی</button>
-        </div>
-        }
+							<th>نام کامل</th>
+							<th>ایمیل</th>
+							<th>تلفن</th>
+							<th>موضوع</th>
+							<th>پیام</th>
+							<th>تاریخ</th>
+							<th>#</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var item in orders)
+						{
 
-    </div>
+
+							<tr>
+
+								<td>@item.FullName</td>
+								<td>@item.Email</td>
+								<td>@item.Phone</td>
+								<td>@item.Subject</td>
+								<td>@item.Message</td>
+								<td>@item.Cdate</td>
+								@if (item.IsNew == true)
+								{
+									<td><button class="btn btn-success btn-sm bg-warning" @onclick="() => ItemSeen(item)">دیدم</button></td>
+								}
+								else
+								{
+									<td>✅</td>
+								}
+
+							</tr>
+						}
+
+						}
+					</tbody>
+				</table>
+			</div>
+
+			<div class="d-flex justify-content-center align-items-center gap-3 mt-4">
+				<button class="btn btn-outline-primary px-4" @onclick="PrevPage" disabled="@(!canPrev)">قبلی</button>
+				<span class="fw-bold">صفحه @pageNumber</span>
+				<button class="btn btn-outline-primary px-4" @onclick="NextPage" disabled="@(!canNext)">بعدی</button>
+			</div>
+		}
+
+	</div>
 </div>
 
 
@@ -92,73 +105,73 @@
 
 
 @code {
-    private List<OrderViewModel>? orders;
-    private int totalCount = 0;
-    private int pageNumber = 1;
-    private int pageSize = 10;
+	private List<OrderViewModel>? orders;
+	private int totalCount = 0;
+	private int pageNumber = 1;
+	private int pageSize = 10;
 
-    private bool canNext => pageNumber * pageSize < totalCount;
-    private bool canPrev => pageNumber > 1;
-    async Task ItemSeen(OrderViewModel item) 
-    {
-        OrderRepository orderRepository = new OrderRepository();
-        var res = await orderRepository.UpdateSeenOrderAsync(item.Id);
-        if (res==true)
-        {
-            
-            foreach (var itemOrder in orders)
-            {
-                if (itemOrder.Id==item.Id)
-                {
-                    item.IsNew = false;
-                    break;
-                }
-            }
-        }
-    }
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadOrders();
-    }
+	private bool canNext => pageNumber * pageSize < totalCount;
+	private bool canPrev => pageNumber > 1;
+	async Task ItemSeen(OrderViewModel item)
+	{
+		OrderRepository orderRepository = new OrderRepository();
+		var res = await orderRepository.UpdateSeenOrderAsync(item.Id);
+		if (res == true)
+		{
 
-    private async Task LoadOrders()
-    {
-        try
-        {
-            OrderRepository orderRepository = new OrderRepository();
-            var result = await orderRepository.GetPagedOrdersAsync(pageNumber, pageSize);
-            
-            orders =(List<OrderViewModel>) result.data;
-             totalCount = result.total;
-            
-                
+			foreach (var itemOrder in orders)
+			{
+				if (itemOrder.Id == item.Id)
+				{
+					item.IsNew = false;
+					break;
+				}
+			}
+		}
+	}
+	protected override async Task OnInitializedAsync()
+	{
+		await LoadOrders();
+	}
+
+	private async Task LoadOrders()
+	{
+		try
+		{
+			OrderRepository orderRepository = new OrderRepository();
+			var result = await orderRepository.GetPagedOrdersAsync(pageNumber, pageSize);
+
+			orders = (List<OrderViewModel>)result.data;
+			totalCount = result.total;
 
 
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"❌ خطا در دریافت سفارش‌ها: {ex.Message}");
-            orders = new();
-        }
-    }
 
-    private async Task NextPage()
-    {
-        pageNumber++;
-        await LoadOrders();
-    }
 
-    private async Task PrevPage()
-    {
-        pageNumber--;
-        await LoadOrders();
-    }
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"❌ خطا در دریافت سفارش‌ها: {ex.Message}");
+			orders = new();
+		}
+	}
 
-    public class ResponseData
-    {
-        public List<OrderViewModel> data { get; set; } = new();
-        public int total { get; set; }
-    }
+	private async Task NextPage()
+	{
+		pageNumber++;
+		await LoadOrders();
+	}
 
-    
+	private async Task PrevPage()
+	{
+		pageNumber--;
+		await LoadOrders();
+	}
+
+	public class ResponseData
+	{
+		public List<OrderViewModel> data { get; set; } = new();
+		public int total { get; set; }
+	}
+
+
 }
