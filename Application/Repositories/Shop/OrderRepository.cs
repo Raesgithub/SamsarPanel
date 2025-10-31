@@ -62,7 +62,7 @@ namespace Application.Repositories.cpanel
                 string queryData = @"
                     SELECT Id, FullName, Email, Phone, Subject, Message, Cdate, ProductId, IsNew
                     FROM orders
-                    ORDER BY Id DESC
+                    ORDER BY isnew DESC
                     OFFSET (@Offset) ROWS
                     FETCH NEXT @PageSize ROWS ONLY";
 
